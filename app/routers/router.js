@@ -1,20 +1,10 @@
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-
-// const {
-//   ApplicationController,
-//   AuthenticationController,
-//   CarController,
-// } = require('./controllers');
-
-// const {
-//   User,
-//   Role,
-//   Car,
-//   UserCar,
-// } = require('./models');
+const docsRouter = require('./docsRouter');
+const apiRouter = require('./apiRouter');
 
 function apply(app) {
+  app.use('', docsRouter);
+  // app.use('/api', apiRouter);
+
   return app;
 };
 
