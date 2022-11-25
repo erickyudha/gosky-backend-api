@@ -1,0 +1,20 @@
+Create User
+npx sequelize model:generate --name User --attributes 
+name:string,email:string,encryptedPassword:string,role:string,
+phone:string,address:string,imageId:string,imageUrl:string
+
+
+Create Ticket
+npx sequelize model:generate --name Ticket --attributes
+category:string,from:string,to:string,departureTime:date,
+returnTime:date,price:number,flightNumber:string,imageId:string,
+imageUrl:string,description:string,createdBy:number,updatedBy:number
+
+
+Create Transaction
+npx sequelize model:generate --name Transaction --attributes
+userId:number,ticketId:number,amount:number
+
+Create Wishlist
+npx sequelize model:generate --name Wishlist --attributes
+userId:number,ticketId:number
