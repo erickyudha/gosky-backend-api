@@ -78,6 +78,15 @@ class AuthController {
   handleLogin = async (req, res) => {
 
   };
+
+  /**
+   * Handle whoami endpoint
+   * @param {*} req - Express req instance
+   * @param {*} res - Express res instance
+   */
+  getUser = async (req, res) => {
+
+  }
 }
 
 module.exports = AuthController;
