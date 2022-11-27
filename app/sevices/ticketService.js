@@ -1,8 +1,15 @@
 const {ticketRepository} = require('../repositories');
 
 module.exports = {
-  list() {
-    return ticketRepository.findAll();
+  async list(filterArgs) {
+    const ticketList = await ticketRepository.findAll();
+    if (!filter) {
+      return ticketList;
+    } else {
+      return ticketList.filter((ticket) => {
+        // TODO: Write filter function here
+      });
+    };
   },
 
   create(args) {
