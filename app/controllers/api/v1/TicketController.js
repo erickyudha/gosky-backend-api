@@ -1,27 +1,27 @@
 class TicketController {
   constructor({
-    ticketModel,
+    ticketService,
   }) {
-    this.ticketModel = ticketModel;
-  }
+    this.ticketService = ticketService;
+  };
 
-  handleListCar = (req, res) => {
+  handleGetList = async (req, res) => {
 
   };
 
-  handleCreateCar = (req, res) => {
+  handleGet = async (req, res) => {
 
   };
 
-  handleGetCar = (req, res) => {
+  handleCreate = async (req, res) => {
 
   };
 
-  handleUpdateCar = (req, res) => {
+  handleUpdate = async (req, res) => {
 
   };
 
-  handleDeleteCar = (req, res) => {
+  handleDelete = async (req, res) => {
 
   };
 }
