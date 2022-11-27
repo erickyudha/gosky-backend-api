@@ -1,11 +1,11 @@
 const {transactionRepository} = require('../repositories');
 
 module.exports = {
-  find(id) {
+  get(id) {
     return transactionRepository.find(id);
   },
 
-  findAll() {
+  list() {
     return transactionRepository.findAll();
   },
 
