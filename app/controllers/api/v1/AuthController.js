@@ -28,11 +28,11 @@ baseAuthorize = async (req, res, next, role) => {
 class AuthController {
   /**
    * Create an authentication controller
-   * @param {SequelizeModel} userModel - Sequelize model for Users table
-   * @param {Module} bcrypt - Bcrypt module
-   * @param {Module} jwt - JWT module
+   * @param {Module} userService
+   * @param {Module} bcrypt
+   * @param {Module} jwt
    */
-  constructor(userModel, bcrypt, jwt) {
+  constructor(userService, bcrypt, jwt) {
     this.userModel = userModel;
     this.bcrypt = bcrypt;
     this.jwt = jwt;
@@ -86,7 +86,7 @@ class AuthController {
    */
   getUser = async (req, res) => {
 
-  }
+  };
 }
 
 module.exports = AuthController;
