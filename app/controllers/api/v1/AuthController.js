@@ -1,6 +1,8 @@
+const {JWT_SIGNATURE_KEY, SALT} = require('../../../../config/application');
 const {
   UnauthorizedError,
 } = require('../../../errors');
+
 
 /**
    * Base authorize middleware model
@@ -33,7 +35,7 @@ class AuthController {
    * @param {Module} jwt
    */
   constructor(userService, bcrypt, jwt) {
-    this.userModel = userModel;
+    this.userService = userService;
     this.bcrypt = bcrypt;
     this.jwt = jwt;
   }
@@ -86,6 +88,22 @@ class AuthController {
    */
   getUser = async (req, res) => {
 
+  };
+
+  createTokenFromUser = (user) => {
+    return this.jwt.sign(user, JWT_SIGNATURE_KEY);
+  };
+
+  decodeUserToken = (token) => {
+    return this.jwt.verify(token, JWT_SIGNATURE_KEY);
+  };
+
+  encryptPassword = (password) => {
+    return this.bcrypt.hashSync(password, SALT);
+  };
+
+  verifyPassword = (password, encryptedPassword) => {
+    return this.bcrypt.compareSync(password, encryptedPassword);
   };
 }
 
