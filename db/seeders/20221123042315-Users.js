@@ -3,6 +3,7 @@
 
 const bcrypt = require('bcryptjs');
 const admin = require('../../config/admin');
+const {SALT} = require('../../config/application');
 
 const names = [
   'Johnny',
@@ -18,7 +19,7 @@ module.exports = {
     const users = names.map((name) => ({
       name,
       email: `${name.toLowerCase()}@gmail.com`,
-      encryptedPassword: bcrypt.hashSync(password, 11),
+      encryptedPassword: bcrypt.hashSync(password, SALT),
       role: 'USER',
       imageId: 12345678,
       imageUrl: 'https://cdn-icons-png.flaticon.com/512/1946/1946429.png',
@@ -31,7 +32,7 @@ module.exports = {
     users.push({
       name: admin.name,
       email: admin.email,
-      encryptedPassword: bcrypt.hashSync(admin.password, 11),
+      encryptedPassword: bcrypt.hashSync(admin.password, SALT),
       role: 'ADMIN',
       imageId: 41131131,
       imageUrl: 'https://www.shutterstock.com/image-vector/three-persons-admin-icon-outline-600w-1730974165.jpg',
