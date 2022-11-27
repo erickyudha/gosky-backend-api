@@ -1,6 +1,7 @@
+/* eslint-disable valid-jsdoc */
 'use strict';
 const {
-  Model
+  Model,
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
@@ -11,6 +12,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.hasOne(models.Wishlist, {
+        foreignKey: 'userId',
+      });
+      this.hasOne(models.Transaction, {
+        foreignKey: 'userId',
+      });
+      this.hasOne(models.Ticket, {
+        foreignKey: 'createdBy',
+      });
+      this.hasOne(models.Ticket, {
+        foreignKey: 'updatedBy',
+      });
     }
   }
   User.init({
@@ -21,10 +34,12 @@ module.exports = (sequelize, DataTypes) => {
     phone: DataTypes.STRING,
     address: DataTypes.STRING,
     imageId: DataTypes.STRING,
-    imageUrl: DataTypes.STRING
+    imageUrl: DataTypes.STRING,
+    deletedAt: DataTypes.DATE,
   }, {
     sequelize,
     modelName: 'User',
+    paranoid: true,
   });
   return User;
 };

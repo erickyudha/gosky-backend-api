@@ -1,6 +1,7 @@
+/* eslint-disable valid-jsdoc */
 'use strict';
 const {
-  Model
+  Model,
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Transaction extends Model {
@@ -11,15 +12,23 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.belongsTo(models.User, {
+        foreignKey: 'userId',
+      });
+      this.belongsTo(models.Ticket, {
+        foreignKey: 'ticketId',
+      });
     }
   }
   Transaction.init({
-    userId: DataTypes.NUMBER,
-    ticketId: DataTypes.NUMBER,
-    amount: DataTypes.NUMBER
+    userId: DataTypes.INTEGER,
+    ticketId: DataTypes.INTEGER,
+    amount: DataTypes.INTEGER,
+    deletedAt: DataTypes.DATE,
   }, {
     sequelize,
     modelName: 'Transaction',
+    paranoid: true,
   });
   return Transaction;
 };
