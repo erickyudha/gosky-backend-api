@@ -57,11 +57,11 @@ describe('TicketController', () => {
 
           const mockRes = {...mock.RES};
           const mockReq = {
-            body: {
+            query: {
               category: 'ONE_WAY',
               from: 'JAKARTA',
               to: 'MEDAN',
-              departureTime: now.add(3, 'h'),
+              departureTime: now.add(3, 'h').toISOString(),
             },
           };
 
