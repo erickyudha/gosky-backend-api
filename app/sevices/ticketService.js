@@ -9,7 +9,7 @@ module.exports = {
     return ticketRepository.create(args);
   },
 
-  find(id) {
+  get(id) {
     return ticketRepository.find(id);
   },
 
