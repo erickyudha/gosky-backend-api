@@ -1,7 +1,5 @@
 class TicketController {
-  constructor({
-    ticketService,
-  }) {
+  constructor(ticketService) {
     this.ticketService = ticketService;
   };
 

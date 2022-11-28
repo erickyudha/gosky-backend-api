@@ -5,7 +5,7 @@ const {
 
 baseAuthorize = async (req, res, next, role) => {
   try {
-    const bearerToken = req.headers.authorization;
+    // const bearerToken = req.headers.authorization;
     // const token = bearerToken.split('Bearer ')[1];
 
     // TODO: VERIFY TOKEN AND CHECK USER
