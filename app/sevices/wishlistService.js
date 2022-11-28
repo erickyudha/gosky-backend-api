@@ -9,11 +9,15 @@ module.exports = {
     return wishlistRepository.find(id);
   },
 
-  create(args) {
-    return wishlistRepository.create(args);
+  add(userId, ticketId) {
+    return wishlistRepository.create({
+      userId, ticketId,
+    });
   },
 
-  delete(id) {
-    return wishlistRepository.delete(id);
+  delete(userId, ticketId) {
+    return wishlistRepository.delete({
+      userId, ticketId,
+    });
   },
 };
