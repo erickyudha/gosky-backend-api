@@ -6,6 +6,28 @@ const now = dayjs();
 
 describe('TicketController', () => {
   describe('#handleGetList', () => {
+    // wishlisted: false,
+    // TODO: ADD wishlisted REQUIREMENTS ON WISHLIST IMPLEMENTATION
+    const mockTicket1 = {
+      ...mock.TICKET,
+      category: 'ONE_WAY',
+    };
+    const mockTicket2 = {
+      ...mock.TICKET,
+      category: 'ONE_WAY',
+      to: 'BANDUNG',
+    };
+    const mockTicket3 = {
+      ...mock.TICKET,
+      category: 'ONE_WAY',
+      departureTime: now.subtract(1, 'day'),
+    };
+    const mockTicket4 = {
+      ...mock.TICKET,
+    };
+    const mockTicketList = [
+      mockTicket1, mockTicket2, mockTicket3, mockTicket4];
+    
     it('should res.status(200) and return ticket list without filter',
         async () => {
           const mockRes = {...mock.RES};
@@ -18,9 +40,9 @@ describe('TicketController', () => {
           const controller = new TicketController(mockTicketService);
           await controller.handleGetList(mockReq, mockRes);
 
-          expect(mockTicketService.list).toBeCalled();
-          expect(mockRes.status).toBeCalledWith(200);
-          expect(mock.json).toBeCalledWith({
+          expect(mockTicketService.list).toHaveBeenCalled();
+          expect(mockRes.status).toHaveBeenCalledWith(200);
+          expect(mock.json).toHaveBeenCalledWith({
             status: 'success',
             message: 'get ticket list data success',
             data: mockTicketList,
@@ -32,27 +54,7 @@ describe('TicketController', () => {
 
     it('should res.status(200) and return filtered ticket list with filter',
         async () => {
-        // wishlisted: false,
-        // TODO: ADD wishlisted REQUIREMENTS ON WISHLIST IMPLEMENTATION
-          const mockTicket1 = {
-            ...mock.TICKET,
-            category: 'ONE_WAY',
-          };
-          const mockTicket2 = {
-            ...mock.TICKET,
-            category: 'ONE_WAY',
-            to: 'BANDUNG',
-          };
-          const mockTicket3 = {
-            ...mock.TICKET,
-            category: 'ONE_WAY',
-            departureTime: now.subtract(1, 'day'),
-          };
-          const mockTicket4 = {
-            ...mock.TICKET,
-          };
-          const mockTicketList = [
-            mockTicket1, mockTicket2, mockTicket3, mockTicket4];
+        
 
 
           const mockRes = {...mock.RES};
@@ -72,9 +74,9 @@ describe('TicketController', () => {
           const controller = new TicketController(mockTicketService);
           await controller.handleGetList(mockReq, mockRes);
 
-          expect(mockTicketService.list).toBeCalled();
-          expect(mockRes.status).toBeCalledWith(200);
-          expect(mock.json).toBeCalledWith({
+          expect(mockTicketService.list).toHaveBeenCalled();
+          expect(mockRes.status).toHaveBeenCalledWith(200);
+          expect(mock.json).toHaveBeenCalledWith({
             status: 'success',
             message: 'get ticket list data success',
             data: [mockTicket1],
@@ -102,9 +104,9 @@ describe('TicketController', () => {
       const controller = new TicketController(mockTicketService);
       await controller.handleGet(mockReq, mockRes);
 
-      expect(mockTicketService.get).toBeCalled();
-      expect(mockRes.status).toBeCalledWith(200);
-      expect(mock.json).toBeCalledWith({
+      expect(mockTicketService.get).toHaveBeenCalled();
+      expect(mockRes.status).toHaveBeenCalledWith(200);
+      expect(mock.json).toHaveBeenCalledWith({
         status: 'success',
         message: 'get ticket data success',
         data: {
@@ -129,9 +131,9 @@ describe('TicketController', () => {
       const controller = new TicketController(mockTicketService);
       await controller.handleGet(mockReq, mockRes);
 
-      expect(mockTicketService.get).toBeCalled();
-      expect(mockRes.status).toBeCalledWith(404);
-      expect(mock.json).toBeCalledWith(new IdNotFoundError().json());
+      expect(mockTicketService.get).toHaveBeenCalled();
+      expect(mockRes.status).toHaveBeenCalledWith(404);
+      expect(mock.json).toHaveBeenCalledWith(new IdNotFoundError().json());
     });
   });
 
@@ -163,9 +165,9 @@ describe('TicketController', () => {
       const controller = new TicketController(mockTicketService);
       await controller.handleCreate(mockReq, mockRes);
 
-      expect(mockTicketService.create).toBeCalled();
-      expect(mockRes.status).toBeCalledWith(201);
-      expect(mockRes.json).toBeCalledWith({
+      expect(mockTicketService.create).toHaveBeenCalled();
+      expect(mockRes.status).toHaveBeenCalledWith(201);
+      expect(mockRes.json).toHaveBeenCalledWith({
         status: 'success',
         message: 'add ticket data success',
         data: {...mock.TICKET},
@@ -181,8 +183,8 @@ describe('TicketController', () => {
       const controller = new TicketController({});
       await controller.handleCreate(mockReq, mockRes);
 
-      expect(mockRes.status).toBeCalledWith(400);
-      expect(mockRes.json).toBeCalledWith(new MissingFieldError().json());
+      expect(mockRes.status).toHaveBeenCalledWith(400);
+      expect(mockRes.json).toHaveBeenCalledWith(new MissingFieldError().json());
     });
   });
 
@@ -218,10 +220,10 @@ describe('TicketController', () => {
       const controller = new TicketController(mockTicketService);
       await controller.handleUpdate(mockReq, mockRes);
 
-      expect(mockTicketService.get).toBeCalled();
-      expect(mockTicketService.update).toBeCalled();
-      expect(mockRes.status).toBeCalledWith(200);
-      expect(mockRes.json).toBeCalledWith({
+      expect(mockTicketService.get).toHaveBeenCalled();
+      expect(mockTicketService.update).toHaveBeenCalled();
+      expect(mockRes.status).toHaveBeenCalledWith(200);
+      expect(mockRes.json).toHaveBeenCalledWith({
         status: 'success',
         message: 'update ticket data success',
         data: {
@@ -245,9 +247,9 @@ describe('TicketController', () => {
       const controller = new TicketController(mockTicketService);
       await controller.handleUpdate(mockReq, mockRes);
 
-      expect(mockTicketService.update).toBeCalled();
-      expect(mockRes.status).toBeCalledWith(404);
-      expect(mockRes.json).toBeCalledWith(new IdNotFoundError().json());
+      expect(mockTicketService.update).toHaveBeenCalled();
+      expect(mockRes.status).toHaveBeenCalledWith(404);
+      expect(mockRes.json).toHaveBeenCalledWith(new IdNotFoundError().json());
     });
   });
 
@@ -263,10 +265,10 @@ describe('TicketController', () => {
       const controller = new TicketController(mockTicketService);
       await controller.handleDelete({}, mockRes);
 
-      expect(mockTicketService.get).toBeCalled();
-      expect(mockTicketService.delete).toBeCalled();
-      expect(mockRes.status).toBeCalledWith(200);
-      expect(mockRes.json).toBeCalledWith({
+      expect(mockTicketService.get).toHaveBeenCalled();
+      expect(mockTicketService.delete).toHaveBeenCalled();
+      expect(mockRes.status).toHaveBeenCalledWith(200);
+      expect(mockRes.json).toHaveBeenCalledWith({
         status: 'success',
         message: 'delete ticket data success',
       });
@@ -283,9 +285,9 @@ describe('TicketController', () => {
       const controller = new TicketController(mockTicketService);
       await controller.handleDelete({}, mockRes);
 
-      expect(mockTicketService.get).toBeCalled();
-      expect(mockRes.status).toBeCalledWith(404);
-      expect(mockRes.json).toBeCalledWith(new IdNotFoundError().json());
+      expect(mockTicketService.get).toHaveBeenCalled();
+      expect(mockRes.status).toHaveBeenCalledWith(404);
+      expect(mockRes.json).toHaveBeenCalledWith(new IdNotFoundError().json());
     });
   });
 });

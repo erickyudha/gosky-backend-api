@@ -25,6 +25,9 @@ module.exports = {
   },
 
   post(req, res) {
+    console.log('====================================');
+    console.log(req.query);
+    console.log('====================================');
     res.status(200).end();
   },
 
