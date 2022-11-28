@@ -13,7 +13,7 @@ module.exports = {
     return Wishlist.create(args);
   },
 
-  delete(id) {
-    return Wishlist.destroy({where: {id}});
+  delete(args) {
+    return Wishlist.destroy({where: args});
   },
 };
