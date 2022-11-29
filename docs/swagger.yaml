@@ -1,36 +1,35 @@
 openapi: 3.0.3
 info:
-  title: Swagger airport - OpenAPI 3.0
-  description: |-
+  title: GoSky Backend API - OpenAPI 3.0
+  description: REST backend API for GoSky frontend web and android app.
   contact:
     email: apiteam@swagger.io
   version: 1.0.11
 servers:
-  - url: https://petstore3.swagger.io/api/v3
+  - url: http://localhost:8000/api/
 tags:
-  - name: auth
-    description: Everything about your Pets
-  - name: users
-    description: Access to Petstore orders
-  - name: tickets
-    description: Operations about user
-  - name: transactions
-    description: Operations about user
-  - name: images
-    description: Operations about user
+  - name: Auth
+    description: Everything about user authentication
+  - name: Users
+    description: Operation about user data
+  - name: Tickets
+    description: Operations about ticket data
+  - name: Transactions
+    description: Operations about user transaction
+  - name: Images
+    description: Operations about image handling
 
 paths:
   /auth/register:
     post:
       tags:
-        - auth
-      summary: Register new member
-      description: Register new account with member role
+        - Auth
+      summary: Register new user
+      description: Register new account with USER role
       operationId: registerMember
       security:
         - {}
       requestBody:
-        description: Required fields [name, email, password]
         required: true
         content:
           application/json:
@@ -56,7 +55,7 @@ paths:
                   example: string
 
       responses:
-        "201":
+        "201":  
           description: Created
           content:
             application/json:
@@ -68,7 +67,7 @@ paths:
                     example: success
                   message:
                     type: string
-                    example: create user successfully
+                    example: register success
                   data:
                     type: object
                     properties:
@@ -98,7 +97,7 @@ paths:
                     example: email already registered
                     
         default:
-          description: Default error response
+          description: General Error
           content:
             application/json:
               schema:
@@ -107,14 +106,13 @@ paths:
   /auth/login:
     post:
       tags:
-        - auth
+        - Auth
       summary: Login with account
       description: Login and get access token for auth
       operationId: login
       security:
         - {}
       requestBody:
-        description: Required fields [email, password]
         required: true
         content:
           application/json:
@@ -132,8 +130,8 @@ paths:
                   type: string
                   example: this_password
       responses:
-        "201":
-          description: Created
+        "200":
+          description: OK
           content:
             application/json:
               schema:
@@ -144,7 +142,7 @@ paths:
                     example: success
                   message:
                     type: string
-                    example: login successfully
+                    example: login success
                   data:
                     type: object
                     properties:
@@ -160,7 +158,7 @@ paths:
                 $ref: "#/components/schemas/MissingFieldError"
                       
         "401":
-          description: invalid email / password
+          description: Unauthorized, wrong login password
           content:
             application/json:
               schema:
@@ -171,10 +169,10 @@ paths:
                     example: failed
                   message:
                     type: string
-                    example: invalid email or password
+                    example: wrong password
 
         "404":
-          description: Unprocessable Entity, check missing fields from requestBody
+          description: Conflict, email not found
           content:
             application/json:
               schema:
@@ -188,16 +186,16 @@ paths:
                     example: email not found
 
         default:
-          description: Default error response
+          description: General Error
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
-                
+         
   /auth/whoami:
     get:
       tags:
-        - auth
+        - Auth
       operationId: whoAmI
       summary: Get current user data
       description: "Return current user data based on bearer token \n\n Allowed roles: USER, ADMIN"
@@ -214,7 +212,7 @@ paths:
                     example: success
                   message:
                     type: string
-                    example: Get user data success
+                    example: get user data success
                   data:
                     $ref: "#/components/schemas/UserResponse"
 
@@ -226,25 +224,28 @@ paths:
                 $ref: "#/components/schemas/UnauthorizedError"
 
         default:
-          description: Default error response
+          description: General Error
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
-                
+
+              
   /users/{id}:
     get:
       tags:
-        - users
+        - Users
       summary: Get user data by ID
       operationId: getUserData
+      security:
+        - {}
       parameters:
         - in: path
           name: id
           schema:
             type: integer
           required: true
-          description: Numeric ID of the user to get
+          description: ID of the user to get
       responses:
         "200":
           description: OK
@@ -262,27 +263,27 @@ paths:
                   data:
                     $ref: "#/components/schemas/SimpleUserResponse"
         "404":
-          description: Not Found, image Id not found
+          description: Not Found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/IdNotFoundError"
         default:
-            description: Default error response
+            description: General Error
             content:
               application/json:
                 schema:
                   $ref: "#/components/schemas/GeneralError"
-   
+
   /users:               
     put:
       tags:
-        - users
-      summary: Edit user data by ID
+        - Users
+      summary: Edit logged in user data
       operationId: editUserData
-      description: "Allowed roles: ADMIN, USER"
+      description: "Update user data \n\n Allowed roles: ADMIN, USER"
       requestBody:
-        description: "Allowed fields to update: [name, phone, address image_id, imageUrl]"
+        description: "Allowed fields to update: [name, phone, address imageId, imageUrl]"
         content:
           aplication/json:
             schema:
@@ -318,7 +319,7 @@ paths:
                     example: success
                   message:
                     type: string
-                    example: Update car data successfully
+                    example: update user data success
                   data:
                     type: object
                     properties:
@@ -335,24 +336,27 @@ paths:
               schema:
                 $ref: "#/components/schemas/UnauthorizedError"
         default:
-          description: Default error response
+          description: General Error
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
-                
-  /users/email/otp:
+         
+  /auth/otp:
     get:
       tags:
-        - users
-      summary: get otp
+        - Auth
+      security:
+        - {}
+      summary: Get OTP for email confirmation
       operationId: getUserDataEmail
-      description: " Allowed roles: ADMIN, USER"
+      description: "Return otp token, OTP is sent to corresponding email"
       parameters:
         - in: query
-          name: otp
+          name: email
           schema:
             type: string
+            format: email
           required: true
                   
       responses:
@@ -401,29 +405,31 @@ paths:
                     type: string
                     example: email already registered
         default:
-            description: Default error response
+            description: General Error
             content:
               application/json:
                 schema:
                   $ref: "#/components/schemas/GeneralError"
-                  
+            
   /users/email:
     put:
       tags:
-        - users
-      summary: Update email
-      description: " Allowed roles: ADMIN, USER"
+        - Users
+      summary: Update logged in user email
+      description: "Allowed roles: ADMIN, USER"
       requestBody:
-        description: "Allowed fields to update: [otp,otpToken]"
         required: true
         content:
           aplication/json:
             schema:
               type: object
+              required:
+                - otp
+                - otpToken
               properties:
                  otp:
                   type: string
-                  example: user@email.com
+                  example: 123456
                  otpToken:
                   type: string
                   example: string
@@ -456,6 +462,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/MissingFieldError"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
         "422":
           description: Unprocessable Entity, wrong otp or invalid token
           content:
@@ -470,25 +482,47 @@ paths:
                     type: string
                     example: wrong otp or invalid otpToken
         default:
-            description: Default error response
+            description: General Error
             content:
               application/json:
                 schema:
                   $ref: "#/components/schemas/GeneralError"
-                  
+            
   /tickets:
     get:
       tags:
-        - tickets
+        - Tickets
       summary: Get ticket
       operationId: getTicket
-      description: "Request body function as get filter"
+      description: Get ticket list data. Filter using query params.
+      security:
+        - {}
       parameters:
         - in: query
-          name: filter
+          name: category
           schema:
             type: string
-          required: true
+            enum:
+              - ONE_WAY
+              - ROUND_TRIP
+        - in: query
+          name: from
+          schema:
+            type: string
+        - in: query
+          name: to
+          schema:
+            type: string
+        - in: query
+          name: departureTime
+          schema:
+            type: string
+            format: timestamp
+        - in: query
+          name: returnTime
+          schema:
+            type: string
+            format: timestamp
       responses:
         "200":
           description: OK
@@ -514,35 +548,43 @@ paths:
                         type: integer
                         example: 1
         default:
-            description: Default error response
+            description: General Error
             content:
               application/json:
                 schema:
                   $ref: "#/components/schemas/GeneralError"
-                  
+                 
     post:
       tags:
-        - tickets
-      summary: update ticket, access admin
+        - Tickets
+      summary: Add new ticket
       description: " Allowed roles: ADMIN"
       requestBody:
-        description: "Allowed fields to update: [category,from,to,depatureTime,returnTime,price,fligthNumber,imageId,imageUrl,description]"
         required: true
         content:
           aplication/json:
             schema:
               type: object
+              required:
+                - category
+                - from
+                - to
+                - departureTime
+                - price
+                - flightNumber
               properties:
                  category:
                   type: string
-                  example: enum['ONE_WAY', 'ROUND_TRIP']
+                  enum:
+                    - ONE_WAY
+                    - ROUND_TRIP
                  from:
                   type: string
                   example: JAKARTA
                  to:
                   type: string
                   example: MEDAN
-                 depatureTime:
+                 departureTime:
                   type: string
                   example: timestamp
                  returnTime:
@@ -565,7 +607,7 @@ paths:
                   example: string
       responses:
         "201":
-          description: OK
+          description: Created
           content:
             application/json:
               schema:
@@ -576,7 +618,7 @@ paths:
                     example: success
                   message:
                     type: string
-                    example: update ticket data success
+                    example: add ticket data success
                   data:
                     $ref: "#/components/schemas/TicketResponse"
         "400":
@@ -586,23 +628,23 @@ paths:
               schema:
                 $ref: "#/components/schemas/MissingFieldError" 
         "401":
-          description: invalid email / password
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/UnauthorizedError"
         default:
-            description: Default error response
+            description: General Error
             content:
               application/json:
                 schema:
                   $ref: "#/components/schemas/GeneralError"
-                  
+                   
   /tickets/{id}:
     get:
       tags:
-        - tickets
-      summary: Get user ticket by ID
+        - Tickets
+      summary: Get ticket data by ID
       operationId: getTicketData
       parameters:
         - in: path
@@ -610,7 +652,7 @@ paths:
           schema:
             type: integer
           required: true
-          description: Numeric ID of the image to get
+          description: ID of ticket data to get
       responses:
         "200":
           description: OK
@@ -634,16 +676,16 @@ paths:
               schema:
                 $ref: "#/components/schemas/IdNotFoundError"
         default:
-            description: Default error response
+            description: General Error
             content:
               application/json:
                 schema:
                   $ref: "#/components/schemas/GeneralError"
-                  
+                
     put:
       tags:
-        - tickets
-      summary: Get user ticket by ID
+        - Tickets
+      summary: Update ticket data by ID
       operationId: putTicketData
       description: "Allowed roles: ADMIN"
       parameters:
@@ -652,10 +694,8 @@ paths:
           schema:
             type: integer
           required: true
-          description: Numeric ID of the image to get
+          description: ID of ticket to update
       requestBody:
-        description: "Allowed fields to update: [otp,otpToken]"
-        required: true
         content:
           aplication/json:
             schema:
@@ -663,7 +703,9 @@ paths:
               properties:
                  category:
                   type: string
-                  example: enum['ONE_WAY', 'ROUND_TRIP']
+                  enum:
+                    - ONE_WAY
+                    - ROUND_TRIP
                  from:
                   type: string
                   example: JAKARTA
@@ -704,30 +746,31 @@ paths:
                     example: success
                   message:
                     type: string
-                    example: get ticket data success
+                    example: update ticket data success
                   data:
                     $ref: "#/components/schemas/TicketResponse"
         "401":
-          description: invalid email / password
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/UnauthorizedError"
         "404":
-          description: Not Found, image Id not found
+          description: Not Found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/IdNotFoundError"
         default:
-            description: Default error response
+            description: General Error
             content:
               application/json:
                 schema:
                   $ref: "#/components/schemas/GeneralError"
+      
     delete:
       tags:
-        - tickets
+        - Tickets
       summary: Delete tickets data by ID
       operationId: deleteCarData
       description: "Allowed roles: ADMIN"
@@ -737,7 +780,7 @@ paths:
           schema:
             type: integer
           required: true
-          description: Numeric ID of the car to delete
+          description: ID of ticket to delete
       responses:
         "200":
           description: OK
@@ -753,30 +796,30 @@ paths:
                     type: string
                     example: delete ticket data success
         "401":
-          description: Unauthorized, bearer token invalid or auth level below admin
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/UnauthorizedError"
         "404":
-          description: Not Found, car Id not found
+          description: Not Found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/IdNotFoundError"
         default:
-          description: Default error response
+          description: General Error
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
-                
+         
   /tickets/wishlist:
     get:
       tags:
-        - tickets
+        - Tickets
       operationId: wishlist
-      summary: Get wishlist data
+      summary: Get user wishlist data
       description: "Allowed roles: ADMIN, USER"
       responses:
         "200":
@@ -804,14 +847,14 @@ paths:
                         example: 1
 
         "401":
-          description: Unauthorized, bearer token invalid
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/UnauthorizedError"
 
         default:
-          description: Default error response
+          description: General Error
           content:
             application/json:
               schema:
@@ -820,8 +863,8 @@ paths:
   /tickets/{id}/wishlist:       
     post:
       tags:
-        - tickets
-      summary: wishlist
+        - Tickets
+      summary: Add a ticket to wishlist
       operationId: wishList
       description: " Allowed roles: ADMIN, USER"
       parameters:
@@ -830,7 +873,7 @@ paths:
           schema:
             type: integer
           required: true
-          description: Numeric ID of the wishlist
+          description: ID of ticket to add to wishlist
       responses:
         "200":
           description: OK
@@ -846,28 +889,28 @@ paths:
                     type: string
                     example: wishlist ticket success
         "401":
-          description: Unauthorized, bearer token invalid or auth level below admin
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/UnauthorizedError"
         "404":
-          description: Not Found, car Id not found
+          description: Not Found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/IdNotFoundError"
         default:
-          description: Default error response
+          description: General Error
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
-                
+                 
     delete:
       tags:
-        - tickets
-      summary: Delete tickets data by ID
+        - Tickets
+      summary: Remove ticket from user wishlist
       description: " Allowed roles: ADMIN, USER"
       parameters:
         - in: path
@@ -875,7 +918,7 @@ paths:
           schema:
             type: integer
           required: true
-          description: Numeric ID of the wishlist to delete
+          description: ID of ticket to remove from wishlist
       responses:
         "200":
           description: OK
@@ -891,30 +934,30 @@ paths:
                     type: string
                     example: unwish ticket success
         "401":
-          description: Unauthorized, bearer token invalid or auth level below admin
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/UnauthorizedError"
         "404":
-          description: Not Found, car Id not found
+          description: Not Found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/IdNotFoundError"
         default:
-          description: Default error response
+          description: General Error
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
-                
+               
   /transactions:
     get:
       tags:
-        - transactions
+        - Transactions
       operationId: trs
-      summary: Get current user data
+      summary: Get transaction list
       description: "USER is only authorized to access transactions made by themself. On other hands ADMIN can access all transactions in database. \n\n Allowed roles: USER, ADMIN"
       responses:
         "200":
@@ -942,40 +985,44 @@ paths:
                         example: 1
 
         "401":
-          description: Unauthorized, bearer token invalid
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/UnauthorizedError"
 
         default:
-          description: Default error response
+          description: General Error
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
   
-  
     post:
       tags:
-        - transactions
-      summary: wishlist
+        - Transactions
+      summary: Add new transaction
       operationId: addtrans
       description: " Allowed roles: ADMIN, USER"
       requestBody:
-        description: "Allowed fields : [ticketsId]"
         required: true
         content:
           aplication/json:
             schema:
               type: object
+              required:
+                - ticketId
+                - amount
               properties:
-                 ticketsId:
+                ticketId:
+                  type: integer
+                  example: 1
+                amount:
                   type: integer
                   example: 1
       responses:
         "201":
-          description: OK
+          description: Created
           content:
             application/json:
               schema:
@@ -996,29 +1043,29 @@ paths:
               schema:
                 $ref: "#/components/schemas/MissingFieldError"
         "401":
-          description: Unauthorized, bearer token invalid or auth level below admin
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/UnauthorizedError"
         "404":
-          description: Not Found, car Id not found
+          description: Not Found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/IdNotFoundError"
         default:
-          description: Default error response
+          description: General Error
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
-                
+                 
   /transactions/{id}:
     get:
       tags:
-        - transactions
-      summary: Get user transactions by ID
+        - Transactions
+      summary: Get transaction by ID
       operationId: getTransactionsData
       description: "USER is only authorized to access transactions made by themself. On other hands ADMIN can access all transactions in database"
       parameters:
@@ -1027,7 +1074,7 @@ paths:
           schema:
             type: integer
           required: true
-          description: Numeric ID of the transaction to get
+          description: ID of the transaction to get
       responses:
         "200":
           description: OK
@@ -1045,43 +1092,55 @@ paths:
                   data:
                     $ref: "#/components/schemas/TransactionResponse"
         "401":
-          description: Unauthorized, bearer token invalid or auth level below admin
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/UnauthorizedError"
         "404":
-          description: Not Found, image Id not found
+          description: Not Found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/IdNotFoundError"
         default:
-            description: Default error response
+            description: General Error
             content:
               application/json:
                 schema:
                   $ref: "#/components/schemas/GeneralError"
+  
   /images:
     post:
       tags:
-        - images
-      summary: wishlist
+        - Images
+      summary: Upload image to server
       operationId: addImg
-      description: " Allowed roles: ADMIN, USER"
+      description: "USER is only authorized to access PROFILE_IMG type, ADMIN can access both.\n\n Allowed roles: ADMIN, USER"
+      parameters:
+        - in: query
+          name: type
+          required: true
+          schema:
+            type: string
+            enum:
+              - PROFILE_IMG
+              - TICKET_IMG
       requestBody:
         required: true
         content:
           multipart/form-data:
             schema:
               type: object
+              required:
+                - image
               properties:
-                 ticketsId:
+                 image:
                   type: string
-                  example: binary
+                  format: binary
       responses:
         "201":
-          description: OK
+          description: Created
           content:
             application/json:
               schema:
@@ -1102,28 +1161,27 @@ paths:
               schema:
                 $ref: "#/components/schemas/MissingFieldError"
         "401":
-          description: Unauthorized, bearer token invalid or auth level below admin
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/UnauthorizedError"
         default:
-          description: Default error response
+          description: General Error
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
-  
-  /images/delete:         
+          
     delete:
       tags:
-        - images
+        - Images
       summary: Delete image data by ID
       operationId: deleteImage
-      description: " Allowed roles: ADMIN, USER"
+      description: "USER is only authorized to access PROFILE_IMG type, ADMIN can access both.\n\n Allowed roles: ADMIN, USER"
       parameters:
         - in: query
-          name: delImage
+          name: imageId
           schema:
             type: string
           required: true
@@ -1148,19 +1206,19 @@ paths:
               schema:
                 $ref: "#/components/schemas/MissingFieldError"
         "401":
-          description: Unauthorized, bearer token invalid or auth level below admin
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/UnauthorizedError"
         "404":
-          description: Not Found, car Id not found
+          description: Not Found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/IdNotFoundError"
         default:
-          description: Default error response
+          description: General Error
           content:
             application/json:
               schema:
@@ -1185,7 +1243,7 @@ components:
           example: error
         message:
           type: string
-          example: Error message
+          example: error message
           
     MissingFieldError:
       type: object
@@ -1205,7 +1263,7 @@ components:
           example: failed
         message:
           type: string
-          example: Unauthorized
+          example: unauthorized
 
     IdNotFoundError:
       type: object
@@ -1234,7 +1292,9 @@ components:
           example: string
         role: 
           type: string
-          example: enum['USER', 'ADMIN']
+          enum:
+            - USER
+            - ADMIN
         phone: 
           type: string
           example: 0856xxxxxxxx
@@ -1265,7 +1325,9 @@ components:
           example: 1
         category: 
           type: string
-          example: enum['ONE_WAY', 'ROUND_TRIP']
+          enum:
+            - ONE_WAY
+            - ROUND_TRIP
         from: 
           type: string
           example: JAKARTA
@@ -1280,7 +1342,7 @@ components:
           example: timestamp
         price: 
           type: integer
-          example: 980000.00
+          example: 980000
         flightNumber: 
           type: string
           example: string
@@ -1293,6 +1355,9 @@ components:
         description: 
           type: string
           example: string
+        wishlisted:
+          type: boolean
+          example: false
         createdBy:
           type: integer
           example: 1
@@ -1321,15 +1386,12 @@ components:
         ticketId:
           type: integer
           example: 1
-        createdBy:
+        amount:
           type: integer
           example: 1
         createdAt: 
           type: string
           example: timestamp
-        updatedBy:
-          type: integer
-          example: 1
         updatedAt: 
           type: string
           example: timestamp
@@ -1348,7 +1410,9 @@ components:
             example: user
           role: 
             type: string
-            example: enum['USER', 'ADMIN']
+            enum:
+              - USER
+              - ADMIN
           imageUrl:
             type: string
             example: string.com/image1.png
@@ -1356,26 +1420,12 @@ components:
     ImageResponse:
           type: object
           properties:
-            id:
-              type: integer
-              example: 1
-            name:
-              type: string
-              example: user
-            role: 
-              type: string
-              example: enum['USER', 'ADMIN']
             imageId:
               type: string
               example: image1
             imageUrl:
               type: string
               example: string.com/image1.png
-            
-            
-
-        
-          
 
 security:
   - bearerAuth: []

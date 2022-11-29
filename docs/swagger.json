@@ -1,8 +1,8 @@
 {
     "openapi": "3.0.3",
     "info": {
-        "title": "Swagger airport - OpenAPI 3.0",
-        "description": "",
+        "title": "GoSky Backend API - OpenAPI 3.0",
+        "description": "REST backend API for GoSky frontend web and android app.",
         "contact": {
             "email": "apiteam@swagger.io"
         },
@@ -10,45 +10,44 @@
     },
     "servers": [
         {
-            "url": "https://petstore3.swagger.io/api/v3"
+            "url": "http://localhost:8000/api/"
         }
     ],
     "tags": [
         {
-            "name": "auth",
-            "description": "Everything about your Pets"
+            "name": "Auth",
+            "description": "Everything about user authentication"
         },
         {
-            "name": "users",
-            "description": "Access to Petstore orders"
+            "name": "Users",
+            "description": "Operation about user data"
         },
         {
-            "name": "tickets",
-            "description": "Operations about user"
+            "name": "Tickets",
+            "description": "Operations about ticket data"
         },
         {
-            "name": "transactions",
-            "description": "Operations about user"
+            "name": "Transactions",
+            "description": "Operations about user transaction"
         },
         {
-            "name": "images",
-            "description": "Operations about user"
+            "name": "Images",
+            "description": "Operations about image handling"
         }
     ],
     "paths": {
         "/auth/register": {
             "post": {
                 "tags": [
-                    "auth"
+                    "Auth"
                 ],
-                "summary": "Register new member",
-                "description": "Register new account with member role",
+                "summary": "Register new user",
+                "description": "Register new account with USER role",
                 "operationId": "registerMember",
                 "security": [
                     {}
                 ],
                 "requestBody": {
-                    "description": "Required fields [name, email, password]",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -96,7 +95,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "create user successfully"
+                                            "example": "register success"
                                         },
                                         "data": {
                                             "type": "object",
@@ -143,7 +142,7 @@
                         }
                     },
                     "default": {
-                        "description": "Default error response",
+                        "description": "General Error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -158,7 +157,7 @@
         "/auth/login": {
             "post": {
                 "tags": [
-                    "auth"
+                    "Auth"
                 ],
                 "summary": "Login with account",
                 "description": "Login and get access token for auth",
@@ -167,7 +166,6 @@
                     {}
                 ],
                 "requestBody": {
-                    "description": "Required fields [email, password]",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -193,8 +191,8 @@
                     }
                 },
                 "responses": {
-                    "201": {
-                        "description": "Created",
+                    "200": {
+                        "description": "OK",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -206,7 +204,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "login successfully"
+                                            "example": "login success"
                                         },
                                         "data": {
                                             "type": "object",
@@ -233,7 +231,7 @@
                         }
                     },
                     "401": {
-                        "description": "invalid email / password",
+                        "description": "Unauthorized, wrong login password",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -245,7 +243,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "invalid email or password"
+                                            "example": "wrong password"
                                         }
                                     }
                                 }
@@ -253,7 +251,7 @@
                         }
                     },
                     "404": {
-                        "description": "Unprocessable Entity, check missing fields from requestBody",
+                        "description": "Conflict, email not found",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -273,7 +271,7 @@
                         }
                     },
                     "default": {
-                        "description": "Default error response",
+                        "description": "General Error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -288,7 +286,7 @@
         "/auth/whoami": {
             "get": {
                 "tags": [
-                    "auth"
+                    "Auth"
                 ],
                 "operationId": "whoAmI",
                 "summary": "Get current user data",
@@ -307,7 +305,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Get user data success"
+                                            "example": "get user data success"
                                         },
                                         "data": {
                                             "$ref": "#/components/schemas/UserResponse"
@@ -328,7 +326,7 @@
                         }
                     },
                     "default": {
-                        "description": "Default error response",
+                        "description": "General Error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -343,10 +341,13 @@
         "/users/{id}": {
             "get": {
                 "tags": [
-                    "users"
+                    "Users"
                 ],
                 "summary": "Get user data by ID",
                 "operationId": "getUserData",
+                "security": [
+                    {}
+                ],
                 "parameters": [
                     {
                         "in": "path",
@@ -355,7 +356,7 @@
                             "type": "integer"
                         },
                         "required": true,
-                        "description": "Numeric ID of the user to get"
+                        "description": "ID of the user to get"
                     }
                 ],
                 "responses": {
@@ -383,7 +384,7 @@
                         }
                     },
                     "404": {
-                        "description": "Not Found, image Id not found",
+                        "description": "Not Found",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -393,7 +394,7 @@
                         }
                     },
                     "default": {
-                        "description": "Default error response",
+                        "description": "General Error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -408,13 +409,13 @@
         "/users": {
             "put": {
                 "tags": [
-                    "users"
+                    "Users"
                 ],
-                "summary": "Edit user data by ID",
+                "summary": "Edit logged in user data",
                 "operationId": "editUserData",
-                "description": "Allowed roles: ADMIN, USER",
+                "description": "Update user data \n\n Allowed roles: ADMIN, USER",
                 "requestBody": {
-                    "description": "Allowed fields to update: [name, phone, address image_id, imageUrl]",
+                    "description": "Allowed fields to update: [name, phone, address imageId, imageUrl]",
                     "content": {
                         "aplication/json": {
                             "schema": {
@@ -460,7 +461,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Update car data successfully"
+                                            "example": "update user data success"
                                         },
                                         "data": {
                                             "type": "object",
@@ -490,7 +491,7 @@
                         }
                     },
                     "default": {
-                        "description": "Default error response",
+                        "description": "General Error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -502,20 +503,24 @@
                 }
             }
         },
-        "/users/email/otp": {
+        "/auth/otp": {
             "get": {
                 "tags": [
-                    "users"
+                    "Auth"
                 ],
-                "summary": "get otp",
+                "security": [
+                    {}
+                ],
+                "summary": "Get OTP for email confirmation",
                 "operationId": "getUserDataEmail",
-                "description": " Allowed roles: ADMIN, USER",
+                "description": "Return otp token, OTP is sent to corresponding email",
                 "parameters": [
                     {
                         "in": "query",
-                        "name": "otp",
+                        "name": "email",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "email"
                         },
                         "required": true
                     }
@@ -591,7 +596,7 @@
                         }
                     },
                     "default": {
-                        "description": "Default error response",
+                        "description": "General Error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -606,21 +611,24 @@
         "/users/email": {
             "put": {
                 "tags": [
-                    "users"
+                    "Users"
                 ],
-                "summary": "Update email",
-                "description": " Allowed roles: ADMIN, USER",
+                "summary": "Update logged in user email",
+                "description": "Allowed roles: ADMIN, USER",
                 "requestBody": {
-                    "description": "Allowed fields to update: [otp,otpToken]",
                     "required": true,
                     "content": {
                         "aplication/json": {
                             "schema": {
                                 "type": "object",
+                                "required": [
+                                    "otp",
+                                    "otpToken"
+                                ],
                                 "properties": {
                                     "otp": {
                                         "type": "string",
-                                        "example": "user@email.com"
+                                        "example": 123456
                                     },
                                     "otpToken": {
                                         "type": "string",
@@ -674,6 +682,16 @@
                             }
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnauthorizedError"
+                                }
+                            }
+                        }
+                    },
                     "422": {
                         "description": "Unprocessable Entity, wrong otp or invalid token",
                         "content": {
@@ -695,7 +713,7 @@
                         }
                     },
                     "default": {
-                        "description": "Default error response",
+                        "description": "General Error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -710,19 +728,55 @@
         "/tickets": {
             "get": {
                 "tags": [
-                    "tickets"
+                    "Tickets"
                 ],
                 "summary": "Get ticket",
                 "operationId": "getTicket",
-                "description": "Request body function as get filter",
+                "description": "Get ticket list data. Filter using query params.",
+                "security": [
+                    {}
+                ],
                 "parameters": [
                     {
                         "in": "query",
-                        "name": "filter",
+                        "name": "category",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "ONE_WAY",
+                                "ROUND_TRIP"
+                            ]
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "from",
                         "schema": {
                             "type": "string"
-                        },
-                        "required": true
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "to",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "departureTime",
+                        "schema": {
+                            "type": "string",
+                            "format": "timestamp"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "returnTime",
+                        "schema": {
+                            "type": "string",
+                            "format": "timestamp"
+                        }
                     }
                 ],
                 "responses": {
@@ -762,7 +816,7 @@
                         }
                     },
                     "default": {
-                        "description": "Default error response",
+                        "description": "General Error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -775,21 +829,31 @@
             },
             "post": {
                 "tags": [
-                    "tickets"
+                    "Tickets"
                 ],
-                "summary": "update ticket, access admin",
+                "summary": "Add new ticket",
                 "description": " Allowed roles: ADMIN",
                 "requestBody": {
-                    "description": "Allowed fields to update: [category,from,to,depatureTime,returnTime,price,fligthNumber,imageId,imageUrl,description]",
                     "required": true,
                     "content": {
                         "aplication/json": {
                             "schema": {
                                 "type": "object",
+                                "required": [
+                                    "category",
+                                    "from",
+                                    "to",
+                                    "departureTime",
+                                    "price",
+                                    "flightNumber"
+                                ],
                                 "properties": {
                                     "category": {
                                         "type": "string",
-                                        "example": "enum['ONE_WAY', 'ROUND_TRIP']"
+                                        "enum": [
+                                            "ONE_WAY",
+                                            "ROUND_TRIP"
+                                        ]
                                     },
                                     "from": {
                                         "type": "string",
@@ -799,7 +863,7 @@
                                         "type": "string",
                                         "example": "MEDAN"
                                     },
-                                    "depatureTime": {
+                                    "departureTime": {
                                         "type": "string",
                                         "example": "timestamp"
                                     },
@@ -834,7 +898,7 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "OK",
+                        "description": "Created",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -846,7 +910,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "update ticket data success"
+                                            "example": "add ticket data success"
                                         },
                                         "data": {
                                             "$ref": "#/components/schemas/TicketResponse"
@@ -867,7 +931,7 @@
                         }
                     },
                     "401": {
-                        "description": "invalid email / password",
+                        "description": "Unauthorized",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -877,7 +941,7 @@
                         }
                     },
                     "default": {
-                        "description": "Default error response",
+                        "description": "General Error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -892,9 +956,9 @@
         "/tickets/{id}": {
             "get": {
                 "tags": [
-                    "tickets"
+                    "Tickets"
                 ],
-                "summary": "Get user ticket by ID",
+                "summary": "Get ticket data by ID",
                 "operationId": "getTicketData",
                 "parameters": [
                     {
@@ -904,7 +968,7 @@
                             "type": "integer"
                         },
                         "required": true,
-                        "description": "Numeric ID of the image to get"
+                        "description": "ID of ticket data to get"
                     }
                 ],
                 "responses": {
@@ -942,7 +1006,7 @@
                         }
                     },
                     "default": {
-                        "description": "Default error response",
+                        "description": "General Error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -955,9 +1019,9 @@
             },
             "put": {
                 "tags": [
-                    "tickets"
+                    "Tickets"
                 ],
-                "summary": "Get user ticket by ID",
+                "summary": "Update ticket data by ID",
                 "operationId": "putTicketData",
                 "description": "Allowed roles: ADMIN",
                 "parameters": [
@@ -968,12 +1032,10 @@
                             "type": "integer"
                         },
                         "required": true,
-                        "description": "Numeric ID of the image to get"
+                        "description": "ID of ticket to update"
                     }
                 ],
                 "requestBody": {
-                    "description": "Allowed fields to update: [otp,otpToken]",
-                    "required": true,
                     "content": {
                         "aplication/json": {
                             "schema": {
@@ -981,7 +1043,10 @@
                                 "properties": {
                                     "category": {
                                         "type": "string",
-                                        "example": "enum['ONE_WAY', 'ROUND_TRIP']"
+                                        "enum": [
+                                            "ONE_WAY",
+                                            "ROUND_TRIP"
+                                        ]
                                     },
                                     "from": {
                                         "type": "string",
@@ -1038,7 +1103,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "get ticket data success"
+                                            "example": "update ticket data success"
                                         },
                                         "data": {
                                             "$ref": "#/components/schemas/TicketResponse"
@@ -1049,7 +1114,7 @@
                         }
                     },
                     "401": {
-                        "description": "invalid email / password",
+                        "description": "Unauthorized",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1059,7 +1124,7 @@
                         }
                     },
                     "404": {
-                        "description": "Not Found, image Id not found",
+                        "description": "Not Found",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1069,7 +1134,7 @@
                         }
                     },
                     "default": {
-                        "description": "Default error response",
+                        "description": "General Error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1082,7 +1147,7 @@
             },
             "delete": {
                 "tags": [
-                    "tickets"
+                    "Tickets"
                 ],
                 "summary": "Delete tickets data by ID",
                 "operationId": "deleteCarData",
@@ -1095,7 +1160,7 @@
                             "type": "integer"
                         },
                         "required": true,
-                        "description": "Numeric ID of the car to delete"
+                        "description": "ID of ticket to delete"
                     }
                 ],
                 "responses": {
@@ -1120,7 +1185,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized, bearer token invalid or auth level below admin",
+                        "description": "Unauthorized",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1130,7 +1195,7 @@
                         }
                     },
                     "404": {
-                        "description": "Not Found, car Id not found",
+                        "description": "Not Found",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1140,7 +1205,7 @@
                         }
                     },
                     "default": {
-                        "description": "Default error response",
+                        "description": "General Error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1155,10 +1220,10 @@
         "/tickets/wishlist": {
             "get": {
                 "tags": [
-                    "tickets"
+                    "Tickets"
                 ],
                 "operationId": "wishlist",
-                "summary": "Get wishlist data",
+                "summary": "Get user wishlist data",
                 "description": "Allowed roles: ADMIN, USER",
                 "responses": {
                     "200": {
@@ -1197,7 +1262,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized, bearer token invalid",
+                        "description": "Unauthorized",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1207,7 +1272,7 @@
                         }
                     },
                     "default": {
-                        "description": "Default error response",
+                        "description": "General Error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1222,9 +1287,9 @@
         "/tickets/{id}/wishlist": {
             "post": {
                 "tags": [
-                    "tickets"
+                    "Tickets"
                 ],
-                "summary": "wishlist",
+                "summary": "Add a ticket to wishlist",
                 "operationId": "wishList",
                 "description": " Allowed roles: ADMIN, USER",
                 "parameters": [
@@ -1235,7 +1300,7 @@
                             "type": "integer"
                         },
                         "required": true,
-                        "description": "Numeric ID of the wishlist"
+                        "description": "ID of ticket to add to wishlist"
                     }
                 ],
                 "responses": {
@@ -1260,7 +1325,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized, bearer token invalid or auth level below admin",
+                        "description": "Unauthorized",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1270,7 +1335,7 @@
                         }
                     },
                     "404": {
-                        "description": "Not Found, car Id not found",
+                        "description": "Not Found",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1280,7 +1345,7 @@
                         }
                     },
                     "default": {
-                        "description": "Default error response",
+                        "description": "General Error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1293,9 +1358,9 @@
             },
             "delete": {
                 "tags": [
-                    "tickets"
+                    "Tickets"
                 ],
-                "summary": "Delete tickets data by ID",
+                "summary": "Remove ticket from user wishlist",
                 "description": " Allowed roles: ADMIN, USER",
                 "parameters": [
                     {
@@ -1305,7 +1370,7 @@
                             "type": "integer"
                         },
                         "required": true,
-                        "description": "Numeric ID of the wishlist to delete"
+                        "description": "ID of ticket to remove from wishlist"
                     }
                 ],
                 "responses": {
@@ -1330,7 +1395,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized, bearer token invalid or auth level below admin",
+                        "description": "Unauthorized",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1340,7 +1405,7 @@
                         }
                     },
                     "404": {
-                        "description": "Not Found, car Id not found",
+                        "description": "Not Found",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1350,7 +1415,7 @@
                         }
                     },
                     "default": {
-                        "description": "Default error response",
+                        "description": "General Error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1365,10 +1430,10 @@
         "/transactions": {
             "get": {
                 "tags": [
-                    "transactions"
+                    "Transactions"
                 ],
                 "operationId": "trs",
-                "summary": "Get current user data",
+                "summary": "Get transaction list",
                 "description": "USER is only authorized to access transactions made by themself. On other hands ADMIN can access all transactions in database. \n\n Allowed roles: USER, ADMIN",
                 "responses": {
                     "200": {
@@ -1407,7 +1472,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized, bearer token invalid",
+                        "description": "Unauthorized",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1417,7 +1482,7 @@
                         }
                     },
                     "default": {
-                        "description": "Default error response",
+                        "description": "General Error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1430,20 +1495,27 @@
             },
             "post": {
                 "tags": [
-                    "transactions"
+                    "Transactions"
                 ],
-                "summary": "wishlist",
+                "summary": "Add new transaction",
                 "operationId": "addtrans",
                 "description": " Allowed roles: ADMIN, USER",
                 "requestBody": {
-                    "description": "Allowed fields : [ticketsId]",
                     "required": true,
                     "content": {
                         "aplication/json": {
                             "schema": {
                                 "type": "object",
+                                "required": [
+                                    "ticketId",
+                                    "amount"
+                                ],
                                 "properties": {
-                                    "ticketsId": {
+                                    "ticketId": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "amount": {
                                         "type": "integer",
                                         "example": 1
                                     }
@@ -1454,7 +1526,7 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "OK",
+                        "description": "Created",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1487,7 +1559,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized, bearer token invalid or auth level below admin",
+                        "description": "Unauthorized",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1497,7 +1569,7 @@
                         }
                     },
                     "404": {
-                        "description": "Not Found, car Id not found",
+                        "description": "Not Found",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1507,7 +1579,7 @@
                         }
                     },
                     "default": {
-                        "description": "Default error response",
+                        "description": "General Error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1522,9 +1594,9 @@
         "/transactions/{id}": {
             "get": {
                 "tags": [
-                    "transactions"
+                    "Transactions"
                 ],
-                "summary": "Get user transactions by ID",
+                "summary": "Get transaction by ID",
                 "operationId": "getTransactionsData",
                 "description": "USER is only authorized to access transactions made by themself. On other hands ADMIN can access all transactions in database",
                 "parameters": [
@@ -1535,7 +1607,7 @@
                             "type": "integer"
                         },
                         "required": true,
-                        "description": "Numeric ID of the transaction to get"
+                        "description": "ID of the transaction to get"
                     }
                 ],
                 "responses": {
@@ -1563,7 +1635,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized, bearer token invalid or auth level below admin",
+                        "description": "Unauthorized",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1573,7 +1645,7 @@
                         }
                     },
                     "404": {
-                        "description": "Not Found, image Id not found",
+                        "description": "Not Found",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1583,7 +1655,7 @@
                         }
                     },
                     "default": {
-                        "description": "Default error response",
+                        "description": "General Error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1598,21 +1670,38 @@
         "/images": {
             "post": {
                 "tags": [
-                    "images"
+                    "Images"
                 ],
-                "summary": "wishlist",
+                "summary": "Upload image to server",
                 "operationId": "addImg",
-                "description": " Allowed roles: ADMIN, USER",
+                "description": "USER is only authorized to access PROFILE_IMG type, ADMIN can access both.\n\n Allowed roles: ADMIN, USER",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "type",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "PROFILE_IMG",
+                                "TICKET_IMG"
+                            ]
+                        }
+                    }
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
                         "multipart/form-data": {
                             "schema": {
                                 "type": "object",
+                                "required": [
+                                    "image"
+                                ],
                                 "properties": {
-                                    "ticketsId": {
+                                    "image": {
                                         "type": "string",
-                                        "example": "binary"
+                                        "format": "binary"
                                     }
                                 }
                             }
@@ -1621,7 +1710,7 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "OK",
+                        "description": "Created",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1654,7 +1743,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized, bearer token invalid or auth level below admin",
+                        "description": "Unauthorized",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1664,7 +1753,7 @@
                         }
                     },
                     "default": {
-                        "description": "Default error response",
+                        "description": "General Error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1674,20 +1763,18 @@
                         }
                     }
                 }
-            }
-        },
-        "/images/delete": {
+            },
             "delete": {
                 "tags": [
-                    "images"
+                    "Images"
                 ],
                 "summary": "Delete image data by ID",
                 "operationId": "deleteImage",
-                "description": " Allowed roles: ADMIN, USER",
+                "description": "USER is only authorized to access PROFILE_IMG type, ADMIN can access both.\n\n Allowed roles: ADMIN, USER",
                 "parameters": [
                     {
                         "in": "query",
-                        "name": "delImage",
+                        "name": "imageId",
                         "schema": {
                             "type": "string"
                         },
@@ -1726,7 +1813,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized, bearer token invalid or auth level below admin",
+                        "description": "Unauthorized",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1736,7 +1823,7 @@
                         }
                     },
                     "404": {
-                        "description": "Not Found, car Id not found",
+                        "description": "Not Found",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1746,7 +1833,7 @@
                         }
                     },
                     "default": {
-                        "description": "Default error response",
+                        "description": "General Error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1777,7 +1864,7 @@
                     },
                     "message": {
                         "type": "string",
-                        "example": "Error message"
+                        "example": "error message"
                     }
                 }
             },
@@ -1803,7 +1890,7 @@
                     },
                     "message": {
                         "type": "string",
-                        "example": "Unauthorized"
+                        "example": "unauthorized"
                     }
                 }
             },
@@ -1841,7 +1928,10 @@
                     },
                     "role": {
                         "type": "string",
-                        "example": "enum['USER', 'ADMIN']"
+                        "enum": [
+                            "USER",
+                            "ADMIN"
+                        ]
                     },
                     "phone": {
                         "type": "string",
@@ -1882,7 +1972,10 @@
                     },
                     "category": {
                         "type": "string",
-                        "example": "enum['ONE_WAY', 'ROUND_TRIP']"
+                        "enum": [
+                            "ONE_WAY",
+                            "ROUND_TRIP"
+                        ]
                     },
                     "from": {
                         "type": "string",
@@ -1919,6 +2012,10 @@
                     "description": {
                         "type": "string",
                         "example": "string"
+                    },
+                    "wishlisted": {
+                        "type": "boolean",
+                        "example": false
                     },
                     "createdBy": {
                         "type": "integer",
@@ -1957,17 +2054,13 @@
                         "type": "integer",
                         "example": 1
                     },
-                    "createdBy": {
+                    "amount": {
                         "type": "integer",
                         "example": 1
                     },
                     "createdAt": {
                         "type": "string",
                         "example": "timestamp"
-                    },
-                    "updatedBy": {
-                        "type": "integer",
-                        "example": 1
                     },
                     "updatedAt": {
                         "type": "string",
@@ -1992,7 +2085,10 @@
                     },
                     "role": {
                         "type": "string",
-                        "example": "enum['USER', 'ADMIN']"
+                        "enum": [
+                            "USER",
+                            "ADMIN"
+                        ]
                     },
                     "imageUrl": {
                         "type": "string",
@@ -2003,18 +2099,6 @@
             "ImageResponse": {
                 "type": "object",
                 "properties": {
-                    "id": {
-                        "type": "integer",
-                        "example": 1
-                    },
-                    "name": {
-                        "type": "string",
-                        "example": "user"
-                    },
-                    "role": {
-                        "type": "string",
-                        "example": "enum['USER', 'ADMIN']"
-                    },
                     "imageId": {
                         "type": "string",
                         "example": "image1"
