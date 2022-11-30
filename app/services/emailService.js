@@ -10,4 +10,17 @@ module.exports = {
       return info;
     });
   },
+
+  sendOtpEmail(email, otp) {
+    const mailOptions = {
+      to: email,
+      subject: 'GoSky - Email Confirmation',
+      template: 'otp',
+      context: {
+        otp: otp,
+      },
+    };
+
+    return this.sendEmail(mailOptions);
+  },
 };
