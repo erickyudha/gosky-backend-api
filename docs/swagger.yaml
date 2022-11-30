@@ -81,20 +81,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/MissingFieldError"
-        
-        "409":
-          description: Conflict, email already registered
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: failed
-                  message:
-                    type: string
-                    example: email already registered
                     
         default:
           description: General Error
