@@ -22,14 +22,15 @@ module.exports = {
         if (ticket.to != to) isValid = false;
       }
       if (departureTime) {
-        if (ticket.departureTime < departureTime) isValid = false;
+        if (new Date(ticket.departureTime) <
+          new Date(departureTime)) isValid = false;
       }
       if (category == 'ROUND_TRIP' && returntime) {
-        if (ticket.returntime < returntime) isValid = false;
+        if (new Date(ticket.returntime) <
+          new Date(returntime)) isValid = false;
       }
-
       return isValid;
-    })
+    });
   },
 
   create(args) {
