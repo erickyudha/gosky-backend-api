@@ -32,12 +32,12 @@ module.exports = {
       cityList.forEach((city) => {
         cityList.forEach((city2) => {
           if (city !== city2) {
-            const now = dayjs().add(generateRand1Digit(), 'day');
-            const returnTime =
-              now.add(generateRand1Digit(), 'day').toISOString();
             const flightNumber =
               city.charAt(0) + city2.charAt(0) + generateRand3Digit();
             for (let i = 0; i < 2; i++) {
+              const now = dayjs().add(generateRand1Digit(), 'day');
+              const returnTime =
+                now.add(generateRand1Digit(), 'day').toISOString();
               ticketArr.push({
                 category: category,
                 from: city,

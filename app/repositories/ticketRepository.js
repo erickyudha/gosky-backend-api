@@ -1,10 +1,8 @@
 const {Ticket} = require('../models');
 
 module.exports = {
-  findAll() {
-    return Ticket.findAll({
-      limit: 100,
-    });
+  findAll(args) {
+    return Ticket.findAll(args);
   },
 
   find(id) {

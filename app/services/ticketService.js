@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const {ticketRepository} = require('../repositories');
 
 module.exports = {
@@ -9,28 +10,21 @@ module.exports = {
       departureTime = null,
       returntime = null,
     } = filterArgs;
-    const tickets = await ticketRepository.findAll();
-    return tickets.filter((ticket) => {
-      let isValid = true;
-      if (category) {
-        if (ticket.category != category) isValid = false;
-      }
-      if (from) {
-        if (ticket.from != from) isValid = false;
-      }
-      if (to) {
-        if (ticket.to != to) isValid = false;
-      }
-      if (departureTime) {
-        if (new Date(ticket.departureTime) <
-          new Date(departureTime)) isValid = false;
-      }
-      if (category == 'ROUND_TRIP' && returntime) {
-        if (new Date(ticket.returntime) <
-          new Date(returntime)) isValid = false;
-      }
-      return isValid;
-    });
+    const filter = {};
+    if (category) filter['category'] = category;
+    if (from) filter['from'] = from;
+    if (to) filter['to'] = to;
+    if (departureTime) {
+      filter['departureTime'] = {
+        [Op.gte]: departureTime,
+      };
+    }
+    if (category == 'ROUND_TRIP' && returntime) {
+      filter['returnTime'] = {
+        [Op.gte]: returntime,
+      };
+    }
+    return ticketRepository.findAll({where: filter, limit: 100});
   },
 
   create(args) {
