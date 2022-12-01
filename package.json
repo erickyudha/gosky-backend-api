@@ -10,7 +10,7 @@
     "db:drop": "sequelize db:drop",
     "db:migrate": "sequelize db:migrate",
     "db:seed": "sequelize db:seed:undo:all && sequelize db:seed:all",
-    "db:setup": "sequelize db:drop && sequelize db:create && sequelize db:migrate && sequelize db:seed:all",
+    "db:setup": "sequelize-cli db:drop && sequelize-cli db:create && sequelize-cli db:migrate && sequelize-cli db:seed:all",
     "test": "jest"
   },
   "author": "C9-Binar-2022",
@@ -36,6 +36,7 @@
     "nodemailer-express-handlebars": "^5.0.0",
     "pg": "^8.8.0",
     "sequelize": "^6.25.8",
+    "sequelize-cli": "^6.5.2",
     "swagger-ui-express": "^4.6.0"
   }
 }
