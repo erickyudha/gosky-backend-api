@@ -3,7 +3,6 @@
 
 const bcrypt = require('bcryptjs');
 const admin = require('../../config/admin');
-const {SALT} = require('../../config/application');
 
 const names = [
   'Johnny',
@@ -19,7 +18,7 @@ module.exports = {
     const users = names.map((name) => ({
       name,
       email: `${name.toLowerCase()}@gmail.com`,
-      encryptedPassword: bcrypt.hashSync(password, SALT),
+      encryptedPassword: bcrypt.hashSync(password),
       role: 'USER',
       imageId: 12345678,
       imageUrl: 'https://cdn-icons-png.flaticon.com/512/1946/1946429.png',
@@ -32,7 +31,7 @@ module.exports = {
     users.push({
       name: admin.name,
       email: admin.email,
-      encryptedPassword: bcrypt.hashSync(admin.password, SALT),
+      encryptedPassword: bcrypt.hashSync(admin.password),
       role: 'ADMIN',
       imageId: 41131131,
       imageUrl: 'https://www.shutterstock.com/image-vector/three-persons-admin-icon-outline-600w-1730974165.jpg',
@@ -46,6 +45,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('Tickets', null, {});
+    await queryInterface.bulkDelete('Users', null, {});
   },
 };
