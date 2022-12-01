@@ -18,10 +18,10 @@ const transporter = nodemailer.createTransport({
 
 const handlebarOptions = {
   viewEngine: {
-    partialsDir: path.resolve('../app/views'),
+    partialsDir: path.resolve('./app/views'),
     defaultLayout: false,
   },
-  viewPath: path.resolve('../app/views'),
+  viewPath: path.resolve('./app/views'),
 };
 transporter.use('compile', hbs(handlebarOptions));
 

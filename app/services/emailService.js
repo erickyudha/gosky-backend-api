@@ -1,17 +1,11 @@
 const transporter = require('../../config/nodemailer');
 
 module.exports = {
-  sendEmail(mailOptions) {
-    return transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        throw console.log(error);
-      }
-      console.log('Message sent: %s', info.messageId);
-      return info;
-    });
+  sendEmail(mailOptions, handler) {
+    transporter.sendMail(mailOptions, handler);
   },
 
-  sendOtpEmail(email, otp) {
+  async sendOtpEmail(email, otp, handler) {
     const mailOptions = {
       to: email,
       subject: 'GoSky - Email Confirmation',
@@ -21,6 +15,6 @@ module.exports = {
       },
     };
 
-    return this.sendEmail(mailOptions);
+    return this.sendEmail(mailOptions, handler);
   },
 };
