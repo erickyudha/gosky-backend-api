@@ -32,7 +32,7 @@ module.exports = {
       cityList.forEach((city) => {
         cityList.forEach((city2) => {
           if (city !== city2) {
-            const now = dayjs();
+            const now = dayjs().add(generateRand1Digit(), 'day');
             const returnTime =
               now.add(generateRand1Digit(), 'day').toISOString();
             const flightNumber =
