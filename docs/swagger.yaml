@@ -6,7 +6,10 @@ info:
     email: apiteam@swagger.io
   version: 1.0.11
 servers:
+  - url: https://gosky.up.railway.app/api/
+    description: hosted
   - url: http://localhost:8000/api/
+    description: local
 tags:
   - name: Auth
     description: Everything about user authentication
