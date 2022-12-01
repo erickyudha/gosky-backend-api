@@ -1,4 +1,3 @@
-const ticketsService = require('../../../services/ticketService');
 const {
   GeneralError,
   IdNotFoundError,
@@ -11,7 +10,7 @@ class TicketController {
 
   handleGetList = async (req, res) => {
     try {
-      const ticket = await ticketsService.list();
+      const ticket = await this.ticketService.list({...req.query});
       res.status(200).json({
         status: 'success',
         message: 'get ticket list data success',
@@ -28,7 +27,7 @@ class TicketController {
 
   handleGet = async (req, res) => {
     try {
-      const ticket = await ticketsService.get(req.params.id);
+      const ticket = await this.ticketService.get(req.params.id);
       if (!ticket) {
         const err = new IdNotFoundError();
         res.status(404).json(err.json());
@@ -47,13 +46,18 @@ class TicketController {
 
   handleCreate = async (req, res) => {
     try {
-      // const create = req.user.name;
-      // eslint-disable-next-line max-len
-      if (!req.body.category || !req.body.from || !req.body.departureTime || !req.body.returnTime || !req.body.price || !req.body.flightNumber) {
+      if (
+        !req.body.category ||
+        !req.body.from ||
+        !req.body.departureTime ||
+        !req.body.price ||
+        !req.body.flightNumber ||
+        (req.body.category == 'ROUND_TRIP' && !req.body.returnTime)
+      ) {
         const error = new MissingFieldError();
         res.status(400).json(error.json());
       } else {
-        const ticket = await ticketsService.create({
+        const ticket = await this.ticketService.create({
           ...req.body,
           departureTime: new Date(req.body.departureTime),
           returnTime: new Date(req.body.returnTime),
@@ -72,19 +76,25 @@ class TicketController {
 
   handleUpdate = async (req, res) => {
     try {
-      const id = await ticketsService.get(req.params.id);
+      const id = await this.ticketService.get(req.params.id);
       if (!id) {
         const err = new IdNotFoundError();
         res.status(404).json(err.json());
         return;
       }
-      // const create = req.user.name;
-      // eslint-disable-next-line max-len
-      if (!req.body.category || !req.body.from || !req.body.departureTime || !req.body.returnTime || !req.body.price || !req.body.flightNumber) {
+
+      if (
+        !req.body.category ||
+        !req.body.from ||
+        !req.body.departureTime ||
+        !req.body.price ||
+        !req.body.flightNumber ||
+        (req.body.category == 'ROUND_TRIP' && !req.body.returnTime)
+      ) {
         const error = new MissingFieldError();
         res.status(400).json(error.json());
       } else {
-        const ticket = await ticketsService.update(req.params.id, {
+        const ticket = await this.ticketService.update(req.params.id, {
           ...req.body,
           departureTime: new Date(req.body.departureTime),
           returnTime: new Date(req.body.returnTime),
@@ -103,9 +113,9 @@ class TicketController {
 
   handleDelete = async (req, res) => {
     try {
-      const id = await ticketsService.get(req.params.id);
+      const id = await this.ticketService.get(req.params.id);
       if (id) {
-        await ticketsService.delete(req.params.id);
+        await this.ticketService.delete(req.params.id);
         res.status(200).json({
           status: 'success',
           message: 'delete ticket data success',
