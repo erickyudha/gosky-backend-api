@@ -1,4 +1,3 @@
-const {JWT_SIGNATURE_KEY, SALT} = require('../../../../config/application');
 const {
   UnauthorizedError,
 } = require('../../../errors');
@@ -8,8 +7,9 @@ baseAuthorize = async (req, res, next, role) => {
     // const bearerToken = req.headers.authorization;
     // const token = bearerToken.split('Bearer ')[1];
 
-    // TODO: VERIFY TOKEN AND CHECK USER
+    // TODO: VERIFY TOKEN AND CHECK USER ROLE
 
+    // if success pass user data to req.user and go next()
     req.user = user;
     next();
   } catch (err) {
@@ -17,11 +17,10 @@ baseAuthorize = async (req, res, next, role) => {
   }
 };
 class AuthController {
-  constructor(userService, emailService, bcrypt, jwt) {
+  constructor(authService, userService, emailService) {
+    this.authService = authService;
     this.userService = userService;
     this.emailService = emailService;
-    this.bcrypt = bcrypt;
-    this.jwt = jwt;
   }
 
   authorizeUser = (req, res, next) => {
@@ -35,32 +34,45 @@ class AuthController {
 
 
   handleRegister = async (req, res) => {
-
+    // TODO:
+    // Finish handleGetOtp First
+    // email is in otpToken
   };
 
   handleLogin = async (req, res) => {
-
+    // TODO:
+    // Just regular login handler
   };
 
-  handleGetUser = async (req, res) => {
-
+  handleGetSelf = async (req, res) => {
+    // TODO:
+    // Just return data from req.user
   };
 
-  createTokenFromUser = (user) => {
-    return this.jwt.sign(user, JWT_SIGNATURE_KEY);
-  };
+  handleGetOtp = async (req, res) => {
+    // TODO:
+    // VERIFY email format IMPORTANT!
+    // Generate otp token with authService
 
-  decodeUserToken = (token) => {
-    return this.jwt.verify(token, JWT_SIGNATURE_KEY);
+    // Set .env for email service
+    // Send otp email with emailService
+    // EXAMPLE:
+    // this.emailService.sendOtpEmail('email@mail.com', 123456,
+    //     (err, info) => {
+    //       if (err) {
+    //         throw new Error('failed to send email');
+    //       } else {
+    //         res.status(200).json({
+    //           'status': 'success',
+    //           'message': 'otp request success',
+    //           'data': {
+    //             'otpToken': CHANGE_THIS,
+    //           },
+    //         });
+    //       }
+    //     },
+    // );
   };
-
-  encryptPassword = (password) => {
-    return this.bcrypt.hashSync(password, SALT);
-  };
-
-  verifyPassword = (password, encryptedPassword) => {
-    return this.bcrypt.compareSync(password, encryptedPassword);
-  };
-}
+};
 
 module.exports = AuthController;
