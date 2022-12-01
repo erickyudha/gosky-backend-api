@@ -7,6 +7,14 @@ function apply(app) {
   app.use('/api', apiRouter);
   app.use('/test', testRouter);
 
+  const generalErrorHandler = (err, req, res, next) => {
+    res.status(500).json({
+      status: 'error',
+      message: err.message,
+    });
+  };
+  app.use(generalErrorHandler);
+
   return app;
 };
 
