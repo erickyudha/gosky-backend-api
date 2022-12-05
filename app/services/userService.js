@@ -5,8 +5,8 @@ module.exports = {
     return userRepository.create(args);
   },
 
-  update(args) {
-    return userRepository.update(args);
+  update(id, args) {
+    return userRepository.update(id, args);
   },
 
   delete(id) {
@@ -23,6 +23,6 @@ module.exports = {
   },
 
   getByEmail(email) {
-    return userRepository.attributesFind({email});
+    return userRepository.findByEmail(email);
   },
 };
