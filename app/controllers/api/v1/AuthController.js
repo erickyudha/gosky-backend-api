@@ -1,4 +1,3 @@
-const services = require('../../../services');
 const {
   GeneralError,
   MissingFieldError,
@@ -7,37 +6,40 @@ const {
   UnauthorizedError,
 } = require('../../../errors');
 
-baseAuthorize = async (req, res, next, role) => {
-  try {
-    const bearerToken = req.headers.authorization;
-    const token = bearerToken.split('Bearer ')[1];
-    const user = services.authService.decodeUserToken(token);
-    if (!role.includes(user.role)) {
-      res.status(401).json(new UnauthorizedError().json());
-      return;
-    }
-    req.user = user;
-    next();
-  } catch (err) {
-    const error = new GeneralError('invalid bearer token');
-    res.status(500).json(error.json());
-    return;
-  }
-};
+
 class AuthController {
   constructor(authService, userService, emailService) {
     this.authService = authService;
     this.userService = userService;
     this.emailService = emailService;
-  }
+  };
+
+  baseAuthorize = async (req, res, next, role) => {
+    try {
+      const bearerToken = req.headers.authorization;
+      const token = bearerToken.split('Bearer ')[1];
+      const decodedUser = this.authService.decodeUserToken(token);
+      const user = await this.userService.get(decodedUser.id);
+      if (!role.includes(user.role)) {
+        res.status(401).json(new UnauthorizedError().json());
+        return;
+      }
+      req.user = user;
+      next();
+    } catch (err) {
+      const error = new GeneralError('invalid bearer token');
+      res.status(500).json(error.json());
+      return;
+    }
+  };
 
   authorizeUser = (req, res, next) => {
-    baseAuthorize(req, res, next, ['USER', 'ADMIN']);
+    this.baseAuthorize(req, res, next, ['USER', 'ADMIN']);
   };
 
 
   authorizeAdmin = (req, res, next) => {
-    baseAuthorize(req, res, next, ['ADMIN']);
+    this.baseAuthorize(req, res, next, ['ADMIN']);
   };
 
 
