@@ -3,6 +3,7 @@ const ticketService = require('./ticketService');
 const transactionService = require('./transactionService');
 const authService = require('./authService');
 const emailService = require('./emailService');
+const imageService = require('./imageService');
 
 module.exports = {
   userService,
@@ -10,4 +11,5 @@ module.exports = {
   transactionService,
   authService,
   emailService,
+  imageService,
 };

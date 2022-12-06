@@ -1,11 +1,14 @@
 const express = require('express');
 const controller = require('../controllers');
+const upload = require('../../config/upload');
 
 const {
   ticketService,
   authService,
   emailService,
   userService,
+  imageService,
+  transactionService,
 } = require('../services');
 
 const apiRouter = express.Router();
@@ -50,6 +53,27 @@ apiRouter.delete('/tickets/:id',
     ticketController.handleDelete);
 
 // TRANSACTION ENDPOINTS
+const transactionController = new controller.api.v1.TransactionController(
+    transactionService, userService, ticketService,
+);
+apiRouter.get('/transactions',
+    authController.authorizeUser,
+    transactionController.handleGetList);
+apiRouter.post('/transactions',
+    authController.authorizeUser,
+    transactionController.handleCreate);
+apiRouter.get('/transactions/:id',
+    authController.authorizeUser,
+    transactionController.handleGetList);
+
 // IMAGE ENDPOINTS
+const imageController = new controller.api.v1.ImageController(imageService);
+apiRouter.post('/images',
+    authController.authorizeUser,
+    upload.single('image'),
+    imageController.handleUpload);
+apiRouter.delete('/images',
+    authController.authorizeUser,
+    imageController.handleDelete);
 
 module.exports = apiRouter;

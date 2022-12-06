@@ -1,24 +1,18 @@
-const transporter = require('../config/nodemailer');
+const {emailService} = require('../app/services');
 
 module.exports = {
   get(req, res) {
     try {
-      const mailOptions = {
-        to: 'erickyudhaps@gmail.com',
-        subject: 'Omegalul',
-        text: 'That was easy!',
-      };
-
-      transporter.sendMail(mailOptions, function(error, info) {
-        if (error) {
-          throw error;
-        } else {
-          res.status(200).json({
-            status: 'success',
-            message: 'email sent',
+      emailService.sendOtpEmail('erickyudhaps@gmail.com', 'uwo0',
+          (err, info) => {
+            if (err) {
+              throw new Error();
+            } else {
+              res.status(200).json({
+                info: info,
+              });
+            }
           });
-        }
-      });
     } catch (error) {
       res.status(422).json({error});
     }

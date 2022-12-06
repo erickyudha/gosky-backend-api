@@ -1,29 +1,28 @@
 class TransactionController {
-  constructor({
-    ticketModel,
-  }) {
-    this.ticketModel = ticketModel;
+  constructor(transactionService, userService, ticketService) {
+    this.transactionService = transactionService;
+    this.userService = userService;
+    this.ticketService = ticketService;
   }
 
-  handleListCar = (req, res) => {
-
+  handleGetList(req, res) {
+    // TODO:
+    // USER is only authorized to access transactions made by themself.
+    // On other hands ADMIN can access all transactions in database.
   };
 
-  handleCreateCar = (req, res) => {
-
+  handleGet(req, res) {
+    // TODO:
+    // USER is only authorized to access transactions made by themself.
+    // On other hands ADMIN can access all transactions in database.
+    // UnauthorizedError if USER try to access transaction not made by them
   };
 
-  handleGetCar = (req, res) => {
-
-  };
-
-  handleUpdateCar = (req, res) => {
-
-  };
-
-  handleDeleteCar = (req, res) => {
-
-  };
+  handleCreate(req, res) {
+    // TODO:
+    // bookingCode random 10 character of number and letter (all cap)
+    // example WAKDU318ND
+  }
 }
 
-module.exports = TicketController;
+module.exports = TransactionController;

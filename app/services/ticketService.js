@@ -1,4 +1,4 @@
-const { Op } = require('sequelize');
+const {Op} = require('sequelize');
 const {ticketRepository} = require('../repositories');
 
 module.exports = {

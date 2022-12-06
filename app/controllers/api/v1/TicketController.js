@@ -59,8 +59,10 @@ class TicketController {
       } else {
         const ticket = await this.ticketService.create({
           ...req.body,
-          departureTime: new Date(req.body.departureTime),
-          returnTime: new Date(req.body.returnTime),
+          createdBy: req.user.id,
+          updatedBy: req.user.id,
+          departureTime: new Date(req.body.departureTime).toISOString(),
+          returnTime: new Date(req.body.returnTime).toISOString(),
         });
         res.status(201).json({
           status: 'success',
@@ -96,8 +98,9 @@ class TicketController {
       } else {
         const ticket = await this.ticketService.update(req.params.id, {
           ...req.body,
-          departureTime: new Date(req.body.departureTime),
-          returnTime: new Date(req.body.returnTime),
+          updatedBy: req.user.id,
+          departureTime: new Date(req.body.departureTime).toISOString(),
+          returnTime: new Date(req.body.returnTime).toISOString(),
         });
         res.status(200).json({
           status: 'success',

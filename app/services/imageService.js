@@ -1,16 +1,24 @@
 const {cloudinary, config} = require('../../config/cloudinary');
 
 module.exports = {
-  async upload(file) {
+  async upload(file, type) {
+    const secondaryDirMap = {
+      'PROFILE_IMG': 'profiles',
+      'TICKET_IMG': 'tickets',
+    };
     const publicId = Date.now() + '-' + Math.round(Math.random() * 1e9);
     return cloudinary.v2.uploader
         .upload(file, {
-          height: 600, width: 800, crop: 'fit',
-          folder: config.dir, public_id: publicId,
+          folder: `${config.dir}/${secondaryDirMap[type]}`, public_id: publicId,
         });
   },
 
-  async delete(id) {
-    return cloudinary.uploader.destroy(`${config.dir}/${id}`);
+  async delete(id, type) {
+    const secondaryDirMap = {
+      'PROFILE_IMG': 'profiles',
+      'TICKET_IMG': 'tickets',
+    };
+    return cloudinary.uploader
+        .destroy(`${config.dir}/${secondaryDirMap[type]}/${id}`);
   },
 };
