@@ -449,16 +449,7 @@
                                             "example": "update user data success"
                                         },
                                         "data": {
-                                            "type": "object",
-                                            "properties": {
-                                                "accessToken": {
-                                                    "type": "string",
-                                                    "example": "string"
-                                                },
-                                                "userData": {
-                                                    "$ref": "#/components/schemas/UserResponse"
-                                                }
-                                            }
+                                            "$ref": "#/components/schemas/UserResponse"
                                         }
                                     }
                                 }
@@ -641,16 +632,7 @@
                                             "example": "update user email success"
                                         },
                                         "data": {
-                                            "type": "object",
-                                            "properties": {
-                                                "accessToken": {
-                                                    "type": "string",
-                                                    "example": "string"
-                                                },
-                                                "userData": {
-                                                    "$ref": "#/components/schemas/UserResponse"
-                                                }
-                                            }
+                                            "$ref": "#/components/schemas/UserResponse"
                                         }
                                     }
                                 }

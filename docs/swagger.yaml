@@ -310,13 +310,8 @@ paths:
                     type: string
                     example: update user data success
                   data:
-                    type: object
-                    properties:
-                      accessToken:
-                        type: string
-                        example: string
-                      userData:
-                        $ref: "#/components/schemas/UserResponse"
+                    $ref: "#/components/schemas/UserResponse"
+                        
                         
         "401":
           description: Unauthorized
@@ -438,13 +433,8 @@ paths:
                     type: string
                     example: update user email success
                   data:
-                    type: object
-                    properties:
-                      accessToken:
-                        type: string
-                        example: string
-                      userData:
-                        $ref: "#/components/schemas/UserResponse"
+                    $ref: "#/components/schemas/UserResponse"
+                        
         "400":
           description: Bad Request, missing fields
           content:
