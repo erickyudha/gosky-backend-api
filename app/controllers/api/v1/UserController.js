@@ -1,4 +1,3 @@
-
 const {
   GeneralError,
   IdNotFoundError,
@@ -11,13 +10,8 @@ class UserController {
   }
 
   handleGetSimpleUser = async (req, res) => {
-    // TODO:
-    // GET SIMPLE USER DATA BY USER ID
-    // id get from req.params
-    // Check response example from swagger docs
     try {
       const user = await this.userService.simpleGet(req.params.id);
-      console.log(user);
       if (!user) {
         const err = new IdNotFoundError();
         res.status(404).json(err.json());
@@ -29,68 +23,38 @@ class UserController {
         data: user,
       });
     } catch (err) {
-      const error = new GeneralError(err);
+      const error = new GeneralError(err.message);
       res.status(500).json(error.json());
     }
   };
 
   handleUpdateUser = async (req, res) => {
-    // TODO:
-    // Finish authorization handler first
-    // UPDATE USER DATA BY THAT USER THEMSELF
-    // USER DATA GET FROM req.user
-    // Check allowed field to update from swagger docs
     try {
       const user = req.user;
-      if (
-        !req.body.name ||
-        !req.body.phone ||
-        !req.body.address ||
-        !req.body.imageId ||
-        !req.body.imageUrl
-      ) {
-        const error = new MissingFieldError();
-        res.status(400).json(error.json());
-        return;
-      }
-      await this.userService.update(user.id, {
-        ...req.body,
-      });
-      const accessToken = await this.authService.createTokenFromUser(
-          user.email);
-      res.status(200).json({
-        status: 'success',
-        message: 'update user data success',
-        data: {
-          accessToken: accessToken,
-          userData: {
-            id: req.user.id,
-            name: req.body.name,
-            email: req.user.email,
-            encryptedPassword: req.user.encryptedPassword,
-            role: req.user.role,
-            phone: req.body.phone,
-            address: req.body.address,
-            imageId: req.body.imageId,
-            imageUrl: req.body.imageUrl,
-            createdAt: req.user.createdAt,
-            updatedAt: req.user.updatedAt,
-            deletedAt: req.user.deletedAt,
-          },
-        },
-      });
+      const updateBody = {};
+      if (req.body.name) updateBody['name'] = req.body.name;
+      if (req.body.phone) updateBody['phone'] = req.body.phone;
+      if (req.body.address) updateBody['address'] = req.body.address;
+      if (req.body.imageId) updateBody['imageId'] = req.body.imageId;
+      if (req.body.imageUrl) updateBody['imageUrl'] = req.body.imageUrl;
+      const success = await this.userService.update(user.id, updateBody);
+      if (success) {
+        const newUser = await this.userService.get(user.id);
+        res.status(200).json({
+          status: 'success',
+          message: 'update user data success',
+          data: newUser,
+        });
+      } else {
+        throw new GeneralError('update failed');
+      };
     } catch (err) {
-      const error = new GeneralError(err);
+      const error = new GeneralError(err.message);
       res.status(500).json(error.json());
     }
   };
 
   handleUpdateUserEmail = async (req, res) => {
-    // TODO:
-    // Finish authorization handler first
-    // UPDATE USER EMAIL BY THAT USER THEMSELF
-    // USER DATA GET FROM req.user
-    // Email get from decoded otpToken
     try {
       const user = req.user;
       if (
@@ -112,34 +76,21 @@ class UserController {
         return;
       }
       const otp = this.authService.decodeUserToken(req.body.otpToken);
-      await this.userService.update(user.id, {
+      const success = await this.userService.update(user.id, {
         email: otp.email,
       });
-      const accessToken = await this.authService.createTokenFromUser(
-          otp.email);
-      res.status(200).json({
-        status: 'success',
-        message: 'update user email success',
-        data: {
-          accessToken: accessToken,
-          userData: {
-            id: req.user.id,
-            name: req.user.name,
-            email: otp.email,
-            encryptedPassword: req.user.encryptedPassword,
-            role: req.user.role,
-            phone: req.user.phone,
-            address: req.user.address,
-            imageId: req.user.imageId,
-            imageUrl: req.user.imageUrl,
-            createdAt: req.user.createdAt,
-            updatedAt: req.user.updatedAt,
-            deletedAt: req.user.deletedAt,
-          },
-        },
-      });
+      if (success) {
+        const newUser = this.userService.get(user.id);
+        res.status(200).json({
+          status: 'success',
+          message: 'update user email success',
+          data: newUser,
+        });
+      } else {
+        throw new GeneralError('update failed');
+      };
     } catch (err) {
-      const error = new GeneralError(err);
+      const error = new GeneralError(err.message);
       res.status(500).json(error.json());
     }
   };
