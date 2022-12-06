@@ -1368,6 +1368,9 @@ components:
         amount:
           type: integer
           example: 1
+        bookingCode:
+          type: string
+          example: AKUD392BCLW
         createdAt: 
           type: string
           example: timestamp

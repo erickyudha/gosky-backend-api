@@ -21,6 +21,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER,
       },
+      bookingCode: {
+        allowNull: false,
+        type: Sequelize.STRING,
+      },
       deletedAt: {
         type: Sequelize.DATE,
       },
