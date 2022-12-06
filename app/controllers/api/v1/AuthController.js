@@ -11,10 +11,7 @@ baseAuthorize = async (req, res, next, role) => {
   try {
     const bearerToken = req.headers.authorization;
     const token = bearerToken.split('Bearer ')[1];
-    // TODO: VERIFY TOKEN AND CHECK USER ROLE
-    const payload = services.authService.decodeUserToken(token);
-    // if success pass user data to req.user and go next()
-    const user = await services.userService.getByEmail(payload);
+    const user = services.authService.decodeUserToken(token);
     if (!role.includes(user.role)) {
       res.status(401).json(new UnauthorizedError().json());
       return;
@@ -22,7 +19,7 @@ baseAuthorize = async (req, res, next, role) => {
     req.user = user;
     next();
   } catch (err) {
-    const error = new GeneralError(err);
+    const error = new GeneralError('invalid bearer token');
     res.status(500).json(error.json());
     return;
   }
@@ -45,47 +42,52 @@ class AuthController {
 
 
   handleRegister = async (req, res) => {
-    // TODO:
-    // Finish handleGetOtp First
-    // email is in otpToken
     try {
-      this.authService.verifyOtpToken(req.body.otp, req.body.otpToken);
       if (
         !req.body.name ||
-        !req.body.encryptedPassword ||
+        !req.body.password ||
         !req.body.otp ||
         !req.body.otpToken
       ) {
         const error = new MissingFieldError();
         res.status(400).json(error.json());
       } else {
-        const verify = this.authService.verifyOtpToken(
+        const email = this.authService.verifyOtpToken(
             req.body.otp, req.body.otpToken,
         );
-        if (!verify) {
-          const error = new GeneralError();
-          res.status(500).json(error.json());
+        if (!email) {
+          const error = new GeneralError('Invalid OTP or OTP Token');
+          res.status(422).json(error.json());
           return;
         } else {
-          const encryptPassword = await this.authService.encryptPassword(
-              req.body.encryptedPassword);
-          await this.userService.create({
-            email: req.query.email,
-            ...req.body,
-            encryptedPassword: encryptPassword,
-            role: 'USER',
-          });
-          const accessToken = this.authService.createTokenFromUser(verify);
-          res.status(201).json({
-            status: 'success',
-            message: 'register success',
-            data:
-              {accessToken: accessToken},
-          });
+          const userExist = await this.userService.getByEmail(email);
+          if (userExist) {
+            res.status(409).json({
+              status: 'failed',
+              message: 'email already registered',
+            });
+          } else {
+            const encryptPassword = await this.authService.encryptPassword(
+                req.body.password);
+            const user = await this.userService.create({
+              name: req.body.name,
+              encryptedPassword: encryptPassword,
+              email,
+              role: 'USER',
+            });
+            const accessToken =
+              this.authService.createTokenFromUser(user.dataValues);
+            res.status(201).json({
+              status: 'success',
+              message: 'register success',
+              data:
+                {accessToken},
+            });
+          }
         }
       };
     } catch (err) {
-      const error = new GeneralError(err);
+      const error = new GeneralError(err.message);
       res.status(500).json(error.json());
       return;
     }
@@ -93,12 +95,12 @@ class AuthController {
 
   handleLogin = async (req, res) => {
     try {
-      if (!req.body.email || !req.body.encryptedPassword) {
+      if (!req.body.email || !req.body.password) {
         const error = new MissingFieldError();
         res.status(400).json(error.json());
       } else {
         const email = req.body.email;
-        const password = req.body.encryptedPassword;
+        const password = req.body.password;
         const user = await this.userService.getByEmail(email);
 
         if (!user) {
@@ -108,7 +110,6 @@ class AuthController {
           });
           return;
         }
-        console.log(user.encryptedPassword);
         const isPasswordCorrect = this.authService.verifyPassword(
             password, user.encryptedPassword);
 
@@ -120,7 +121,8 @@ class AuthController {
           return;
         }
 
-        const accessToken = this.authService.createTokenFromUser(email);
+        const accessToken =
+          this.authService.createTokenFromUser(user.dataValues);
         res.status(200).json({
           status: 'success',
           message: 'login success',
@@ -129,39 +131,22 @@ class AuthController {
         });
       };
     } catch (err) {
-      const error = new GeneralError(err);
+      const error = new GeneralError(err.message);
       res.status(500).json(error.json());
       return;
     }
   };
 
   handleGetSelf = async (req, res) => {
-    // TODO:
-    // Just return data from req.user
     res.status(200).json({
       status: 'success',
       message: 'get user data success',
-      data: {
-        id: req.user.id,
-        name: req.user.name,
-        email: req.user.email,
-        encryptedPassword: req.user.encryptedPassword,
-        role: req.user.role,
-        phone: req.user.phone,
-        address: req.user.address,
-        imageId: req.user.imageId,
-        imageUrl: req.user.imageUrl,
-        createdAt: req.user.createdAt,
-        updatedAt: req.user.updatedAt,
-        deletedAt: req.user.deletedAt,
-      },
+      data: req.user,
     });
   };
 
   handleGetOtp = async (req, res) => {
-    try {// TODO:
-      // VERIFY email format IMPORTANT!
-      // Generate otp token with authService
+    try {
       const email = req.query.email;
       const gmailAlreadyRegistered = await this.userService.getByEmail(email);
       if (gmailAlreadyRegistered) {
@@ -180,9 +165,6 @@ class AuthController {
       if (valid >= 0) {
         const createOtpTokenEmail = this.authService.createOtpToken(email);
         const otp = this.authService.decodeUserToken(createOtpTokenEmail);
-        // Set .env for email service
-        // Send otp email with emailService
-        // EXAMPLE:
         this.emailService.sendOtpEmail(email, otp.otp,
             (err, info) => {
               if (err) {
@@ -200,11 +182,12 @@ class AuthController {
         );
       } else {
         res.status(500).json({
-          message: 'wrong Gmail format',
+          status: 'error',
+          message: 'wrong email format',
         });
       }
     } catch (err) {
-      const error = new GeneralError();
+      const error = new GeneralError(err.message);
       res.status(500).json(error.json());
       return;
     }
