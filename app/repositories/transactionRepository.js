@@ -1,8 +1,8 @@
 const {Transaction} = require('../models');
 
 module.exports = {
-  findAll() {
-    return Transaction.findAll();
+  findAll(args) {
+    return Transaction.findAll(args);
   },
 
   find(id) {

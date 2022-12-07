@@ -18,6 +18,9 @@ module.exports = (sequelize, DataTypes) => {
       this.hasOne(models.Transaction, {
         foreignKey: 'userId',
       });
+      this.hasOne(models.Notification, {
+        foreignKey: 'userId',
+      });
       this.hasOne(models.Ticket, {
         foreignKey: 'createdBy',
       });

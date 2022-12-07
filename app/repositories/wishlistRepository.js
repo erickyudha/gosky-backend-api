@@ -1,12 +1,8 @@
 const {Wishlist} = require('../models');
 
 module.exports = {
-  findAll() {
-    return Wishlist.findAll();
-  },
-
-  find(id) {
-    return Wishlist.findByPk(id);
+  findAll(args) {
+    return Wishlist.findAll(args);
   },
 
   create(args) {

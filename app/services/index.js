@@ -4,6 +4,8 @@ const transactionService = require('./transactionService');
 const authService = require('./authService');
 const emailService = require('./emailService');
 const imageService = require('./imageService');
+const notificationService = require('./notificationService');
+const wishlistService = require('./wishlistService');
 
 module.exports = {
   userService,
@@ -12,4 +14,6 @@ module.exports = {
   authService,
   emailService,
   imageService,
+  notificationService,
+  wishlistService,
 };

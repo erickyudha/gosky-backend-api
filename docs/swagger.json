@@ -1184,7 +1184,7 @@
                 }
             }
         },
-        "/tickets/wishlist": {
+        "/wishlist": {
             "get": {
                 "tags": [
                     "Tickets"

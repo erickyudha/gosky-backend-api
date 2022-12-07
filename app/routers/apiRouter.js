@@ -9,6 +9,8 @@ const {
   userService,
   imageService,
   transactionService,
+  notificationService,
+  wishlistService,
 } = require('../services');
 
 const apiRouter = express.Router();
@@ -51,10 +53,23 @@ apiRouter.put('/tickets/:id',
 apiRouter.delete('/tickets/:id',
     authController.authorizeAdmin,
     ticketController.handleDelete);
+// WISHLIST
+const wishlistController =
+    new controller.api.v1.WishlistController(wishlistService);
+apiRouter.get('/wishlist',
+    authController.authorizeUser,
+    wishlistController.handleGetList);
+apiRouter.post('/tickets/:id/wishlist',
+    authController.authorizeUser,
+    wishlistController.handleCreate);
+apiRouter.delete('/tickets/:id/wishlist',
+    authController.authorizeUser,
+    wishlistController.handleDelete);
 
 // TRANSACTION ENDPOINTS
 const transactionController = new controller.api.v1.TransactionController(
     transactionService, userService, ticketService,
+    notificationService, emailService,
 );
 apiRouter.get('/transactions',
     authController.authorizeUser,
@@ -75,5 +90,16 @@ apiRouter.post('/images',
 apiRouter.delete('/images',
     authController.authorizeUser,
     imageController.handleDelete);
+
+// NOTIFICATION ENDPOINTS
+const notificationController = new controller.api.v1.NotificationController(
+    notificationService,
+);
+apiRouter.get('/notifications',
+    authController.authorizeUser,
+    notificationController.handleList);
+apiRouter.put('/notifications/:id/read',
+    authController.authorizeUser,
+    notificationController.handleMarkAsRead);
 
 module.exports = apiRouter;

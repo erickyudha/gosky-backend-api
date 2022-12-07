@@ -1,12 +1,8 @@
 const {wishlistRepository} = require('../repositories');
 
 module.exports = {
-  list() {
-    return wishlistRepository.findAll();
-  },
-
-  get(id) {
-    return wishlistRepository.find(id);
+  listByUser(userId) {
+    return wishlistRepository.findAll({where: {userId}});
   },
 
   add(userId, ticketId) {

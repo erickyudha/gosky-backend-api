@@ -5,7 +5,7 @@ module.exports = {
     transporter.sendMail(mailOptions, handler);
   },
 
-  async sendOtpEmail(email, otp, handler) {
+  sendOtpEmail(email, otp, handler) {
     const mailOptions = {
       to: email,
       subject: 'GoSky - Email Confirmation',
@@ -13,6 +13,17 @@ module.exports = {
       context: {
         otp: otp,
       },
+    };
+
+    return this.sendEmail(mailOptions, handler);
+  },
+
+  sendTransactionEmail(email, transactionData, handler) {
+    const mailOptions = {
+      to: email,
+      subject: 'GoSky - Transaction Receipt',
+      template: 'transaction',
+      context: transactionData,
     };
 
     return this.sendEmail(mailOptions, handler);
