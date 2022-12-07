@@ -55,7 +55,7 @@ apiRouter.delete('/tickets/:id',
     ticketController.handleDelete);
 // WISHLIST
 const wishlistController =
-    new controller.api.v1.WishlistController(wishlistService);
+    new controller.api.v1.WishlistController(wishlistService, ticketService);
 apiRouter.get('/wishlist',
     authController.authorizeUser,
     wishlistController.handleGetList);

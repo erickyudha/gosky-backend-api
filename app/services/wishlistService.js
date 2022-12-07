@@ -5,6 +5,10 @@ module.exports = {
     return wishlistRepository.findAll({where: {userId}});
   },
 
+  get(id) {
+    return wishlistRepository.get(id);
+  },
+
   add(userId, ticketId) {
     return wishlistRepository.create({
       userId, ticketId,
