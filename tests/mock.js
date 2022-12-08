@@ -25,6 +25,20 @@ const mock = {
     updatedAt: isoDate,
   },
 
+  ADMIN: {
+    id: 1,
+    name: 'User',
+    email: `user@email.com`,
+    encryptedPassword: bcrypt.hashSync('password', SALT),
+    role: 'ADMIN',
+    imageId: 'image',
+    imageUrl: 'https://cdn-icons-png.flaticon.com/512/1946/1946429.png',
+    phone: `1234567890`,
+    address: 'bandung',
+    createdAt: isoDate,
+    updatedAt: isoDate,
+  },
+
   TICKET: {
     id: 1,
     category: 'ROUND_TRIP',
