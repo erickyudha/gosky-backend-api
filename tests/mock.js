@@ -14,7 +14,7 @@ const mock = {
   USER: {
     id: 1,
     name: 'User',
-    email: `user@email.com`,
+    email: `user@gmail.com`,
     encryptedPassword: bcrypt.hashSync('password', SALT),
     role: 'USER',
     imageId: 'image',
@@ -28,7 +28,7 @@ const mock = {
   ADMIN: {
     id: 1,
     name: 'User',
-    email: `user@email.com`,
+    email: `user@gmail.com`,
     encryptedPassword: bcrypt.hashSync('password', SALT),
     role: 'ADMIN',
     imageId: 'image',
