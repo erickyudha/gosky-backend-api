@@ -13,6 +13,9 @@ module.exports = {
     const generateRand1Digit = () => {
       return '' + Math.floor(1 + Math.random() * 9);
     };
+    const generateRandMinutes = () => {
+      return Math.floor(30 + Math.random() * 90);
+    };
     const IMG_PLACEHOLDER = 'https://res.cloudinary.com/dgjwtquka/image/upload/v1664957631/sample.jpg';
     const cityList = [
       'JAKARTA', 'DENPASAR', 'YOGYAKARTA', 'SURABAYA',
@@ -45,6 +48,7 @@ module.exports = {
                 departureTime: now.toISOString(),
                 returnTime: (category == 'ONE_WAY') ? null : returnTime,
                 price: generateRand3Digit() + '000',
+                duration: generateRandMinutes(),
                 flightNumber,
                 imageId: 'sample',
                 imageUrl: IMG_PLACEHOLDER,

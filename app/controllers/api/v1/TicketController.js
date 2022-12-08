@@ -52,6 +52,7 @@ class TicketController {
         !req.body.departureTime ||
         !req.body.price ||
         !req.body.flightNumber ||
+        !req.body.duration ||
         (req.body.category == 'ROUND_TRIP' && !req.body.returnTime)
       ) {
         const error = new MissingFieldError();
@@ -84,30 +85,17 @@ class TicketController {
         res.status(404).json(err.json());
         return;
       }
-
-      if (
-        !req.body.category ||
-        !req.body.from ||
-        !req.body.departureTime ||
-        !req.body.price ||
-        !req.body.flightNumber ||
-        (req.body.category == 'ROUND_TRIP' && !req.body.returnTime)
-      ) {
-        const error = new MissingFieldError();
-        res.status(400).json(error.json());
-      } else {
-        const ticket = await this.ticketService.update(req.params.id, {
-          ...req.body,
-          updatedBy: req.user.id,
-          departureTime: new Date(req.body.departureTime).toISOString(),
-          returnTime: new Date(req.body.returnTime).toISOString(),
-        });
-        res.status(200).json({
-          status: 'success',
-          message: 'update ticket data success',
-          data: ticket,
-        });
-      };
+      const ticket = await this.ticketService.update(req.params.id, {
+        ...req.body,
+        updatedBy: req.user.id,
+        departureTime: new Date(req.body.departureTime).toISOString(),
+        returnTime: new Date(req.body.returnTime).toISOString(),
+      });
+      res.status(200).json({
+        status: 'success',
+        message: 'update ticket data success',
+        data: ticket,
+      });
     } catch (err) {
       const error = new GeneralError(err);
       res.status(500).json(error.json());
