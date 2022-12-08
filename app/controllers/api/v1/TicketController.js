@@ -52,6 +52,7 @@ class TicketController {
         !req.body.departureTime ||
         !req.body.price ||
         !req.body.flightNumber ||
+        !req.body.duration ||
         (req.body.category == 'ROUND_TRIP' && !req.body.returnTime)
       ) {
         const error = new MissingFieldError();
@@ -90,6 +91,7 @@ class TicketController {
         !req.body.from ||
         !req.body.departureTime ||
         !req.body.price ||
+        !req.body.duration ||
         !req.body.flightNumber ||
         (req.body.category == 'ROUND_TRIP' && !req.body.returnTime)
       ) {

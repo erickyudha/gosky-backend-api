@@ -35,6 +35,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER,
       },
+      duration: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+      },
       flightNumber: {
         allowNull: false,
         type: Sequelize.STRING,

@@ -34,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
     returnTime: DataTypes.DATE,
     price: DataTypes.INTEGER,
     flightNumber: DataTypes.STRING,
+    duration: DataTypes.INTEGER,
     imageId: DataTypes.STRING,
     imageUrl: DataTypes.STRING,
     description: DataTypes.STRING,
