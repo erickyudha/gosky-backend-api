@@ -6,9 +6,10 @@ const {EMAIL_SIGNATURE_KEY, JWT_SIGNATURE_KEY, SALT} =
 module.exports = {
   createOtpToken(email) {
     const otp = '' + Math.floor(100000 + Math.random() * 900000);
-    return jwt.sign({
+    const token = jwt.sign({
       otp, email,
     }, EMAIL_SIGNATURE_KEY);
+    return [otp, token];
   },
 
   verifyOtpToken(otp, otpToken) {

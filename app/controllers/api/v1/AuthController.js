@@ -106,7 +106,7 @@ class AuthController {
         const user = await this.userService.getByEmail(email);
 
         if (!user) {
-          res.status(401).json({
+          res.status(404).json({
             status: 'failed',
             message: 'Email is not registered',
           });
@@ -150,6 +150,11 @@ class AuthController {
   handleGetOtp = async (req, res) => {
     try {
       const email = req.query.email;
+      if (!email) {
+        const error = new MissingFieldError();
+        res.status(400).json(error.json());
+        return;
+      }
       const gmailAlreadyRegistered = await this.userService.getByEmail(email);
       if (gmailAlreadyRegistered) {
         res.status(409).json({
@@ -158,16 +163,11 @@ class AuthController {
         });
         return;
       }
-      if (!email) {
-        const error = new MissingFieldError();
-        res.status(400).json(error.json());
-        return;
-      }
+      // TODO: MAKE EMAIL NOT LIMITED TO GMAIL
       const valid = email.indexOf('@gmail.com');
       if (valid >= 0) {
-        const createOtpTokenEmail = this.authService.createOtpToken(email);
-        const otp = this.authService.decodeUserToken(createOtpTokenEmail);
-        this.emailService.sendOtpEmail(email, otp.otp,
+        const [otp, otpToken] = this.authService.createOtpToken(email);
+        this.emailService.sendOtpEmail(email, otp,
             (err, info) => {
               if (err) {
                 throw err;
@@ -175,16 +175,14 @@ class AuthController {
                 res.status(200).json({
                   'status': 'success',
                   'message': 'otp request success',
-                  'data': {
-                    'otpToken': createOtpTokenEmail,
-                  },
+                  'data': {otpToken},
                 });
               }
             },
         );
       } else {
-        res.status(500).json({
-          status: 'error',
+        res.status(422).json({
+          status: 'failed',
           message: 'wrong email format',
         });
       }
