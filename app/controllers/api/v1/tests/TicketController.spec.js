@@ -129,6 +129,7 @@ describe('TicketController', () => {
   describe('#handleCreate', () => {
     it('should res.status(201) and return created on success', async () => {
       const mockTicket = {...mock.TICKET};
+      const mockUser = {...mock.USER};
       const mockTicketReq = {
         category: mockTicket.category,
         from: mockTicket.from,
@@ -143,6 +144,7 @@ describe('TicketController', () => {
       };
 
       const mockReq = {
+        user: mockUser,
         body: mockTicketReq,
       };
       const mockRes = {...mock.RES};
@@ -180,6 +182,7 @@ describe('TicketController', () => {
   describe('#handleUpdate', () => {
     it('should res.status(200) and return updated success', async () => {
       const mockTicket = {...mock.TICKET};
+      const mockUser = {...mock.USER};
       const mockTicketReq = {
         category: mockTicket.category,
         from: 'DA WAY',
@@ -195,6 +198,7 @@ describe('TicketController', () => {
 
       const mockReq = {
         params: {id: 1},
+        user: mockUser,
         body: mockTicketReq,
       };
       const mockRes = {...mock.RES};
