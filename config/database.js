@@ -1,7 +1,7 @@
 require('dotenv').config();
 const {
   DB_USER = 'postgres',
-  DB_PASSWORD = 'riowdyws27',
+  DB_PASSWORD = '',
   DB_NAME = 'gosky',
   DB_HOST = 'localhost',
   DB_PORT = '5432',
