@@ -48,6 +48,7 @@ const mock = {
     returnTime: now.add(1, 'day').toISOString(),
     price: 980000,
     flightNumber: 'AX31V',
+    duration: 32,
     imageId: 'string',
     imageUrl: 'string.com/image.png',
     description: 'Lorem ipsum blbalaldanlwdj',
