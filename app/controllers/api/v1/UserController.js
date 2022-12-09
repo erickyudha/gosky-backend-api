@@ -65,20 +65,17 @@ class UserController {
         res.status(400).json(error.json());
         return;
       }
-      const verify = this.authService.verifyOtpToken(
+      const email = this.authService.verifyOtpToken(
           req.body.otp, req.body.otpToken,
       );
-      if (!verify) {
+      if (!email) {
         res.status(422).json({
           status: 'failed',
           message: 'wrong otp or invalid otpToken',
         });
         return;
       }
-      const otp = this.authService.decodeUserToken(req.body.otpToken);
-      const success = await this.userService.update(user.id, {
-        email: otp.email,
-      });
+      const success = await this.userService.update(user.id, {email});
       if (success) {
         const newUser = this.userService.get(user.id);
         res.status(200).json({
