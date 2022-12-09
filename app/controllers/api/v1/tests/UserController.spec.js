@@ -1,50 +1,152 @@
-describe('#handleGetUser', () => {
-  it('should res.status(200) and return simple user data', async () => {
-    const mockReq = {
-      params: {
-        id: 1,
-      },
-    };
-    const mockRes = { ...mock.RES };
-    const mockUser = { ...mock.USER };
-    const mockUserService = {
-      get: jest.fn().mockReturnValue(mockUser),
-    };
-    const expectedResData = {
-      id: mockUser.id,
-      name: mockUser.name,
-      role: mockUser.role,
-      imageUrl: mockUser.imageUrl,
-    };
+const mock = require('../../../../../tests/mock');
+const {IdNotFoundError} = require('../../../../errors');
+const UserController = require('../UserController');
+const authService = require('../../../../services/authService');
 
-    const controller = new AuthController(mockUserService, {}, bcrypt, jwt);
-    await controller.handleGetUser(mockReq, mockRes);
+describe('UserController', () => {
+  describe('#handleGetSimpleUser', () => {
+    it('should res.status(200) if success', async () => {
+      const mockUser = mock.USER;
+      const mockSimpleUser = {
+        id: mockUser.id,
+        name: mockUser.name,
+        role: mockUser.role,
+        imageUrl: mockUser.imageUrl,
+      };
+      const mockReq = {
+        params: {
+          id: 1,
+        },
+      };
+      const mockRes = mock.RES;
+      const mockUserService = {
+        simpleGet: jest.fn().mockReturnValue(mockSimpleUser),
+      };
 
-    expect(mockUserService.get).toHaveBeenCalled();
-    expect(mockRes.status).toHaveBeenCalledWith(200);
-    expect(mockRes.json).toHaveBeenCalledWith({
-      status: 'success',
-      message: 'get user data success',
-      data: expectedResData,
+      const controller = new UserController(mockUserService, {});
+      await controller.handleGetSimpleUser(mockReq, mockRes);
+
+      expect(mockUserService.simpleGet).toHaveBeenCalled();
+      expect(mockRes.status).toHaveBeenCalledWith(200);
+      expect(mockRes.json).toHaveBeenCalledWith({
+        status: 'success',
+        message: 'get user data success',
+        data: mockSimpleUser,
+      });
+    });
+
+    it('should res.status(404) if id not found', async () => {
+      const mockReq = {
+        params: {
+          id: 999,
+        },
+      };
+      const mockRes = mock.RES;
+      const mockUserService = {
+        simpleGet: jest.fn().mockReturnValue(null),
+      };
+
+      const controller = new UserController(mockUserService, {});
+      await controller.handleGetSimpleUser(mockReq, mockRes);
+
+      expect(mockUserService.simpleGet).toHaveBeenCalled();
+      expect(mockRes.status).toHaveBeenCalledWith(404);
+      expect(mockRes.json).toHaveBeenCalledWith(new IdNotFoundError().json());
     });
   });
 
-  it('should res.status(404) if id not found', async () => {
-    const mockReq = {
-      params: {
-        id: 1,
-      },
-    };
-    const mockRes = { ...mock.RES };
-    const mockUserService = {
-      get: jest.fn().mockReturnValue(null),
-    };
+  describe('#handleUpdateUser', () => {
+    it('should res.status(200) if success', async () => {
+      const mockUser = mock.USER;
+      const updateBody = {
+        name: 'sussy',
+        phone: '03183971937',
+        address: 'skeld',
+        imageId: 'sample',
+        imageUrl: 'image.com/image.png',
+      };
+      const mockReq = {
+        body: updateBody,
+        user: mockUser,
+      };
+      const mockRes = mock.RES;
 
-    const controller = new AuthController(mockUserService, {}, bcrypt, jwt);
-    await controller.handleGetUser(mockReq, mockRes);
+      const mockUserService = {
+        update: jest.fn().mockReturnValue([1]),
+        get: jest.fn().mockReturnValue({
+          ...mockUser, ...updateBody,
+        }),
+      };
 
-    expect(mockUserService.get).toHaveBeenCalled();
-    expect(mockRes.status).toHaveBeenCalledWith(404);
-    expect(mockRes.json).toHaveBeenCalledWith(new IdNotFoundError().json());
+      const controller = new UserController(mockUserService, {});
+      await controller.handleUpdateUser(mockReq, mockRes);
+
+      expect(mockUserService.update).toHaveBeenCalled();
+      expect(mockUserService.get).toHaveBeenCalled();
+      expect(mockRes.status).toHaveBeenCalledWith(200);
+      expect(mockRes.json).toHaveBeenCalledWith({
+        status: 'success',
+        message: 'update user data success',
+        data: {
+          ...mockUser, ...updateBody,
+        },
+      });
+    });
+  });
+
+  describe('#handleUpdateUSerEmail', () => {
+    it('should res.status(200) if success', async () => {
+      const mockUser = mock.USER;
+      const [mockOtp, mockOtpToken] =
+        authService.createOtpToken(mockUser.email);
+      const mockReq = {
+        user: mockUser,
+        body: {
+          otp: mockOtp,
+          otpToken: mockOtpToken,
+        },
+      };
+      const mockRes = mock.RES;
+
+      const mockUserService = {
+        update: jest.fn().mockReturnValue([1]),
+        get: jest.fn().mockReturnValue(mockUser),
+      };
+
+      const controller = new UserController(mockUserService, authService);
+      await controller.handleUpdateUserEmail(mockReq, mockRes);
+
+      expect(mockUserService.update).toHaveBeenCalled();
+      expect(mockUserService.get).toHaveBeenCalled();
+      expect(mockRes.status).toHaveBeenCalledWith(200);
+      expect(mockRes.json).toHaveBeenCalledWith({
+        status: 'success',
+        message: 'update user email success',
+        data: mockUser,
+      });
+    });
+
+    it('should res.status(422) if otp invalid', async () => {
+      const mockUser = mock.USER;
+      const [mockOtp, mockOtpToken] =
+        authService.createOtpToken(mockUser.email);
+      const mockReq = {
+        user: mockUser,
+        body: {
+          otp: mockOtp + 'wadad',
+          otpToken: mockOtpToken,
+        },
+      };
+      const mockRes = mock.RES;
+
+      const controller = new UserController({}, authService);
+      await controller.handleUpdateUserEmail(mockReq, mockRes);
+
+      expect(mockRes.status).toHaveBeenCalledWith(422);
+      expect(mockRes.json).toHaveBeenCalledWith({
+        status: 'failed',
+        message: 'wrong otp or invalid otpToken',
+      });
+    });
   });
 });
