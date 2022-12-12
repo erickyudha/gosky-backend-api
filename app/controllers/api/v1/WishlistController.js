@@ -14,12 +14,20 @@ class WishlistController {
     // Return TICKET object list, not wishlist list itself
     try {
       const userId = req.user;
+      const listTicket = [];
       const list = await this.wishlistService.listByUser(userId.id);
+      for (let index = 0; index < list.length; index++) {
+        const element = list[index].userId;
+        if (userId.id === element) {
+          const b = await this.ticketService.get(list[index].ticketId);
+          listTicket.push(b);
+        }
+      }
       res.status(200).json({
         status: 'success',
         message: 'wishlist ticket success',
-        data: list,
-        meta: list.length,
+        data: listTicket,
+        meta: {count: listTicket.length},
       });
     } catch (err) {
       const error = new GeneralError(err.message);
