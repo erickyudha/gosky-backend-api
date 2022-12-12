@@ -10,8 +10,8 @@ class WishlistController {
   };
 
   handleGetList = async (req, res) => {
-    // TODO:
-    // Get logged in user ticket wishlist
+    // FIX:
+    // Return TICKET object list, not wishlist list itself
     try {
       const userId = req.user;
       const list = await this.wishlistService.listByUser(userId.id);
