@@ -20,7 +20,6 @@ class TransactionController {
   }
 
   handleGetList = async (req, res) => {
-    // TODO:
     // USER is only authorized to access transactions made by themself.
     // On other hands ADMIN can access all transactions in database.
     try {
@@ -46,7 +45,6 @@ class TransactionController {
   };
 
   handleGet = async (req, res) => {
-    // TODO:
     // USER is only authorized to access transactions made by themself.
     // On other hands ADMIN can access all transactions in database.
     // UnauthorizedError if USER try to access transaction not made by them
@@ -74,7 +72,7 @@ class TransactionController {
       }
       res.status(200).json({
         status: 'success',
-        message: 'get transaction list data success',
+        message: 'get transaction data success',
         data: transaction,
       });
     } catch (err) {
@@ -84,7 +82,6 @@ class TransactionController {
   };
 
   handleCreate = async (req, res) => {
-    // TODO:
     // bookingCode random 10 character of number and letter (all cap)
     // example WAKDU318ND
 
@@ -132,7 +129,7 @@ class TransactionController {
             } else {
               res.status(200).json({
                 status: 'success',
-                message: '"add transaction success',
+                message: 'add transaction success',
                 data: transaction,
               });
             }
