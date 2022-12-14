@@ -1,7 +1,6 @@
 const {
   GeneralError,
   UnauthorizedError,
-  IdNotFoundError,
   MissingFieldError,
 } = require('../../../errors');
 class ImageController {
@@ -39,7 +38,8 @@ class ImageController {
         }
       }
       const upload = await this.imageService.upload(file, type);
-      const data = {imageId: upload.public_id, imageUrl: upload.url};
+      const id = upload.public_id.split('s/');
+      const data = {imageId: id[1], imageUrl: upload.url};
       res.status(201).json({
         status: 'success',
         message: 'upload image success',
@@ -58,49 +58,25 @@ class ImageController {
     // IF ROLE CANT ACCESS, use unauthorized error
     try {
       const user = req.user;
-      console.log(user.name);
+      const type = req.query.type;
       const imageId = req.query.imageId;
-      if (!imageId) {
+      if (!imageId && !type) {
         const error = new MissingFieldError();
         res.status(400).json(error.json());
         return;
-      }
-      const errorId = new IdNotFoundError();
-      const type = imageId.substr(6, 7);
-      let fixType;
-      let id;
-      const error = new UnauthorizedError();
+      };
       if (user.role === 'USER') {
-        if (type != 'profile') {
+        if (type != 'PROFILE_IMG') {
           res.status(401).json(error.json());
           return;
         }
       } else {
-        if (type != 'profile' && type != 'tickets') {
+        if (type != 'PROFILE_IMG' && type != 'TICKET_IMG') {
           res.status(401).json(error.json());
           return;
         }
       }
-      if (type === 'tickets') {
-        fixType = 'TICKET_IMG';
-        const del = await this.ticketService.imageId(imageId);
-        id = imageId.substr(14, 23);
-        console.log(id);
-        if (!del) {
-          res.status(401).json(errorId.json());
-          return;
-        }
-      } else {
-        fixType = 'PROFILE_IMG';
-        const del = await this.userService.imageId(imageId);
-        id = imageId.substr(15, 23);
-        console.log(id);
-        if (!del) {
-          res.status(401).json(errorId.json());
-          return;
-        }
-      }
-      await this.imageService.delete(id, fixType);
+      await this.imageService.delete(imageId, type);
       res.status(201).json({
         status: 'success',
         message: 'delete image success',

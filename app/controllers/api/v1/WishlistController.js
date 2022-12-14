@@ -46,6 +46,14 @@ class WishlistController {
         res.status(404).json(err.json());
         return;
       }
+      const chck = await this.wishlistService.getByData(userId.id, ticketId.id);
+      if (chck) {
+        res.status(409).json({
+          status: 'failed',
+          message: 'ticket already wishlisted',
+        });
+        return;
+      }
       this.wishlistService.add(userId.id, ticketId.id);
       res.status(200).json({
         status: 'success',
@@ -63,13 +71,13 @@ class WishlistController {
     try {
       const user = req.user;
       const ticketId = req.params.id;
-      const ticket = await this.wishlistService.get(ticketId);
+      const ticket = await this.ticketService.get(ticketId);
       if (!ticket) {
         const err = new IdNotFoundError();
         res.status(404).json(err.json());
         return;
       }
-      this.wishlistService.delete(user.id, ticket.ticketId);
+      this.wishlistService.delete(user.id, ticketId);
       res.status(200).json({
         status: 'success',
         message: 'unwish ticket success',
