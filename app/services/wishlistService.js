@@ -9,6 +9,10 @@ module.exports = {
     return wishlistRepository.get(id);
   },
 
+  getByData(userId, ticketId) {
+    return wishlistRepository.findOne({where: {userId, ticketId}});
+  },
+
   add(userId, ticketId) {
     return wishlistRepository.create({
       userId, ticketId,

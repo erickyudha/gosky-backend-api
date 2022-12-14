@@ -72,7 +72,7 @@ class TransactionController {
       }
       res.status(200).json({
         status: 'success',
-        message: 'get transaction list data success',
+        message: 'get transaction data success',
         data: transaction,
       });
     } catch (err) {
