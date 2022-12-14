@@ -5,6 +5,10 @@ module.exports = {
     return Wishlist.findAll(args);
   },
 
+  findOne(args) {
+    return Wishlist.findOne(args);
+  },
+
   get(id) {
     return Wishlist.findByPk(id);
   },
