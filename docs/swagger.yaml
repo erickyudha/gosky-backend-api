@@ -274,7 +274,7 @@ paths:
       requestBody:
         description: "Allowed fields to update: [name, phone, address imageId, imageUrl]"
         content:
-          aplication/json:
+          application/json:
             schema:
               type: object
               properties:
@@ -404,7 +404,7 @@ paths:
       requestBody:
         required: true
         content:
-          aplication/json:
+          application/json:
             schema:
               type: object
               required:
@@ -541,7 +541,7 @@ paths:
       requestBody:
         required: true
         content:
-          aplication/json:
+          application/json:
             schema:
               type: object
               required:
@@ -676,7 +676,7 @@ paths:
           description: ID of ticket to update
       requestBody:
         content:
-          aplication/json:
+          application/json:
             schema:
               type: object
               properties:
@@ -986,7 +986,7 @@ paths:
       requestBody:
         required: true
         content:
-          aplication/json:
+          application/json:
             schema:
               type: object
               required:
