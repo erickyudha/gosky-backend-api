@@ -27,6 +27,10 @@ module.exports = {
     return ticketRepository.findAll({where: filter, limit: 100});
   },
 
+  imageId(imageId) {
+    return ticketRepository.findOne({where: {imageId}, limit: 100});
+  },
+
   create(args) {
     return ticketRepository.create(args);
   },

@@ -5,6 +5,10 @@ module.exports = {
     return Ticket.findAll(args);
   },
 
+  findOne(args) {
+    return Ticket.findOne(args);
+  },
+
   find(id) {
     return Ticket.findByPk(id);
   },

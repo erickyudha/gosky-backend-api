@@ -14,6 +14,10 @@ module.exports = {
     });
   },
 
+  findAll(args) {
+    return User.findAll(args);
+  },
+
   delete(id) {
     return User.destroy({where: {id}});
   },

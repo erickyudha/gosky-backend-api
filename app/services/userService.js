@@ -5,6 +5,10 @@ module.exports = {
     return userRepository.create(args);
   },
 
+  imageId(imageId) {
+    return userRepository.findAll({where: {imageId}});
+  },
+
   update(id, args) {
     return userRepository.update(id, args);
   },
