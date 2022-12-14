@@ -9,8 +9,10 @@ module.exports = {
     return notificationRepository.findAll({where: {userId}});
   },
 
-  create(message) {
-    return notificationRepository.create(message);
+  create(userId, message) {
+    return notificationRepository.create({
+      userId, message, isRead: false,
+    });
   },
 
   markAsRead(id) {

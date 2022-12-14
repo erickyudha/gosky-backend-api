@@ -37,7 +37,7 @@ class NotificationController {
         res.status(404).json(err.json());
         return;
       }
-      if (user.id != notification.id) {
+      if (user.id != notification.userId) {
         const error = new UnauthorizedError();
         res.status(401).json(error.json());
         return;
