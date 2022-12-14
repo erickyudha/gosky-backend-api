@@ -15,6 +15,6 @@ module.exports = {
   },
 
   create(args) {
-    return transactionRepository.create();
+    return transactionRepository.create(args);
   },
 };
