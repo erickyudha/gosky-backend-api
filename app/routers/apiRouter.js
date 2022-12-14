@@ -79,10 +79,11 @@ apiRouter.post('/transactions',
     transactionController.handleCreate);
 apiRouter.get('/transactions/:id',
     authController.authorizeUser,
-    transactionController.handleGetList);
+    transactionController.handleGet);
 
 // IMAGE ENDPOINTS
-const imageController = new controller.api.v1.ImageController(imageService);
+const imageController = new controller.api.v1.ImageController(
+    imageService, userService, ticketService);
 apiRouter.post('/images',
     authController.authorizeUser,
     upload.single('image'),
