@@ -21,8 +21,123 @@ tags:
     description: Operations about user transaction
   - name: Images
     description: Operations about image handling
+  - name: Notification
+    description: Notifications
 
 paths:
+  /notifications:
+    get:
+      tags:
+        - Notification
+      summary: Get current notification data
+      operationId: getnot
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: get user data success
+                  data:
+                    type: array
+                    items: 
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        userId:
+                          type: integer
+                          example: 1
+                        messaage:
+                          type: string
+                          example: Transaction ticket 1 is success
+                        isRead:
+                          type: boolean
+                          example: null
+                        createdAt: 
+                          type: string
+                          example: timestamp
+                        updatedAt: 
+                          type: string
+                          example: timestamp
+                        deletedAt: 
+                          type: string
+                          example: timestamp
+                  count:
+                    type: integer
+                    example: 1
+        default:
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+                
+  /notifications/{id}/read:
+    put:
+      tags:
+        - Notification
+      summary: Get current notification data
+      operationId: putnot
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID of notification data to get
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: read notification, success
+        "401":
+          description: Unauthorized, wrong login password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: failed
+                  message:
+                    type: string
+                    example: wrong password
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IdNotFoundError"
+        default:
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneralError"
+                          
+                
+                      
+
+
   /auth/register:
     post:
       tags:
