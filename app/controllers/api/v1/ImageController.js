@@ -4,14 +4,11 @@ const {
   MissingFieldError,
 } = require('../../../errors');
 class ImageController {
-  constructor(imageService, userService, ticketService) {
+  constructor(imageService) {
     this.imageService = imageService;
-    this.userService = userService;
-    this.ticketService = ticketService;
   }
 
   handleUpload = async (req, res) => {
-    // TODO:
     // USER is only authorized to access PROFILE_IMG type
     // ADMIN can access both.
     // IF ROLE CANT ACCESS, use unauthorized error
@@ -52,7 +49,6 @@ class ImageController {
   };
 
   handleDelete = async (req, res) => {
-    // TODO:
     // USER is only authorized to access PROFILE_IMG type
     // ADMIN can access both.
     // IF ROLE CANT ACCESS, use unauthorized error
@@ -67,17 +63,17 @@ class ImageController {
       };
       if (user.role === 'USER') {
         if (type != 'PROFILE_IMG') {
-          res.status(401).json(error.json());
+          res.status(401).json(new UnauthorizedError().json());
           return;
         }
       } else {
         if (type != 'PROFILE_IMG' && type != 'TICKET_IMG') {
-          res.status(401).json(error.json());
+          res.status(401).json(new UnauthorizedError().json());
           return;
         }
       }
       await this.imageService.delete(imageId, type);
-      res.status(201).json({
+      res.status(200).json({
         status: 'success',
         message: 'delete image success',
       });
