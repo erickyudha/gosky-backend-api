@@ -1,5 +1,5 @@
 const mock = require('../../../../../tests/mock');
-const {IdNotFoundError} = require('../../../../errors');
+const {IdNotFoundError, GeneralError} = require('../../../../errors');
 const WishlistController = require('../WishlistController');
 
 describe('WishlistController', () => {
@@ -32,6 +32,29 @@ describe('WishlistController', () => {
         data: [mock.TICKET],
         meta: {count: 1},
       });
+    });
+
+    it('should res.status(500) to handle general error', async () => {
+      const mockUser = mock.USER;
+      const mockReq = {
+        user: mockUser,
+      };
+      const mockRes = mock.RES;
+      const err = new GeneralError('error test');
+      const mockWishlistService = {
+        listByUser: jest.fn().mockRejectedValue(err),
+      };
+      const mockTicketService = {
+        get: jest.fn().mockReturnValue(mock.TICKET),
+      };
+
+      const controller = new WishlistController(
+          mockWishlistService, mockTicketService,
+      );
+      await controller.handleGetList(mockReq, mockRes);
+
+      expect(mockRes.status).toHaveBeenCalledWith(500);
+      expect(mockRes.json).toHaveBeenCalledWith(err.json());
     });
   });
 
@@ -128,6 +151,33 @@ describe('WishlistController', () => {
         message: 'ticket already wishlisted',
       });
     });
+
+    it('should res.status(500) to handle general error', async () => {
+      const mockUser = mock.USER;
+      const mockReq = {
+        user: mockUser,
+        params: {
+          id: 1,
+        },
+      };
+      const mockRes = mock.RES;
+      const err = new GeneralError('error test');
+      const mockWishlistService = {
+        getByData: jest.fn().mockReturnValue(null),
+        add: jest.fn(),
+      };
+      const mockTicketService = {
+        get: jest.fn().mockRejectedValue(err),
+      };
+
+      const controller = new WishlistController(
+          mockWishlistService, mockTicketService,
+      );
+      await controller.handleCreate(mockReq, mockRes);
+
+      expect(mockRes.status).toHaveBeenCalledWith(500);
+      expect(mockRes.json).toHaveBeenCalledWith(err.json());
+    });
   });
 
   describe('#handleDelete', () => {
@@ -187,6 +237,32 @@ describe('WishlistController', () => {
       expect(mockTicketService.get).toHaveBeenCalled();
       expect(mockRes.status).toHaveBeenCalledWith(404);
       expect(mockRes.json).toHaveBeenCalledWith(new IdNotFoundError().json());
+    });
+
+    it('should res.status(500) to handle general error', async () => {
+      const mockUser = mock.USER;
+      const mockReq = {
+        user: mockUser,
+        params: {
+          id: 1,
+        },
+      };
+      const mockRes = mock.RES;
+      const err = new GeneralError('error test');
+      const mockWishlistService = {
+        delete: jest.fn(),
+      };
+      const mockTicketService = {
+        get: jest.fn().mockRejectedValue(err),
+      };
+
+      const controller = new WishlistController(
+          mockWishlistService, mockTicketService,
+      );
+      await controller.handleDelete(mockReq, mockRes);
+
+      expect(mockRes.status).toHaveBeenCalledWith(500);
+      expect(mockRes.json).toHaveBeenCalledWith(err.json());
     });
   });
 });

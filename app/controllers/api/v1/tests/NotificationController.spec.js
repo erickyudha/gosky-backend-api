@@ -1,5 +1,9 @@
 const mock = require('../../../../../tests/mock');
-const {UnauthorizedError, IdNotFoundError} = require('../../../../errors');
+const {
+  UnauthorizedError,
+  IdNotFoundError,
+  GeneralError,
+} = require('../../../../errors');
 const NotificationController = require('../NotificationController');
 
 describe('NotificationController', () => {
@@ -29,6 +33,24 @@ describe('NotificationController', () => {
           count: 1,
         },
       });
+    });
+
+    it('should res.status(500) to handle general error', async () => {
+      const mockUser = mock.USER;
+      const mockReq = {
+        user: mockUser,
+      };
+      const mockRes = mock.RES;
+      const err = new GeneralError('test error');
+
+      const mockNotifService = {
+        listByUser: jest.fn().mockRejectedValue(err),
+      };
+      const controller = new NotificationController(mockNotifService);
+      await controller.handleList(mockReq, mockRes);
+
+      expect(mockRes.status).toHaveBeenCalledWith(500);
+      expect(mockRes.json).toHaveBeenCalledWith(err.json());
     });
   });
 
@@ -104,6 +126,27 @@ describe('NotificationController', () => {
       expect(mockNotifService.get).toHaveBeenCalled();
       expect(mockRes.status).toHaveBeenCalledWith(404);
       expect(mockRes.json).toHaveBeenCalledWith(new IdNotFoundError().json());
+    });
+
+    it('should res.status(500) to handle general error', async () => {
+      const mockUser = mock.USER;
+      const mockReq = {
+        user: mockUser,
+        params: {
+          id: 1,
+        },
+      };
+      const mockRes = mock.RES;
+      const err = new GeneralError('test error');
+      const mockNotifService = {
+        get: jest.fn().mockRejectedValue(err),
+        markAsRead: jest.fn(),
+      };
+      const controller = new NotificationController(mockNotifService);
+      await controller.handleMarkAsRead(mockReq, mockRes);
+
+      expect(mockRes.status).toHaveBeenCalledWith(500);
+      expect(mockRes.json).toHaveBeenCalledWith(err.json());
     });
   });
 });

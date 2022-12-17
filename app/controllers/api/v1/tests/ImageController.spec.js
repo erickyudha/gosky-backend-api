@@ -1,6 +1,10 @@
 const ImageController = require('../ImageController');
 const mock = require('../../../../../tests/mock');
-const {MissingFieldError, UnauthorizedError} = require('../../../../errors');
+const {
+  MissingFieldError,
+  UnauthorizedError,
+  GeneralError,
+} = require('../../../../errors');
 
 describe('ImageController', () => {
   describe('#handleUpload', () => {
@@ -102,6 +106,30 @@ describe('ImageController', () => {
       expect(mockRes.status).toHaveBeenCalledWith(401);
       expect(mockRes.json).toHaveBeenCalledWith(new UnauthorizedError().json());
     });
+
+    it('should res.status(500) to handle general error', async () => {
+      const mockUser = mock.USER;
+      const mockReq = {
+        user: mockUser,
+        query: {
+          type: 'PROFILE_IMG',
+        },
+        file: {
+          buffer: Buffer.from('Im a string!', 'utf-8'),
+        },
+      };
+      const mockRes = mock.RES;
+      const err = new GeneralError('test error');
+      const mockImageService = {
+        upload: jest.fn().mockRejectedValue(err),
+      };
+
+      const controller = new ImageController(mockImageService);
+      await controller.handleUpload(mockReq, mockRes);
+
+      expect(mockRes.status).toHaveBeenCalledWith(500);
+      expect(mockRes.json).toHaveBeenCalledWith(err.json());
+    });
   });
 
   describe('#handleDelete', () => {
@@ -192,6 +220,28 @@ describe('ImageController', () => {
 
       expect(mockRes.status).toHaveBeenCalledWith(401);
       expect(mockRes.json).toHaveBeenCalledWith(new UnauthorizedError().json());
+    });
+
+    it('should res.status(500) to handle general error', async () => {
+      const mockUser = mock.USER;
+      const mockReq = {
+        user: mockUser,
+        query: {
+          imageId: mock.IMAGE.imageId,
+          type: 'PROFILE_IMG',
+        },
+      };
+      const mockRes = mock.RES;
+      const err = new GeneralError('test error');
+      const mockImageService = {
+        delete: jest.fn().mockRejectedValue(err),
+      };
+
+      const controller = new ImageController(mockImageService);
+      await controller.handleDelete(mockReq, mockRes);
+
+      expect(mockRes.status).toHaveBeenCalledWith(500);
+      expect(mockRes.json).toHaveBeenCalledWith(err.json());
     });
   });
 });

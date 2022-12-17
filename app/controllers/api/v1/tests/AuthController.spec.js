@@ -339,6 +339,34 @@ describe('AuthController', () => {
       expect(mockRes.status).toHaveBeenCalledWith(422);
       expect(mockRes.json).toHaveBeenCalledWith(error.json());
     });
+
+    it('should res.status(500) to handle general error', async () => {
+      const mockUser = mock.USER;
+      const mockSqUser = {
+        dataValues: mock.USER,
+      };
+      const [mockOtp, mockToken] = returnMockOtp(mockUser.email);
+      const mockReq = {
+        body: {
+          name: mockUser.name,
+          password: 'password',
+          otp: mockOtp,
+          otpToken: mockToken,
+        },
+      };
+      const err = new GeneralError('test error');
+      const mockRes = mock.RES;
+      const mockUserService = {
+        create: jest.fn().mockReturnValue(mockSqUser),
+        getByEmail: jest.fn().mockRejectedValue(err),
+      };
+
+      const controller = new AuthController(authService, mockUserService, {});
+      await controller.handleRegister(mockReq, mockRes);
+
+      expect(mockRes.status).toHaveBeenCalledWith(500);
+      expect(mockRes.json).toHaveBeenCalledWith(err.json());
+    });
   });
 
   describe('#handleLogin', () => {
@@ -364,6 +392,27 @@ describe('AuthController', () => {
 
       expect(mockUserService.getByEmail).toHaveBeenCalled();
       expect(mockRes.status).toHaveBeenCalledWith(200);
+    });
+
+    it('should res.status(400) if missing req field(s)', async () => {
+      const mockUser = mock.USER;
+      const mockReq = {
+        body: {},
+      };
+      const mockRes = mock.RES;
+
+      const mockUserService = {
+        getByEmail: jest.fn().mockReturnValue({
+          ...mockUser,
+          dataValues: mockUser,
+        }),
+      };
+
+      const controller = new AuthController(authService, mockUserService, {});
+      await controller.handleLogin(mockReq, mockRes);
+
+      expect(mockRes.status).toHaveBeenCalledWith(400);
+      expect(mockRes.json).toHaveBeenCalledWith(new MissingFieldError().json());
     });
 
     it('should res.status(404) if email not registered', async () => {
@@ -418,6 +467,28 @@ describe('AuthController', () => {
         message: 'Wrong password',
       });
     });
+
+    it('should res.status(500) to handle general error', async () => {
+      const mockUser = mock.USER;
+      const mockReq = {
+        body: {
+          email: mockUser.email,
+          password: 'password',
+        },
+      };
+      const mockRes = mock.RES;
+      const err = new GeneralError('test error');
+      const mockUserService = {
+        getByEmail: jest.fn().mockRejectedValue(err),
+      };
+
+      const controller = new AuthController(authService, mockUserService, {});
+      await controller.handleLogin(mockReq, mockRes);
+
+      expect(mockRes.status).toHaveBeenCalledWith(500);
+      expect(mockRes.json)
+          .toHaveBeenCalledWith(err.json());
+    });
   });
 
   describe('#handleGetSelf', () => {
@@ -448,9 +519,6 @@ describe('AuthController', () => {
         },
       };
       const mockRes = mock.RES;
-      const mockUserService = {
-        getByEmail: jest.fn().mockReturnValue(null),
-      };
       const mockEmailService = {
         sendOtpEmail: jest.fn()
             .mockImplementation((email, otp, handler) => {
@@ -462,10 +530,9 @@ describe('AuthController', () => {
             }),
       };
       const controller =
-        new AuthController(authService, mockUserService, mockEmailService);
+        new AuthController(authService, {}, mockEmailService);
       await controller.handleGetOtp(mockReq, mockRes);
 
-      expect(mockUserService.getByEmail).toHaveBeenCalled();
       expect(mockEmailService.sendOtpEmail).toHaveBeenCalled();
       expect(mockRes.status).toHaveBeenCalledWith(200);
     });
@@ -490,32 +557,6 @@ describe('AuthController', () => {
       expect(mockRes.json).toHaveBeenCalledWith(new MissingFieldError().json());
     });
 
-    it('should res.status(409) if email already registered', async () => {
-      const mockUser = mock.USER;
-      const mockReq = {
-        query: {
-          email: mockUser.email,
-        },
-      };
-      const mockRes = mock.RES;
-      const mockUserService = {
-        getByEmail: jest.fn().mockReturnValue(mockUser),
-      };
-      const mockEmailService = {
-        sendOtpEmail: jest.fn().mockReturnThis(),
-      };
-      const controller =
-        new AuthController(authService, mockUserService, mockEmailService);
-      await controller.handleGetOtp(mockReq, mockRes);
-
-      expect(mockUserService.getByEmail).toHaveBeenCalled();
-      expect(mockRes.status).toHaveBeenCalledWith(409);
-      expect(mockRes.json).toHaveBeenCalledWith({
-        status: 'failed',
-        message: 'email already registered',
-      });
-    });
-
     it('should res.status(422) if email format wrong', async () => {
       const mockReq = {
         query: {
@@ -523,22 +564,47 @@ describe('AuthController', () => {
         },
       };
       const mockRes = mock.RES;
-      const mockUserService = {
-        getByEmail: jest.fn().mockReturnValue(null),
-      };
+
       const mockEmailService = {
         sendOtpEmail: jest.fn().mockReturnThis(),
       };
       const controller =
-        new AuthController(authService, mockUserService, mockEmailService);
+        new AuthController(authService, {}, mockEmailService);
       await controller.handleGetOtp(mockReq, mockRes);
 
-      expect(mockUserService.getByEmail).toHaveBeenCalled();
       expect(mockRes.status).toHaveBeenCalledWith(422);
       expect(mockRes.json).toHaveBeenCalledWith({
         status: 'failed',
         message: 'wrong email format',
       });
+    });
+
+    it('should res.status(500) to handle general error', async () => {
+      const mockUser = mock.USER;
+      const mockReq = {
+        query: {
+          email: mockUser.email,
+        },
+      };
+      const mockRes = mock.RES;
+      const err = new GeneralError('test error');
+
+      const mockEmailService = {
+        sendOtpEmail: jest.fn()
+            .mockImplementation((email, otp, handler) => {
+              const err = new GeneralError('test error');
+              const info = {
+                email, otp,
+              };
+              handler(err, info);
+            }),
+      };
+      const controller =
+        new AuthController(authService, {}, mockEmailService);
+      await controller.handleGetOtp(mockReq, mockRes);
+
+      expect(mockRes.status).toHaveBeenCalledWith(500);
+      expect(mockRes.json).toHaveBeenCalledWith(err.json());
     });
   });
 });
