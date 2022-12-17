@@ -3,25 +3,20 @@ const {
   IdNotFoundError,
 } = require('../../../errors');
 class WishlistController {
-  constructor(wishlistService, ticketService, userService) {
+  constructor(wishlistService, ticketService) {
     this.wishlistService = wishlistService;
     this.ticketService = ticketService;
-    this.userService = userService;
   };
 
   handleGetList = async (req, res) => {
-    // FIX:
-    // Return TICKET object list, not wishlist list itself
     try {
-      const userId = req.user;
+      const user = req.user;
       const listTicket = [];
-      const list = await this.wishlistService.listByUser(userId.id);
-      for (let index = 0; index < list.length; index++) {
-        const element = list[index].userId;
-        if (userId.id === element) {
-          const b = await this.ticketService.get(list[index].ticketId);
-          listTicket.push(b);
-        }
+      const listWishlist = await this.wishlistService.listByUser(user.id);
+      for (let i = 0; i < listWishlist.length; i++) {
+        const wishlist = listWishlist[i];
+        const ticket = await this.ticketService.get(wishlist.ticketId);
+        listTicket.push(ticket);
       }
       res.status(200).json({
         status: 'success',
@@ -36,25 +31,24 @@ class WishlistController {
   };
 
   handleCreate = async (req, res) => {
-    // TODO:
     // Add to user wishlist
     try {
-      const userId = req.user;
-      const ticketId = await this.ticketService.get(req.params.id);
-      if (!ticketId) {
+      const user = req.user;
+      const ticket = await this.ticketService.get(req.params.id);
+      if (!ticket) {
         const err = new IdNotFoundError();
         res.status(404).json(err.json());
         return;
       }
-      const chck = await this.wishlistService.getByData(userId.id, ticketId.id);
-      if (chck) {
+      const check = await this.wishlistService.getByData(user.id, ticket.id);
+      if (check) {
         res.status(409).json({
           status: 'failed',
           message: 'ticket already wishlisted',
         });
         return;
       }
-      this.wishlistService.add(userId.id, ticketId.id);
+      this.wishlistService.add(user.id, ticket.id);
       res.status(200).json({
         status: 'success',
         message: 'wishlist ticket success',
@@ -66,7 +60,6 @@ class WishlistController {
   };
 
   handleDelete = async (req, res) => {
-    // TODO:
     // Remove from user wishlist
     try {
       const user = req.user;
