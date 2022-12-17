@@ -25,6 +25,7 @@ apiRouter.get('/auth/whoami',
     authController.handleGetSelf,
 );
 apiRouter.get('/auth/otp', authController.handleGetOtp);
+apiRouter.put('/auth/password', authController.handleResetPassword);
 
 // USER ENDPOINTS
 const userController = new controller.api.v1.UserController(
@@ -37,6 +38,9 @@ apiRouter.put('/users',
 apiRouter.put('/users/email',
     authController.authorizeUser,
     userController.handleUpdateUserEmail);
+apiRouter.put('/users/password',
+    authController.authorizeUser,
+    userController.handleUpdateUserPassword);
 
 // TICKET ENDPOINTS
 const ticketController = new controller.api.v1.TicketController(

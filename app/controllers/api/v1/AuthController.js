@@ -184,6 +184,15 @@ class AuthController {
       return;
     }
   };
+
+  handleResetPassword = async (req, res) => {
+    // TODO:
+    // User Can't Login because Forgot Password
+    // Get OTP first to verify email
+    // Check if email registered
+    // if valid reset password
+    // finally return accessToken
+  };
 };
 
 module.exports = AuthController;

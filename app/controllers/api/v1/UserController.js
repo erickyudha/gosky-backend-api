@@ -87,6 +87,12 @@ class UserController {
       res.status(500).json(error.json());
     }
   };
+
+  handleUpdateUserPassword = async (req, res) => {
+    // TODO:
+    // get user data from req
+    // Just update it
+  };
 };
 
 module.exports = UserController;
