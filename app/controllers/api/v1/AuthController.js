@@ -155,14 +155,6 @@ class AuthController {
         res.status(400).json(error.json());
         return;
       }
-      const gmailAlreadyRegistered = await this.userService.getByEmail(email);
-      if (gmailAlreadyRegistered) {
-        res.status(409).json({
-          status: 'failed',
-          message: 'email already registered',
-        });
-        return;
-      }
       // TODO: MAKE EMAIL NOT LIMITED TO GMAIL
       const valid = email.indexOf('@gmail.com');
       if (valid >= 0) {

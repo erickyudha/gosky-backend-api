@@ -45,8 +45,6 @@ class UserController {
           message: 'update user data success',
           data: newUser,
         });
-      } else {
-        throw new GeneralError('update failed');
       };
     } catch (err) {
       const error = new GeneralError(err.message);
@@ -83,9 +81,7 @@ class UserController {
           message: 'update user email success',
           data: newUser,
         });
-      } else {
-        throw new GeneralError('update failed');
-      };
+      }
     } catch (err) {
       const error = new GeneralError(err.message);
       res.status(500).json(error.json());

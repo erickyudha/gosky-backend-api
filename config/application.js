@@ -1,7 +1,15 @@
 require('dotenv').config();
+
+const {
+  MORGAN_FORMAT = 'dev',
+  JWT_SIGNATURE_KEY = 'AMOGUS',
+  EMAIL_SIGNATURE_KEY = 'IMPOSTOR',
+  SALT = 10,
+} = process.env;
+
 module.exports = {
-  MORGAN_FORMAT: 'dev',
-  JWT_SIGNATURE_KEY: process.env.JWT_SIGNATURE_KEY || 'Rahasia',
-  EMAIL_SIGNATURE_KEY: process.env.JWT_SIGNATURE_KEY || 'Rahasia2',
-  SALT: parseInt(process.env.SALT) || 10,
+  MORGAN_FORMAT,
+  JWT_SIGNATURE_KEY,
+  EMAIL_SIGNATURE_KEY,
+  SALT: parseInt(SALT),
 };

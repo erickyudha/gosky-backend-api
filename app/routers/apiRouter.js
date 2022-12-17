@@ -68,7 +68,7 @@ apiRouter.delete('/tickets/:id/wishlist',
 
 // TRANSACTION ENDPOINTS
 const transactionController = new controller.api.v1.TransactionController(
-    transactionService, userService, ticketService,
+    transactionService, ticketService,
     notificationService, emailService,
 );
 apiRouter.get('/transactions',
@@ -82,8 +82,7 @@ apiRouter.get('/transactions/:id',
     transactionController.handleGet);
 
 // IMAGE ENDPOINTS
-const imageController = new controller.api.v1.ImageController(
-    imageService, userService, ticketService);
+const imageController = new controller.api.v1.ImageController(imageService);
 apiRouter.post('/images',
     authController.authorizeUser,
     upload.single('image'),

@@ -20,7 +20,7 @@ class TicketController {
         },
       });
     } catch (err) {
-      const error = new GeneralError(err);
+      const error = new GeneralError(err.message);
       res.status(500).json(error.json());
     }
   };
@@ -39,12 +39,15 @@ class TicketController {
         data: ticket,
       });
     } catch (err) {
-      const error = new GeneralError(err);
+      const error = new GeneralError(err.message);
       res.status(500).json(error.json());
     }
   };
 
   handleCreate = async (req, res) => {
+    // BUG:
+    // For ONE_WAY ticket, error if returnTime empty
+    // If returnTime null, return time be 1970 and not null in db
     try {
       if (
         !req.body.category ||
@@ -72,12 +75,14 @@ class TicketController {
         });
       };
     } catch (err) {
-      const error = new GeneralError(err);
+      const error = new GeneralError(err.message);
       res.status(500).json(error.json());
     }
   };
 
   handleUpdate = async (req, res) => {
+    // BUG:
+    // If returnTime or departureTime empty/not updated, error
     try {
       const id = await this.ticketService.get(req.params.id);
       if (!id) {
@@ -97,7 +102,7 @@ class TicketController {
         data: ticket,
       });
     } catch (err) {
-      const error = new GeneralError(err);
+      const error = new GeneralError(err.message);
       res.status(500).json(error.json());
     }
   };
@@ -117,7 +122,7 @@ class TicketController {
         res.status(404).json(err.json());
       }
     } catch (err) {
-      const error = new GeneralError(err);
+      const error = new GeneralError(err.message);
       res.status(500).json(error.json());
     }
   };
