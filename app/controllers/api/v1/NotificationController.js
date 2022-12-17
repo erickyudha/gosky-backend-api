@@ -9,16 +9,17 @@ class NotificationController {
   };
 
   handleList = async (req, res) => {
-    // TODO:
     // Return user notification list
     try {
-      const userId = req.user;
-      const listNotif = await this.notificationService.listByUser(userId.id);
+      const user = req.user;
+      const listNotif = await this.notificationService.listByUser(user.id);
       res.status(200).json({
         status: 'success',
-        message: 'get notification list, success',
+        message: 'get notification list success',
         data: listNotif,
-        count: listNotif.length,
+        meta: {
+          count: listNotif.length,
+        },
       });
     } catch (err) {
       const error = new GeneralError(err.message);
@@ -27,7 +28,6 @@ class NotificationController {
   };
 
   handleMarkAsRead = async (req, res) => {
-    // TODO:
     // Mark notification as read by id
     try {
       const user = req.user;
@@ -45,7 +45,7 @@ class NotificationController {
       await this.notificationService.markAsRead(notification.id);
       res.status(200).json({
         status: 'success',
-        message: 'read notification, success',
+        message: 'notification marked as read',
       });
     } catch (err) {
       const error = new GeneralError(err.message);
