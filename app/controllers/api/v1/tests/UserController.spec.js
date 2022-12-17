@@ -1,5 +1,9 @@
 const mock = require('../../../../../tests/mock');
-const {IdNotFoundError} = require('../../../../errors');
+const {
+  IdNotFoundError,
+  GeneralError,
+  MissingFieldError,
+} = require('../../../../errors');
 const UserController = require('../UserController');
 const authService = require('../../../../services/authService');
 
@@ -53,6 +57,25 @@ describe('UserController', () => {
       expect(mockRes.status).toHaveBeenCalledWith(404);
       expect(mockRes.json).toHaveBeenCalledWith(new IdNotFoundError().json());
     });
+
+    it('should res.status(500) to handle general error', async () => {
+      const mockReq = {
+        params: {
+          id: 1,
+        },
+      };
+      const mockRes = mock.RES;
+      const err = new GeneralError('error test');
+      const mockUserService = {
+        simpleGet: jest.fn().mockRejectedValue(err),
+      };
+
+      const controller = new UserController(mockUserService, {});
+      await controller.handleGetSimpleUser(mockReq, mockRes);
+
+      expect(mockRes.status).toHaveBeenCalledWith(500);
+      expect(mockRes.json).toHaveBeenCalledWith(err.json());
+    });
   });
 
   describe('#handleUpdateUser', () => {
@@ -92,9 +115,38 @@ describe('UserController', () => {
         },
       });
     });
+
+    it('should res.status(500) to handle general error', async () => {
+      const mockUser = mock.USER;
+      const updateBody = {
+        name: 'sussy',
+        phone: '03183971937',
+        address: 'skeld',
+        imageId: 'sample',
+        imageUrl: 'image.com/image.png',
+      };
+      const mockReq = {
+        body: updateBody,
+        user: mockUser,
+      };
+      const mockRes = mock.RES;
+      const err = new GeneralError('error test');
+      const mockUserService = {
+        update: jest.fn().mockRejectedValue(err),
+        get: jest.fn().mockReturnValue({
+          ...mockUser, ...updateBody,
+        }),
+      };
+
+      const controller = new UserController(mockUserService, {});
+      await controller.handleUpdateUser(mockReq, mockRes);
+
+      expect(mockRes.status).toHaveBeenCalledWith(500);
+      expect(mockRes.json).toHaveBeenCalledWith(err.json());
+    });
   });
 
-  describe('#handleUpdateUSerEmail', () => {
+  describe('#handleUpdateUserEmail', () => {
     it('should res.status(200) if success', async () => {
       const mockUser = mock.USER;
       const [mockOtp, mockOtpToken] =
@@ -126,6 +178,26 @@ describe('UserController', () => {
       });
     });
 
+    it('should res.status(400) if missing required field(s)', async () => {
+      const mockUser = mock.USER;
+      const mockReq = {
+        user: mockUser,
+        body: {},
+      };
+      const mockRes = mock.RES;
+
+      const mockUserService = {
+        update: jest.fn().mockReturnValue([1]),
+        get: jest.fn().mockReturnValue(mockUser),
+      };
+
+      const controller = new UserController(mockUserService, authService);
+      await controller.handleUpdateUserEmail(mockReq, mockRes);
+
+      expect(mockRes.status).toHaveBeenCalledWith(400);
+      expect(mockRes.json).toHaveBeenCalledWith(new MissingFieldError().json());
+    });
+
     it('should res.status(422) if otp invalid', async () => {
       const mockUser = mock.USER;
       const [mockOtp, mockOtpToken] =
@@ -147,6 +219,31 @@ describe('UserController', () => {
         status: 'failed',
         message: 'wrong otp or invalid otpToken',
       });
+    });
+
+    it('should res.status(500) to handle general error', async () => {
+      const mockUser = mock.USER;
+      const [mockOtp, mockOtpToken] =
+        authService.createOtpToken(mockUser.email);
+      const mockReq = {
+        user: mockUser,
+        body: {
+          otp: mockOtp,
+          otpToken: mockOtpToken,
+        },
+      };
+      const mockRes = mock.RES;
+      const err = new GeneralError('error test');
+      const mockUserService = {
+        update: jest.fn().mockRejectedValue(err),
+        get: jest.fn().mockReturnValue(mockUser),
+      };
+
+      const controller = new UserController(mockUserService, authService);
+      await controller.handleUpdateUserEmail(mockReq, mockRes);
+
+      expect(mockRes.status).toHaveBeenCalledWith(500);
+      expect(mockRes.json).toHaveBeenCalledWith(err.json());
     });
   });
 });

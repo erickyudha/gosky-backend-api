@@ -59,6 +59,48 @@ const mock = {
     deletedAt: isoDate,
   },
 
+  NOTIFICATION: {
+    id: 1,
+    userId: 1,
+    message: 'Transaction of 2 ROUND_TRIP [SEMARANG - DENPASAR] ' +
+    'ticket(s) is success',
+    isRead: false,
+    deletedAt: null,
+    createdAt: '2022-12-16T11:45:25.071Z',
+    updatedAt: '2022-12-16T11:45:25.071Z',
+  },
+
+  UP_IMAGE: {
+    public_id: 'gosky/profiles/1671193627092-153440080',
+    url: 'http://res.cloudinary.com/dgjwtquka/image/upload/' +
+    'v1671193630/gosky/profiles/1671193627092-153440080.png',
+  },
+
+  IMAGE: {
+    imageId: '1671193627092-153440080',
+    imageUrl: 'http://res.cloudinary.com/dgjwtquka/image/upload/' +
+      'v1671193630/gosky/profiles/1671193627092-153440080.png',
+  },
+
+  WISHLIST: {
+    id: 1,
+    userId: 1,
+    ticketId: 1,
+    deletedAt: null,
+    createdAt: '2022-12-16T11:45:25.071Z',
+    updatedAt: '2022-12-16T11:45:25.071Z',
+  },
+
+  TRANSACTION: {
+    id: 1,
+    userId: 1,
+    ticketId: 1,
+    amount: 1,
+    bookingCode: 'VQSGU4NRD',
+    deletedAt: null,
+    createdAt: '2022-12-14T08:09:22.006Z',
+    updatedAt: '2022-12-14T08:09:22.006Z',
+  },
 
 };
 

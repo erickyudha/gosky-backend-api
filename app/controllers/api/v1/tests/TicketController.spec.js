@@ -1,7 +1,11 @@
 const mock = require('../../../../../tests/mock');
 const TicketController = require('../TicketController');
 const dayjs = require('dayjs');
-const {IdNotFoundError, MissingFieldError} = require('../../../../errors');
+const {
+  IdNotFoundError,
+  MissingFieldError,
+  GeneralError,
+} = require('../../../../errors');
 const now = dayjs();
 
 describe('TicketController', () => {
@@ -74,6 +78,22 @@ describe('TicketController', () => {
           expect(mockTicketService.list).toHaveBeenCalled();
           expect(mockRes.status).toHaveBeenCalledWith(200);
         });
+
+    it('should res.status(500) to handle general error',
+        async () => {
+          const mockRes = mock.RES;
+          const mockReq = {body: {}};
+          const err = new GeneralError('test error');
+          const mockTicketService = {
+            list: jest.fn().mockRejectedValue(err),
+          };
+
+          const controller = new TicketController(mockTicketService);
+          await controller.handleGetList(mockReq, mockRes);
+
+          expect(mockRes.status).toHaveBeenCalledWith(500);
+          expect(mockRes.json).toHaveBeenCalledWith(err.json());
+        });
   });
 
   describe('#handleGet', () => {
@@ -124,6 +144,26 @@ describe('TicketController', () => {
       expect(mockRes.status).toHaveBeenCalledWith(404);
       expect(mockRes.json).toHaveBeenCalledWith(new IdNotFoundError().json());
     });
+
+    it('should res.status(500) to handle general error', async () => {
+      const mockRes = mock.RES;
+      const mockReq = {
+        params: {
+          id: 1,
+        },
+      };
+
+      const err = new GeneralError('test error');
+      const mockTicketService = {
+        get: jest.fn().mockRejectedValue(err),
+      };
+
+      const controller = new TicketController(mockTicketService);
+      await controller.handleGet(mockReq, mockRes);
+
+      expect(mockRes.status).toHaveBeenCalledWith(500);
+      expect(mockRes.json).toHaveBeenCalledWith(err.json());
+    });
   });
 
   describe('#handleCreate', () => {
@@ -157,8 +197,8 @@ describe('TicketController', () => {
       const controller = new TicketController(mockTicketService);
       await controller.handleCreate(mockReq, mockRes);
 
-      // expect(mockTicketService.create).toHaveBeenCalled();
-      // expect(mockRes.status).toHaveBeenCalledWith(201);
+      expect(mockTicketService.create).toHaveBeenCalled();
+      expect(mockRes.status).toHaveBeenCalledWith(201);
       expect(mockRes.json).toHaveBeenCalledWith({
         status: 'success',
         message: 'add ticket data success',
@@ -177,6 +217,40 @@ describe('TicketController', () => {
 
       expect(mockRes.status).toHaveBeenCalledWith(400);
       expect(mockRes.json).toHaveBeenCalledWith(new MissingFieldError().json());
+    });
+
+    it('should res.status(500) to handle general error', async () => {
+      const mockTicket = mock.TICKET;
+      const mockUser = mock.USER;
+      const mockTicketReq = {
+        category: mockTicket.category,
+        from: mockTicket.from,
+        to: mockTicket.to,
+        departureTime: mockTicket.departureTime,
+        returnTime: mockTicket.departureTime,
+        price: mockTicket.price,
+        duration: mockTicket.duration,
+        flightNumber: mockTicket.flightNumber,
+        imageId: mockTicket.imageId,
+        imageUrl: mockTicket.imageUrl,
+        description: mockTicket.description,
+      };
+
+      const mockReq = {
+        user: mockUser,
+        body: mockTicketReq,
+      };
+      const mockRes = mock.RES;
+      const err = new GeneralError('error test');
+      const mockTicketService = {
+        create: jest.fn().mockRejectedValue(err),
+      };
+
+      const controller = new TicketController(mockTicketService);
+      await controller.handleCreate(mockReq, mockRes);
+
+      expect(mockRes.status).toHaveBeenCalledWith(500);
+      expect(mockRes.json).toHaveBeenCalledWith(err.json());
     });
   });
 
@@ -246,6 +320,44 @@ describe('TicketController', () => {
       expect(mockRes.status).toHaveBeenCalledWith(404);
       expect(mockRes.json).toHaveBeenCalledWith(new IdNotFoundError().json());
     });
+
+    it('should res.status(500) to handle general error', async () => {
+      const mockTicket = mock.TICKET;
+      const mockUser = mock.USER;
+      const mockTicketReq = {
+        category: mockTicket.category,
+        from: 'DA WAY',
+        to: mockTicket.to,
+        departureTime: mockTicket.departureTime,
+        returnTime: mockTicket.departureTime,
+        price: mockTicket.price,
+        flightNumber: mockTicket.flightNumber,
+        imageId: mockTicket.imageId,
+        imageUrl: mockTicket.imageUrl,
+        description: mockTicket.description,
+      };
+
+      const mockReq = {
+        params: {id: 1},
+        user: mockUser,
+        body: mockTicketReq,
+      };
+      const mockRes = mock.RES;
+      const err = new GeneralError('error test');
+      const mockTicketService = {
+        get: jest.fn().mockRejectedValue(err),
+        update: jest.fn().mockReturnValue({
+          ...mock.TICKET,
+          from: 'DA WAY',
+        }),
+      };
+
+      const controller = new TicketController(mockTicketService);
+      await controller.handleUpdate(mockReq, mockRes);
+
+      expect(mockRes.status).toHaveBeenCalledWith(500);
+      expect(mockRes.json).toHaveBeenCalledWith(err.json());
+    });
   });
 
   describe('#handleDelete', () => {
@@ -289,6 +401,24 @@ describe('TicketController', () => {
       expect(mockTicketService.get).toHaveBeenCalled();
       expect(mockRes.status).toHaveBeenCalledWith(404);
       expect(mockRes.json).toHaveBeenCalledWith(new IdNotFoundError().json());
+    });
+
+    it('should res.status(500) on delete success', async () => {
+      const mockReq = {
+        params: {id: 1},
+      };
+      const mockRes = mock.RES;
+      const err = new GeneralError('error test');
+      const mockTicketService = {
+        get: jest.fn().mockRejectedValue(err),
+        delete: jest.fn().mockReturnValue(true),
+      };
+
+      const controller = new TicketController(mockTicketService);
+      await controller.handleDelete(mockReq, mockRes);
+
+      expect(mockRes.status).toHaveBeenCalledWith(500);
+      expect(mockRes.json).toHaveBeenCalledWith(err.json());
     });
   });
 });
