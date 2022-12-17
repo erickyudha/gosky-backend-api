@@ -440,7 +440,7 @@ describe('AuthController', () => {
   });
 
   describe('#handleGetOtp', () => {
-    it('should send email if request otp success', async () => {
+    it('should res.status(200) if request otp success', async () => {
       const mockUser = mock.USER;
       const mockReq = {
         query: {
@@ -452,7 +452,14 @@ describe('AuthController', () => {
         getByEmail: jest.fn().mockReturnValue(null),
       };
       const mockEmailService = {
-        sendOtpEmail: jest.fn().mockReturnThis(),
+        sendOtpEmail: jest.fn()
+            .mockImplementation((email, otp, handler) => {
+              const err = null;
+              const info = {
+                email, otp,
+              };
+              handler(err, info);
+            }),
       };
       const controller =
         new AuthController(authService, mockUserService, mockEmailService);
@@ -460,6 +467,7 @@ describe('AuthController', () => {
 
       expect(mockUserService.getByEmail).toHaveBeenCalled();
       expect(mockEmailService.sendOtpEmail).toHaveBeenCalled();
+      expect(mockRes.status).toHaveBeenCalledWith(200);
     });
 
     it('should res.status(400) if missing req field', async () => {
