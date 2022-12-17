@@ -7,13 +7,11 @@ const {
 class TransactionController {
   constructor(
       transactionService,
-      userService,
       ticketService,
       notificationService,
       emailService,
   ) {
     this.transactionService = transactionService;
-    this.userService = userService;
     this.ticketService = ticketService;
     this.notificationService = notificationService;
     this.emailService = emailService;
@@ -24,13 +22,11 @@ class TransactionController {
     // On other hands ADMIN can access all transactions in database.
     try {
       const user = req.user;
-      const listAdmin = await this.transactionService.list();
-      const listUser = await this.transactionService.listByUser(user.id);
       let transaction;
       if (user.role === 'ADMIN') {
-        transaction = listAdmin;
+        transaction = await this.transactionService.list();
       } else {
-        transaction = listUser;
+        transaction = await this.transactionService.listByUser(user.id);
       }
       res.status(200).json({
         status: 'success',
@@ -49,26 +45,18 @@ class TransactionController {
     // On other hands ADMIN can access all transactions in database.
     // UnauthorizedError if USER try to access transaction not made by them
     try {
-      let transaction;
       const user = req.user;
       const transactionId = req.params.id;
-      if (user.role === 'ADMIN') {
-        const listAdmin = await this.transactionService.list();
-        transaction = listAdmin;
-      } else {
-        const getUser = await this.transactionService.get(transactionId);
-        if (!getUser) {
-          const error = new IdNotFoundError();
-          res.status(404).json(error.json());
-          return;
-        }
-
-        if (user.id != getUser.userId) {
-          const error = new UnauthorizedError();
-          res.status(401).json(error.json());
-          return;
-        }
-        transaction = getUser;
+      const transaction = await this.transactionService.get(transactionId);
+      if (!transaction) {
+        const error = new IdNotFoundError();
+        res.status(404).json(error.json());
+        return;
+      }
+      if (user.role === 'USER' && user.id != transaction.userId) {
+        const error = new UnauthorizedError();
+        res.status(401).json(error.json());
+        return;
       }
       res.status(200).json({
         status: 'success',
@@ -106,8 +94,8 @@ class TransactionController {
         res.status(400).json(error.json());
         return;
       }
-      const ticketId = await this.ticketService.get(req.body.ticketId);
-      if (!ticketId) {
+      const ticket = await this.ticketService.get(req.body.ticketId);
+      if (!ticket) {
         const err = new IdNotFoundError();
         res.status(404).json(err.json());
         return;
@@ -119,14 +107,16 @@ class TransactionController {
         bookingCode: bookingCode,
       });
       await this.notificationService.create(
-          user.id, `Transaction ticket ${ticketId.id} is success`,
+          user.id,
+          `Transaction of ${req.body.amount} ${ticket.category} ` +
+          `[${ticket.from} - ${ticket.to}] ticket(s) is success`,
       );
       await this.emailService.sendTransactionEmail(user.email, transaction,
           (err, info) => {
             if (err) {
               throw err;
             } else {
-              res.status(200).json({
+              res.status(201).json({
                 status: 'success',
                 message: 'add transaction success',
                 data: transaction,
