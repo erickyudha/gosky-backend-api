@@ -51,6 +51,7 @@
                     "Notification"
                 ],
                 "summary": "Get current notification data",
+                "operationId": "getnot",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -131,6 +132,7 @@
                     "Notification"
                 ],
                 "summary": "Get current notification data",
+                "operationId": "putnot",
                 "parameters": [
                     {
                         "in": "path",
@@ -712,26 +714,6 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/UnauthorizedError"
-                                }
-                            }
-                        }
-                    },
-                    "409": {
-                        "description": "Conflict, email already registered",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "status": {
-                                            "type": "string",
-                                            "example": "failed"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "email already registered"
-                                        }
-                                    }
                                 }
                             }
                         }
@@ -1586,7 +1568,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/TicketResponse"
+                                                "$ref": "#/components/schemas/TransactionResponse"
                                             }
                                         },
                                         "meta": {
