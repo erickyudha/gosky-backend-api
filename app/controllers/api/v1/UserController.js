@@ -92,6 +92,28 @@ class UserController {
     // TODO:
     // get user data from req
     // Just update it
+    try {
+      const user = req.user;
+      if (!req.body.newPassword) {
+        const missingFieldErr = new MissingFieldError();
+        res.status(400).json(missingFieldErr.json());
+        return;
+      }
+      const encryptPassword = await this.authService.encryptPassword(
+          req.body.newPassword);
+      await this.userService.update(user.id,
+          {encryptedPassword: encryptPassword},
+      );
+      const newUser = await this.userService.get(user.id);
+      res.status(200).json({
+        status: 'success',
+        message: 'reset password success',
+        data: newUser,
+      });
+    } catch (err) {
+      const error = new GeneralError(err.message);
+      res.status(500).json(error.json());
+    }
   };
 };
 
