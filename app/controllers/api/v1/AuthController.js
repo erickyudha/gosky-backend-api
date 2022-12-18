@@ -114,7 +114,6 @@ class AuthController {
         }
         const isPasswordCorrect = this.authService.verifyPassword(
             password, user.encryptedPassword);
-
         if (!isPasswordCorrect) {
           res.status(401).json({
             status: 'failed',
@@ -122,7 +121,6 @@ class AuthController {
           });
           return;
         }
-
         const accessToken =
           this.authService.createTokenFromUser(user.dataValues);
         res.status(200).json({
@@ -192,6 +190,49 @@ class AuthController {
     // Check if email registered
     // if valid reset password
     // finally return accessToken
+    try {
+      const email = req.query.email;
+      const missingFieldErr = new MissingFieldError();
+      if (!req.query.email) {
+        res.status(400).json(missingFieldErr.json());
+        return;
+      }
+      if (!req.body.otp || !req.body.otpToken|| !req.body.newPassword) {
+        res.status(400).json(missingFieldErr.json());
+        return;
+      }
+      const user = await this.userService.getByEmail(email);
+      if (!user) {
+        res.status(409).json({
+          status: 'failed',
+          message: 'email not registered',
+        });
+        return;
+      }
+      const verifyToken = this.authService.verifyOtpToken(
+          req.body.otp, req.body.otpToken,
+      );
+      if (!verifyToken) {
+        const error = new GeneralError('Invalid OTP or OTP Token');
+        res.status(422).json(error.json());
+        return;
+      }
+      const encryptPassword = await this.authService.encryptPassword(
+          req.body.newPassword);
+      await this.userService.update(user.id,
+          {encryptedPassword: encryptPassword},
+      );
+      const accessToken = this.authService.createTokenFromUser(user.dataValues);
+      res.status(200).json({
+        status: 'success',
+        message: 'reset password success',
+        data: {accessToken: accessToken},
+      });
+    } catch (err) {
+      const error = new GeneralError(err.message);
+      res.status(500).json(error.json());
+      return;
+    }
   };
 };
 
