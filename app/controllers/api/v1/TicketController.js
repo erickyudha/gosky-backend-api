@@ -61,12 +61,18 @@ class TicketController {
         const error = new MissingFieldError();
         res.status(400).json(error.json());
       } else {
+        let returnTimes;
+        if (req.body.category === 'ONE_WAY') {
+          returnTimes = null;
+        } else {
+          returnTimes = new Date(req.body.returnTime).toISOString();
+        }
         const ticket = await this.ticketService.create({
           ...req.body,
           createdBy: req.user.id,
           updatedBy: req.user.id,
           departureTime: new Date(req.body.departureTime).toISOString(),
-          returnTime: new Date(req.body.returnTime).toISOString(),
+          returnTime: returnTimes,
         });
         res.status(201).json({
           status: 'success',
@@ -90,12 +96,25 @@ class TicketController {
         res.status(404).json(err.json());
         return;
       }
-      const ticket = await this.ticketService.update(req.params.id, {
+      let returnTimes;
+      if (req.body.category === 'ONE_WAY') {
+        returnTimes = null;
+      } else {
+        returnTimes = new Date(req.body.returnTime).toISOString();
+      }
+      let departureTimes;
+      if (req.body.departureTime = null) {
+        departureTimes = id.departureTime;
+      } else {
+        new Date(req.body.departureTime).toISOString();
+      }
+      await this.ticketService.update(req.params.id, {
         ...req.body,
         updatedBy: req.user.id,
-        departureTime: new Date(req.body.departureTime).toISOString(),
-        returnTime: new Date(req.body.returnTime).toISOString(),
+        departureTime: departureTimes,
+        returnTime: returnTimes,
       });
+      const ticket = await this.ticketService.get(id.id);
       res.status(200).json({
         status: 'success',
         message: 'update ticket data success',
