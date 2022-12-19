@@ -30,6 +30,7 @@ module.exports = {
       },
       returnTime: {
         type: Sequelize.DATE,
+        defaultValue: null,
       },
       price: {
         allowNull: false,
