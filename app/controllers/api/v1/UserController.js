@@ -94,9 +94,19 @@ class UserController {
     // Just update it
     try {
       const user = req.user;
-      if (!req.body.newPassword) {
+      if (!req.body.password || !req.body.newPassword) {
         const missingFieldErr = new MissingFieldError();
         res.status(400).json(missingFieldErr.json());
+        return;
+      }
+      const pass = req.body.password;
+      const password = await this.authService.verifyPassword(
+          pass, user.encryptedPassword);
+      if (!password) {
+        res.status(401).json({
+          status: 'failed',
+          message: 'wrong password',
+        });
         return;
       }
       const encryptPassword = await this.authService.encryptPassword(

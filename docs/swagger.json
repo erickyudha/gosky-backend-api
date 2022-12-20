@@ -1,2429 +1,2446 @@
 {
     "openapi": "3.0.3",
     "info": {
-      "title": "GoSky Backend API - OpenAPI 3.0",
-      "description": "REST backend API for GoSky frontend web and android app.",
-      "contact": {
-        "email": "apiteam@swagger.io"
-      },
-      "version": "1.0.11"
+        "title": "GoSky Backend API - OpenAPI 3.0",
+        "description": "REST backend API for GoSky frontend web and android app.",
+        "contact": {
+            "email": "apiteam@swagger.io"
+        },
+        "version": "1.0.11"
     },
     "servers": [
-
-      {
-        "url": "http://localhost:8000/api/",
-        "description": "local"
-      }
+        {
+            "url": "https://gosky.up.railway.app/api/",
+            "description": "hosted"
+        },
+        {
+            "url": "http://localhost:8000/api/",
+            "description": "local"
+        }
     ],
     "tags": [
-      {
-        "name": "Auth",
-        "description": "Everything about user authentication"
-      },
-      {
-        "name": "Users",
-        "description": "Operation about user data"
-      },
-      {
-        "name": "Tickets",
-        "description": "Operations about ticket data"
-      },
-      {
-        "name": "Transactions",
-        "description": "Operations about user transaction"
-      },
-      {
-        "name": "Images",
-        "description": "Operations about image handling"
-      },
-      {
-        "name": "Notification",
-        "description": "Notifications"
-      }
+        {
+            "name": "Auth",
+            "description": "Everything about user authentication"
+        },
+        {
+            "name": "Users",
+            "description": "Operation about user data"
+        },
+        {
+            "name": "Tickets",
+            "description": "Operations about ticket data"
+        },
+        {
+            "name": "Transactions",
+            "description": "Operations about user transaction"
+        },
+        {
+            "name": "Images",
+            "description": "Operations about image handling"
+        },
+        {
+            "name": "Notification",
+            "description": "Notifications"
+        }
     ],
     "paths": {
-      "/notifications": {
-        "get": {
-          "tags": [
-            "Notification"
-          ],
-          "summary": "Get current notification data",
-          "operationId": "getnot",
-          "responses": {
-            "200": {
-              "description": "OK",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "status": {
-                        "type": "string",
-                        "example": "success"
-                      },
-                      "message": {
-                        "type": "string",
-                        "example": "get user data success"
-                      },
-                      "data": {
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "example": 1
-                            },
-                            "userId": {
-                              "type": "integer",
-                              "example": 1
-                            },
-                            "messaage": {
-                              "type": "string",
-                              "example": "Transaction ticket 1 is success"
-                            },
-                            "isRead": {
-                              "type": "boolean",
-                              "example": null
-                            },
-                            "createdAt": {
-                              "type": "string",
-                              "example": "timestamp"
-                            },
-                            "updatedAt": {
-                              "type": "string",
-                              "example": "timestamp"
-                            },
-                            "deletedAt": {
-                              "type": "string",
-                              "example": "timestamp"
+        "/notifications": {
+            "get": {
+                "tags": [
+                    "Notification"
+                ],
+                "summary": "Get current notification data",
+                "operationId": "getnot",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "get user data success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "userId": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "messaage": {
+                                                        "type": "string",
+                                                        "example": "Transaction ticket 1 is success"
+                                                    },
+                                                    "isRead": {
+                                                        "type": "boolean",
+                                                        "example": null
+                                                    },
+                                                    "createdAt": {
+                                                        "type": "string",
+                                                        "example": "timestamp"
+                                                    },
+                                                    "updatedAt": {
+                                                        "type": "string",
+                                                        "example": "timestamp"
+                                                    },
+                                                    "deletedAt": {
+                                                        "type": "string",
+                                                        "example": "timestamp"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "count": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    }
+                                }
                             }
-                          }
                         }
-                      },
-                      "count": {
-                        "type": "integer",
-                        "example": 1
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "default": {
-              "description": "General Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/GeneralError"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/notifications/{id}/read": {
-        "put": {
-          "tags": [
-            "Notification"
-          ],
-          "summary": "Get current notification data",
-          "operationId": "putnot",
-          "parameters": [
-            {
-              "in": "path",
-              "name": "id",
-              "schema": {
-                "type": "integer"
-              },
-              "required": true,
-              "description": "ID of notification data to get"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "OK",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "status": {
-                        "type": "string",
-                        "example": "success"
-                      },
-                      "message": {
-                        "type": "string",
-                        "example": "read notification, success"
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "401": {
-              "description": "Unauthorized, wrong login password",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "status": {
-                        "type": "string",
-                        "example": "failed"
-                      },
-                      "message": {
-                        "type": "string",
-                        "example": "wrong password"
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "404": {
-              "description": "Not Found",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/IdNotFoundError"
-                  }
-                }
-              }
-            },
-            "default": {
-              "description": "General Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/GeneralError"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/auth/register": {
-        "post": {
-          "tags": [
-            "Auth"
-          ],
-          "summary": "Register new user",
-          "description": "Register new account with USER role",
-          "operationId": "registerMember",
-          "security": [
-            {}
-          ],
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "name",
-                    "password",
-                    "otp",
-                    "otpToken"
-                  ],
-                  "properties": {
-                    "name": {
-                      "type": "string",
-                      "example": "John Doe"
                     },
-                    "password": {
-                      "type": "string",
-                      "example": "this_password"
-                    },
-                    "otp": {
-                      "type": "string",
-                      "example": "string"
-                    },
-                    "otpToken": {
-                      "type": "string",
-                      "example": "string"
+                    "default": {
+                        "description": "General Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralError"
+                                }
+                            }
+                        }
                     }
-                  }
                 }
-              }
             }
-          },
-          "responses": {
-            "201": {
-              "description": "Created",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "status": {
-                        "type": "string",
-                        "example": "success"
-                      },
-                      "message": {
-                        "type": "string",
-                        "example": "register success"
-                      },
-                      "data": {
-                        "type": "object",
-                        "properties": {
-                          "accessToken": {
+        },
+        "/notifications/{id}/read": {
+            "put": {
+                "tags": [
+                    "Notification"
+                ],
+                "summary": "Get current notification data",
+                "operationId": "putnot",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "required": true,
+                        "description": "ID of notification data to get"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "read notification, success"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized, wrong login password",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "wrong password"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/IdNotFoundError"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "General Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register new user",
+                "description": "Register new account with USER role",
+                "operationId": "registerMember",
+                "security": [
+                    {}
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "name",
+                                    "password",
+                                    "otp",
+                                    "otpToken"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "this_password"
+                                    },
+                                    "otp": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "otpToken": {
+                                        "type": "string",
+                                        "example": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "register success"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "accessToken": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, missing fields",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MissingFieldError"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "General Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login with account",
+                "description": "Login and get access token for auth",
+                "operationId": "login",
+                "security": [
+                    {}
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "new@account.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "this_password"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "login success"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "accessToken": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, missing fields",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MissingFieldError"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized, wrong login password",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "wrong password"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Conflict, email not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "email not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "General Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/whoami": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "operationId": "whoAmI",
+                "summary": "Get current user data",
+                "description": "Return current user data based on bearer token \n\n Allowed roles: USER, ADMIN",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "get user data success"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/UserResponse"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized, bearer token invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnauthorizedError"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "General Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/password": {
+            "put": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Reset password",
+                "operationId": "resetpassword",
+                "description": "reset password \n\n Allowed roles: ADMIN, USER",
+                "security": [
+                    {}
+                ],
+                "requestBody": {
+                    "description": "Allowed fields to update: [otp, otpToken, newPassword]",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "otp",
+                                    "otpToken",
+                                    "newPassword"
+                                ],
+                                "properties": {
+                                    "otp": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "otpToken": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "newPassword": {
+                                        "type": "string",
+                                        "example": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "reset password success"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "accessToken": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, missing fields",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MissingFieldError"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnauthorizedError"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/IdNotFoundError"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "General Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{id}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get user data by ID",
+                "operationId": "getUserData",
+                "security": [
+                    {}
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "required": true,
+                        "description": "ID of the user to get"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "get user data success"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/SimpleUserResponse"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/IdNotFoundError"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "General Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users": {
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Edit logged in user data",
+                "operationId": "editUserData",
+                "description": "Update user data \n\n Allowed roles: ADMIN, USER",
+                "requestBody": {
+                    "description": "Allowed fields to update: [name, phone, address imageId, imageUrl]",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "0856xxxxxxxx"
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "imageId": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "imageUrl": {
+                                        "type": "string",
+                                        "example": "string.com/image.png"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "update user data success"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/UserResponse"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnauthorizedError"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "General Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/password": {
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Reset password",
+                "operationId": "resetpasswordUsr",
+                "description": "reset password \n\n Allowed roles: ADMIN, USER",
+                "requestBody": {
+                    "description": "Allowed fields to update: [newPassword]",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "password": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "newPassword": {
+                                        "type": "string",
+                                        "example": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "update user password success"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/UserResponse"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, missing fields",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MissingFieldError"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "wrong password"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "General Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/otp": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "security": [
+                    {}
+                ],
+                "summary": "Get OTP for email confirmation",
+                "operationId": "getUserDataEmail",
+                "description": "Return otp token, OTP is sent to corresponding email",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "email",
+                        "schema": {
                             "type": "string",
-                            "example": "string"
-                          }
+                            "format": "email"
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "otp request success"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "otpToken": {
+                                                    "type": "string",
+                                                    "example": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "400": {
-              "description": "Bad Request, missing fields",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/MissingFieldError"
-                  }
-                }
-              }
-            },
-            "default": {
-              "description": "General Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/GeneralError"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/auth/login": {
-        "post": {
-          "tags": [
-            "Auth"
-          ],
-          "summary": "Login with account",
-          "description": "Login and get access token for auth",
-          "operationId": "login",
-          "security": [
-            {}
-          ],
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "email",
-                    "password"
-                  ],
-                  "properties": {
-                    "email": {
-                      "type": "string",
-                      "format": "email",
-                      "example": "new@account.com"
                     },
-                    "password": {
-                      "type": "string",
-                      "example": "this_password"
+                    "400": {
+                        "description": "Bad Request, missing fields",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MissingFieldError"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnauthorizedError"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "General Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralError"
+                                }
+                            }
+                        }
                     }
-                  }
                 }
-              }
             }
-          },
-          "responses": {
-            "200": {
-              "description": "OK",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "status": {
-                        "type": "string",
-                        "example": "success"
-                      },
-                      "message": {
-                        "type": "string",
-                        "example": "login success"
-                      },
-                      "data": {
-                        "type": "object",
-                        "properties": {
-                          "accessToken": {
+        },
+        "/users/email": {
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update logged in user email",
+                "description": "Allowed roles: ADMIN, USER",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "otp",
+                                    "otpToken"
+                                ],
+                                "properties": {
+                                    "otp": {
+                                        "type": "string",
+                                        "example": 123456
+                                    },
+                                    "otpToken": {
+                                        "type": "string",
+                                        "example": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "update user email success"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/UserResponse"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, missing fields",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MissingFieldError"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnauthorizedError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity, wrong otp or invalid token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "wrong otp or invalid otpToken"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "General Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tickets": {
+            "get": {
+                "tags": [
+                    "Tickets"
+                ],
+                "summary": "Get ticket",
+                "operationId": "getTicket",
+                "description": "Get ticket list data. Filter using query params.",
+                "security": [
+                    {}
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "category",
+                        "schema": {
                             "type": "string",
-                            "example": "string"
-                          }
+                            "enum": [
+                                "ONE_WAY",
+                                "ROUND_TRIP"
+                            ]
                         }
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "400": {
-              "description": "Bad Request, missing fields",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/MissingFieldError"
-                  }
-                }
-              }
-            },
-            "401": {
-              "description": "Unauthorized, wrong login password",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "status": {
-                        "type": "string",
-                        "example": "failed"
-                      },
-                      "message": {
-                        "type": "string",
-                        "example": "wrong password"
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "404": {
-              "description": "Conflict, email not found",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "status": {
-                        "type": "string",
-                        "example": "failed"
-                      },
-                      "message": {
-                        "type": "string",
-                        "example": "email not found"
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "default": {
-              "description": "General Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/GeneralError"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/auth/whoami": {
-        "get": {
-          "tags": [
-            "Auth"
-          ],
-          "operationId": "whoAmI",
-          "summary": "Get current user data",
-          "description": "Return current user data based on bearer token \n\n Allowed roles: USER, ADMIN",
-          "responses": {
-            "200": {
-              "description": "OK",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "status": {
-                        "type": "string",
-                        "example": "success"
-                      },
-                      "message": {
-                        "type": "string",
-                        "example": "get user data success"
-                      },
-                      "data": {
-                        "$ref": "#/components/schemas/UserResponse"
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "401": {
-              "description": "Unauthorized, bearer token invalid",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/UnauthorizedError"
-                  }
-                }
-              }
-            },
-            "default": {
-              "description": "General Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/GeneralError"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/auth/password": {
-        "put": {
-          "tags": [
-            "Auth"
-          ],
-          "summary": "Reset password",
-          "operationId": "resetpassword",
-          "description": "reset password \n\n Allowed roles: ADMIN, USER",
-          "security": [
-            {}
-          ],
-          "requestBody": {
-            "description": "Allowed fields to update: [otp, otpToken, newPassword]",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "otp",
-                    "otpToken",
-                    "newPassword"
-                  ],
-                  "properties": {
-                    "otp": {
-                      "type": "string",
-                      "example": "string"
                     },
-                    "otpToken": {
-                      "type": "string",
-                      "example": "string"
+                    {
+                        "in": "query",
+                        "name": "from",
+                        "schema": {
+                            "type": "string"
+                        }
                     },
-                    "newPassword": {
-                      "type": "string",
-                      "example": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "OK",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "status": {
-                        "type": "string",
-                        "example": "success"
-                      },
-                      "message": {
-                        "type": "string",
-                        "example": "reset password success"
-                      },
-                      "data": {
-                        "type": "object",
-                        "properties": {
-                          "accessToken": {
+                    {
+                        "in": "query",
+                        "name": "to",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "departureTime",
+                        "schema": {
                             "type": "string",
-                            "example": "string"
-                          }
+                            "format": "timestamp"
                         }
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "400": {
-              "description": "Bad Request, missing fields",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/MissingFieldError"
-                  }
-                }
-              }
-            },
-            "401": {
-              "description": "Unauthorized",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/UnauthorizedError"
-                  }
-                }
-              }
-            },
-            "404": {
-              "description": "Not Found",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/IdNotFoundError"
-                  }
-                }
-              }
-            },
-            "default": {
-              "description": "General Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/GeneralError"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/users/{id}": {
-        "get": {
-          "tags": [
-            "Users"
-          ],
-          "summary": "Get user data by ID",
-          "operationId": "getUserData",
-          "security": [
-            {}
-          ],
-          "parameters": [
-            {
-              "in": "path",
-              "name": "id",
-              "schema": {
-                "type": "integer"
-              },
-              "required": true,
-              "description": "ID of the user to get"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "OK",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "status": {
-                        "type": "string",
-                        "example": "success"
-                      },
-                      "message": {
-                        "type": "string",
-                        "example": "get user data success"
-                      },
-                      "data": {
-                        "$ref": "#/components/schemas/SimpleUserResponse"
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "404": {
-              "description": "Not Found",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/IdNotFoundError"
-                  }
-                }
-              }
-            },
-            "default": {
-              "description": "General Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/GeneralError"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/users": {
-        "put": {
-          "tags": [
-            "Users"
-          ],
-          "summary": "Edit logged in user data",
-          "operationId": "editUserData",
-          "description": "Update user data \n\n Allowed roles: ADMIN, USER",
-          "requestBody": {
-            "description": "Allowed fields to update: [name, phone, address imageId, imageUrl]",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string",
-                      "example": "John Doe"
                     },
-                    "phone": {
-                      "type": "string",
-                      "format": "email",
-                      "example": "0856xxxxxxxx"
-                    },
-                    "address": {
-                      "type": "string",
-                      "example": "string"
-                    },
-                    "imageId": {
-                      "type": "string",
-                      "example": "string"
-                    },
-                    "imageUrl": {
-                      "type": "string",
-                      "example": "string.com/image.png"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "OK",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "status": {
-                        "type": "string",
-                        "example": "success"
-                      },
-                      "message": {
-                        "type": "string",
-                        "example": "update user data success"
-                      },
-                      "data": {
-                        "$ref": "#/components/schemas/UserResponse"
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "401": {
-              "description": "Unauthorized",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/UnauthorizedError"
-                  }
-                }
-              }
-            },
-            "default": {
-              "description": "General Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/GeneralError"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/users/password": {
-        "put": {
-          "tags": [
-            "Users"
-          ],
-          "summary": "Reset password",
-          "operationId": "resetpasswordUsr",
-          "description": "reset password \n\n Allowed roles: ADMIN, USER",
-          "requestBody": {
-            "description": "Allowed fields to update: [newPassword]",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "newPassword": {
-                      "type": "string",
-                      "example": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "OK",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "status": {
-                        "type": "string",
-                        "example": "success"
-                      },
-                      "message": {
-                        "type": "string",
-                        "example": "update user password success"
-                      },
-                      "data": {
-                        "$ref": "#/components/schemas/UserResponse"
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "400": {
-              "description": "Bad Request, missing fields",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/MissingFieldError"
-                  }
-                }
-              }
-            },
-            "401": {
-              "description": "Unauthorized",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/UnauthorizedError"
-                  }
-                }
-              }
-            },
-            "default": {
-              "description": "General Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/GeneralError"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/auth/otp": {
-        "get": {
-          "tags": [
-            "Auth"
-          ],
-          "security": [
-            {}
-          ],
-          "summary": "Get OTP for email confirmation",
-          "operationId": "getUserDataEmail",
-          "description": "Return otp token, OTP is sent to corresponding email",
-          "parameters": [
-            {
-              "in": "query",
-              "name": "email",
-              "schema": {
-                "type": "string",
-                "format": "email"
-              },
-              "required": true
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "OK",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "status": {
-                        "type": "string",
-                        "example": "success"
-                      },
-                      "message": {
-                        "type": "string",
-                        "example": "otp request success"
-                      },
-                      "data": {
-                        "type": "object",
-                        "properties": {
-                          "otpToken": {
+                    {
+                        "in": "query",
+                        "name": "returnTime",
+                        "schema": {
                             "type": "string",
-                            "example": "string"
-                          }
+                            "format": "timestamp"
                         }
-                      }
                     }
-                  }
-                }
-              }
-            },
-            "400": {
-              "description": "Bad Request, missing fields",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/MissingFieldError"
-                  }
-                }
-              }
-            },
-            "401": {
-              "description": "Unauthorized",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/UnauthorizedError"
-                  }
-                }
-              }
-            },
-            "default": {
-              "description": "General Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/GeneralError"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/users/email": {
-        "put": {
-          "tags": [
-            "Users"
-          ],
-          "summary": "Update logged in user email",
-          "description": "Allowed roles: ADMIN, USER",
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "otp",
-                    "otpToken"
-                  ],
-                  "properties": {
-                    "otp": {
-                      "type": "string",
-                      "example": 123456
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "get ticket list data success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/TicketResponse"
+                                            }
+                                        },
+                                        "meta": {
+                                            "type": "object",
+                                            "properties": {
+                                                "count": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     },
-                    "otpToken": {
-                      "type": "string",
-                      "example": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "OK",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "status": {
-                        "type": "string",
-                        "example": "success"
-                      },
-                      "message": {
-                        "type": "string",
-                        "example": "update user email success"
-                      },
-                      "data": {
-                        "$ref": "#/components/schemas/UserResponse"
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "400": {
-              "description": "Bad Request, missing fields",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/MissingFieldError"
-                  }
-                }
-              }
-            },
-            "401": {
-              "description": "Unauthorized",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/UnauthorizedError"
-                  }
-                }
-              }
-            },
-            "422": {
-              "description": "Unprocessable Entity, wrong otp or invalid token",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "status": {
-                        "type": "string",
-                        "example": "failed"
-                      },
-                      "message": {
-                        "type": "string",
-                        "example": "wrong otp or invalid otpToken"
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "default": {
-              "description": "General Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/GeneralError"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/tickets": {
-        "get": {
-          "tags": [
-            "Tickets"
-          ],
-          "summary": "Get ticket",
-          "operationId": "getTicket",
-          "description": "Get ticket list data. Filter using query params.",
-          "security": [
-            {}
-          ],
-          "parameters": [
-            {
-              "in": "query",
-              "name": "category",
-              "schema": {
-                "type": "string",
-                "enum": [
-                  "ONE_WAY",
-                  "ROUND_TRIP"
-                ]
-              }
-            },
-            {
-              "in": "query",
-              "name": "from",
-              "schema": {
-                "type": "string"
-              }
-            },
-            {
-              "in": "query",
-              "name": "to",
-              "schema": {
-                "type": "string"
-              }
-            },
-            {
-              "in": "query",
-              "name": "departureTime",
-              "schema": {
-                "type": "string",
-                "format": "timestamp"
-              }
-            },
-            {
-              "in": "query",
-              "name": "returnTime",
-              "schema": {
-                "type": "string",
-                "format": "timestamp"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "OK",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "status": {
-                        "type": "string",
-                        "example": "success"
-                      },
-                      "message": {
-                        "type": "string",
-                        "example": "get ticket list data success"
-                      },
-                      "data": {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/components/schemas/TicketResponse"
+                    "default": {
+                        "description": "General Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralError"
+                                }
+                            }
                         }
-                      },
-                      "meta": {
-                        "type": "object",
-                        "properties": {
-                          "count": {
-                            "type": "integer",
-                            "example": 1
-                          }
-                        }
-                      }
                     }
-                  }
                 }
-              }
             },
-            "default": {
-              "description": "General Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/GeneralError"
-                  }
+            "post": {
+                "tags": [
+                    "Tickets"
+                ],
+                "summary": "Add new ticket",
+                "description": " Allowed roles: ADMIN",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "category",
+                                    "from",
+                                    "to",
+                                    "departureTime",
+                                    "price",
+                                    "flightNumber"
+                                ],
+                                "properties": {
+                                    "category": {
+                                        "type": "string",
+                                        "enum": [
+                                            "ONE_WAY",
+                                            "ROUND_TRIP"
+                                        ]
+                                    },
+                                    "from": {
+                                        "type": "string",
+                                        "example": "JAKARTA"
+                                    },
+                                    "to": {
+                                        "type": "string",
+                                        "example": "MEDAN"
+                                    },
+                                    "departureTime": {
+                                        "type": "string",
+                                        "example": "timestamp"
+                                    },
+                                    "returnTime": {
+                                        "type": "string",
+                                        "example": "timestamp"
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "example": 980000
+                                    },
+                                    "flightNumber": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "imageId": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "imageUrl": {
+                                        "type": "string",
+                                        "example": "string.com/image.png"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "add ticket data success"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/TicketResponse"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, missing fields",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MissingFieldError"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnauthorizedError"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "General Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralError"
+                                }
+                            }
+                        }
+                    }
                 }
-              }
             }
-          }
         },
-        "post": {
-          "tags": [
-            "Tickets"
-          ],
-          "summary": "Add new ticket",
-          "description": " Allowed roles: ADMIN",
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "category",
-                    "from",
-                    "to",
-                    "departureTime",
-                    "price",
-                    "flightNumber"
-                  ],
-                  "properties": {
-                    "category": {
-                      "type": "string",
-                      "enum": [
-                        "ONE_WAY",
-                        "ROUND_TRIP"
-                      ]
-                    },
-                    "from": {
-                      "type": "string",
-                      "example": "JAKARTA"
-                    },
-                    "to": {
-                      "type": "string",
-                      "example": "MEDAN"
-                    },
-                    "departureTime": {
-                      "type": "string",
-                      "example": "timestamp"
-                    },
-                    "returnTime": {
-                      "type": "string",
-                      "example": "timestamp"
-                    },
-                    "price": {
-                      "type": "number",
-                      "example": 980000
-                    },
-                    "flightNumber": {
-                      "type": "string",
-                      "example": "string"
-                    },
-                    "imageId": {
-                      "type": "string",
-                      "example": "string"
-                    },
-                    "imageUrl": {
-                      "type": "string",
-                      "example": "string.com/image.png"
-                    },
-                    "description": {
-                      "type": "string",
-                      "example": "string"
+        "/tickets/{id}": {
+            "get": {
+                "tags": [
+                    "Tickets"
+                ],
+                "summary": "Get ticket data by ID",
+                "operationId": "getTicketData",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "required": true,
+                        "description": "ID of ticket data to get"
                     }
-                  }
-                }
-              }
-            }
-          },
-          "responses": {
-            "201": {
-              "description": "Created",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "status": {
-                        "type": "string",
-                        "example": "success"
-                      },
-                      "message": {
-                        "type": "string",
-                        "example": "add ticket data success"
-                      },
-                      "data": {
-                        "$ref": "#/components/schemas/TicketResponse"
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "400": {
-              "description": "Bad Request, missing fields",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/MissingFieldError"
-                  }
-                }
-              }
-            },
-            "401": {
-              "description": "Unauthorized",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/UnauthorizedError"
-                  }
-                }
-              }
-            },
-            "default": {
-              "description": "General Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/GeneralError"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/tickets/{id}": {
-        "get": {
-          "tags": [
-            "Tickets"
-          ],
-          "summary": "Get ticket data by ID",
-          "operationId": "getTicketData",
-          "parameters": [
-            {
-              "in": "path",
-              "name": "id",
-              "schema": {
-                "type": "integer"
-              },
-              "required": true,
-              "description": "ID of ticket data to get"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "OK",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "status": {
-                        "type": "string",
-                        "example": "success"
-                      },
-                      "message": {
-                        "type": "string",
-                        "example": "get ticket data success"
-                      },
-                      "data": {
-                        "$ref": "#/components/schemas/TicketResponse"
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "404": {
-              "description": "Not Found, image Id not found",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/IdNotFoundError"
-                  }
-                }
-              }
-            },
-            "default": {
-              "description": "General Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/GeneralError"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "put": {
-          "tags": [
-            "Tickets"
-          ],
-          "summary": "Update ticket data by ID",
-          "operationId": "putTicketData",
-          "description": "Allowed roles: ADMIN",
-          "parameters": [
-            {
-              "in": "path",
-              "name": "id",
-              "schema": {
-                "type": "integer"
-              },
-              "required": true,
-              "description": "ID of ticket to update"
-            }
-          ],
-          "requestBody": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "category": {
-                      "type": "string",
-                      "enum": [
-                        "ONE_WAY",
-                        "ROUND_TRIP"
-                      ]
-                    },
-                    "from": {
-                      "type": "string",
-                      "example": "JAKARTA"
-                    },
-                    "to": {
-                      "type": "string",
-                      "example": "MEDAN"
-                    },
-                    "depatureTime": {
-                      "type": "string",
-                      "example": "timestamp"
-                    },
-                    "returnTime": {
-                      "type": "string",
-                      "example": "timestamp"
-                    },
-                    "price": {
-                      "type": "number",
-                      "example": 980000
-                    },
-                    "flightNumber": {
-                      "type": "string",
-                      "example": "string"
-                    },
-                    "imageId": {
-                      "type": "string",
-                      "example": "string"
-                    },
-                    "imageUrl": {
-                      "type": "string",
-                      "example": "string.com/image.png"
-                    },
-                    "description": {
-                      "type": "string",
-                      "example": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "OK",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "status": {
-                        "type": "string",
-                        "example": "success"
-                      },
-                      "message": {
-                        "type": "string",
-                        "example": "update ticket data success"
-                      },
-                      "data": {
-                        "$ref": "#/components/schemas/TicketResponse"
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "401": {
-              "description": "Unauthorized",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/UnauthorizedError"
-                  }
-                }
-              }
-            },
-            "404": {
-              "description": "Not Found",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/IdNotFoundError"
-                  }
-                }
-              }
-            },
-            "default": {
-              "description": "General Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/GeneralError"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "delete": {
-          "tags": [
-            "Tickets"
-          ],
-          "summary": "Delete tickets data by ID",
-          "operationId": "deleteCarData",
-          "description": "Allowed roles: ADMIN",
-          "parameters": [
-            {
-              "in": "path",
-              "name": "id",
-              "schema": {
-                "type": "integer"
-              },
-              "required": true,
-              "description": "ID of ticket to delete"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "OK",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "status": {
-                        "type": "string",
-                        "example": "success"
-                      },
-                      "message": {
-                        "type": "string",
-                        "example": "delete ticket data success"
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "401": {
-              "description": "Unauthorized",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/UnauthorizedError"
-                  }
-                }
-              }
-            },
-            "404": {
-              "description": "Not Found",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/IdNotFoundError"
-                  }
-                }
-              }
-            },
-            "default": {
-              "description": "General Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/GeneralError"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/wishlist": {
-        "get": {
-          "tags": [
-            "Tickets"
-          ],
-          "operationId": "wishlist",
-          "summary": "Get user wishlist data",
-          "description": "Allowed roles: ADMIN, USER",
-          "responses": {
-            "200": {
-              "description": "OK",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "status": {
-                        "type": "string",
-                        "example": "success"
-                      },
-                      "message": {
-                        "type": "string",
-                        "example": "get ticket wishlist data success"
-                      },
-                      "data": {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/components/schemas/TicketResponse"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "get ticket data success"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/TicketResponse"
+                                        }
+                                    }
+                                }
+                            }
                         }
-                      },
-                      "meta": {
-                        "type": "object",
-                        "properties": {
-                          "count": {
-                            "type": "integer",
-                            "example": 1
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "401": {
-              "description": "Unauthorized",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/UnauthorizedError"
-                  }
-                }
-              }
-            },
-            "default": {
-              "description": "General Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/GeneralError"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/tickets/{id}/wishlist": {
-        "post": {
-          "tags": [
-            "Tickets"
-          ],
-          "summary": "Add a ticket to wishlist",
-          "operationId": "wishList",
-          "description": " Allowed roles: ADMIN, USER",
-          "parameters": [
-            {
-              "in": "path",
-              "name": "id",
-              "schema": {
-                "type": "integer"
-              },
-              "required": true,
-              "description": "ID of ticket to add to wishlist"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "OK",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "status": {
-                        "type": "string",
-                        "example": "success"
-                      },
-                      "message": {
-                        "type": "string",
-                        "example": "wishlist ticket success"
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "401": {
-              "description": "Unauthorized",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/UnauthorizedError"
-                  }
-                }
-              }
-            },
-            "404": {
-              "description": "Not Found",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/IdNotFoundError"
-                  }
-                }
-              }
-            },
-            "default": {
-              "description": "General Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/GeneralError"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "delete": {
-          "tags": [
-            "Tickets"
-          ],
-          "summary": "Remove ticket from user wishlist",
-          "description": " Allowed roles: ADMIN, USER",
-          "parameters": [
-            {
-              "in": "path",
-              "name": "id",
-              "schema": {
-                "type": "integer"
-              },
-              "required": true,
-              "description": "ID of ticket to remove from wishlist"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "OK",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "status": {
-                        "type": "string",
-                        "example": "success"
-                      },
-                      "message": {
-                        "type": "string",
-                        "example": "unwish ticket success"
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "401": {
-              "description": "Unauthorized",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/UnauthorizedError"
-                  }
-                }
-              }
-            },
-            "404": {
-              "description": "Not Found",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/IdNotFoundError"
-                  }
-                }
-              }
-            },
-            "default": {
-              "description": "General Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/GeneralError"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/transactions": {
-        "get": {
-          "tags": [
-            "Transactions"
-          ],
-          "operationId": "trs",
-          "summary": "Get transaction list",
-          "description": "USER is only authorized to access transactions made by themself. On other hands ADMIN can access all transactions in database. \n\n Allowed roles: USER, ADMIN",
-          "responses": {
-            "200": {
-              "description": "OK",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "status": {
-                        "type": "string",
-                        "example": "success"
-                      },
-                      "message": {
-                        "type": "string",
-                        "example": "get transaction list data success"
-                      },
-                      "data": {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/components/schemas/TransactionResponse"
-                        }
-                      },
-                      "meta": {
-                        "type": "object",
-                        "properties": {
-                          "count": {
-                            "type": "integer",
-                            "example": 1
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "401": {
-              "description": "Unauthorized",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/UnauthorizedError"
-                  }
-                }
-              }
-            },
-            "default": {
-              "description": "General Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/GeneralError"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "post": {
-          "tags": [
-            "Transactions"
-          ],
-          "summary": "Add new transaction",
-          "operationId": "addtrans",
-          "description": " Allowed roles: ADMIN, USER",
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "ticketId",
-                    "amount"
-                  ],
-                  "properties": {
-                    "ticketId": {
-                      "type": "integer",
-                      "example": 1
                     },
-                    "amount": {
-                      "type": "integer",
-                      "example": 1
+                    "404": {
+                        "description": "Not Found, image Id not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/IdNotFoundError"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "General Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralError"
+                                }
+                            }
+                        }
                     }
-                  }
                 }
-              }
-            }
-          },
-          "responses": {
-            "201": {
-              "description": "Created",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "status": {
-                        "type": "string",
-                        "example": "success"
-                      },
-                      "message": {
-                        "type": "string",
-                        "example": "add transaction success"
-                      },
-                      "data": {
-                        "$ref": "#/components/schemas/TransactionResponse"
-                      }
+            },
+            "put": {
+                "tags": [
+                    "Tickets"
+                ],
+                "summary": "Update ticket data by ID",
+                "operationId": "putTicketData",
+                "description": "Allowed roles: ADMIN",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "required": true,
+                        "description": "ID of ticket to update"
                     }
-                  }
-                }
-              }
-            },
-            "400": {
-              "description": "Bad Request, missing fields",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/MissingFieldError"
-                  }
-                }
-              }
-            },
-            "401": {
-              "description": "Unauthorized",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/UnauthorizedError"
-                  }
-                }
-              }
-            },
-            "404": {
-              "description": "Not Found",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/IdNotFoundError"
-                  }
-                }
-              }
-            },
-            "default": {
-              "description": "General Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/GeneralError"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/transactions/{id}": {
-        "get": {
-          "tags": [
-            "Transactions"
-          ],
-          "summary": "Get transaction by ID",
-          "operationId": "getTransactionsData",
-          "description": "USER is only authorized to access transactions made by themself. On other hands ADMIN can access all transactions in database",
-          "parameters": [
-            {
-              "in": "path",
-              "name": "id",
-              "schema": {
-                "type": "integer"
-              },
-              "required": true,
-              "description": "ID of the transaction to get"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "OK",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "status": {
-                        "type": "string",
-                        "example": "success"
-                      },
-                      "message": {
-                        "type": "string",
-                        "example": "get transaction data success"
-                      },
-                      "data": {
-                        "$ref": "#/components/schemas/TransactionResponse"
-                      }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "category": {
+                                        "type": "string",
+                                        "enum": [
+                                            "ONE_WAY",
+                                            "ROUND_TRIP"
+                                        ]
+                                    },
+                                    "from": {
+                                        "type": "string",
+                                        "example": "JAKARTA"
+                                    },
+                                    "to": {
+                                        "type": "string",
+                                        "example": "MEDAN"
+                                    },
+                                    "depatureTime": {
+                                        "type": "string",
+                                        "example": "timestamp"
+                                    },
+                                    "returnTime": {
+                                        "type": "string",
+                                        "example": "timestamp"
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "example": 980000
+                                    },
+                                    "flightNumber": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "imageId": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "imageUrl": {
+                                        "type": "string",
+                                        "example": "string.com/image.png"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "string"
+                                    }
+                                }
+                            }
+                        }
                     }
-                  }
-                }
-              }
-            },
-            "401": {
-              "description": "Unauthorized",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/UnauthorizedError"
-                  }
-                }
-              }
-            },
-            "404": {
-              "description": "Not Found",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/IdNotFoundError"
-                  }
-                }
-              }
-            },
-            "default": {
-              "description": "General Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/GeneralError"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/images": {
-        "post": {
-          "tags": [
-            "Images"
-          ],
-          "summary": "Upload image to server",
-          "operationId": "addImg",
-          "description": "USER is only authorized to access PROFILE_IMG type, ADMIN can access both.\n\n Allowed roles: ADMIN, USER",
-          "parameters": [
-            {
-              "in": "query",
-              "name": "type",
-              "required": true,
-              "schema": {
-                "type": "string",
-                "enum": [
-                  "PROFILE_IMG",
-                  "TICKET_IMG"
-                ]
-              }
-            }
-          ],
-          "requestBody": {
-            "required": true,
-            "content": {
-              "multipart/form-data": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "image"
-                  ],
-                  "properties": {
-                    "image": {
-                      "type": "string",
-                      "format": "binary"
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "update ticket data success"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/TicketResponse"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnauthorizedError"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/IdNotFoundError"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "General Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralError"
+                                }
+                            }
+                        }
                     }
-                  }
                 }
-              }
-            }
-          },
-          "responses": {
-            "201": {
-              "description": "Created",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "status": {
-                        "type": "string",
-                        "example": "success"
-                      },
-                      "message": {
-                        "type": "string",
-                        "example": "upload image success"
-                      },
-                      "data": {
-                        "$ref": "#/components/schemas/ImageResponse"
-                      }
+            },
+            "delete": {
+                "tags": [
+                    "Tickets"
+                ],
+                "summary": "Delete tickets data by ID",
+                "operationId": "deleteCarData",
+                "description": "Allowed roles: ADMIN",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "required": true,
+                        "description": "ID of ticket to delete"
                     }
-                  }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "delete ticket data success"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnauthorizedError"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/IdNotFoundError"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "General Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralError"
+                                }
+                            }
+                        }
+                    }
                 }
-              }
-            },
-            "400": {
-              "description": "Bad Request, missing fields",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/MissingFieldError"
-                  }
-                }
-              }
-            },
-            "401": {
-              "description": "Unauthorized",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/UnauthorizedError"
-                  }
-                }
-              }
-            },
-            "default": {
-              "description": "General Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/GeneralError"
-                  }
-                }
-              }
             }
-          }
         },
-        "delete": {
-          "tags": [
-            "Images"
-          ],
-          "summary": "Delete image data by ID",
-          "operationId": "deleteImage",
-          "description": "USER is only authorized to access PROFILE_IMG type, ADMIN can access both.\n\n Allowed roles: ADMIN, USER",
-          "parameters": [
-            {
-              "in": "query",
-              "name": "imageId",
-              "schema": {
-                "type": "string"
-              },
-              "required": true
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "OK",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "status": {
-                        "type": "string",
-                        "example": "success"
-                      },
-                      "message": {
-                        "type": "string",
-                        "example": "delete image success"
-                      }
+        "/wishlist": {
+            "get": {
+                "tags": [
+                    "Tickets"
+                ],
+                "operationId": "wishlist",
+                "summary": "Get user wishlist data",
+                "description": "Allowed roles: ADMIN, USER",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "get ticket wishlist data success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/TicketResponse"
+                                            }
+                                        },
+                                        "meta": {
+                                            "type": "object",
+                                            "properties": {
+                                                "count": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnauthorizedError"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "General Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralError"
+                                }
+                            }
+                        }
                     }
-                  }
                 }
-              }
-            },
-            "400": {
-              "description": "Bad Request, missing fields",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/MissingFieldError"
-                  }
-                }
-              }
-            },
-            "401": {
-              "description": "Unauthorized",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/UnauthorizedError"
-                  }
-                }
-              }
-            },
-            "404": {
-              "description": "Not Found",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/IdNotFoundError"
-                  }
-                }
-              }
-            },
-            "default": {
-              "description": "General Error",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/GeneralError"
-                  }
-                }
-              }
             }
-          }
+        },
+        "/tickets/{id}/wishlist": {
+            "post": {
+                "tags": [
+                    "Tickets"
+                ],
+                "summary": "Add a ticket to wishlist",
+                "operationId": "wishList",
+                "description": " Allowed roles: ADMIN, USER",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "required": true,
+                        "description": "ID of ticket to add to wishlist"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "wishlist ticket success"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnauthorizedError"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/IdNotFoundError"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "General Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Tickets"
+                ],
+                "summary": "Remove ticket from user wishlist",
+                "description": " Allowed roles: ADMIN, USER",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "required": true,
+                        "description": "ID of ticket to remove from wishlist"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "unwish ticket success"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnauthorizedError"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/IdNotFoundError"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "General Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/transactions": {
+            "get": {
+                "tags": [
+                    "Transactions"
+                ],
+                "operationId": "trs",
+                "summary": "Get transaction list",
+                "description": "USER is only authorized to access transactions made by themself. On other hands ADMIN can access all transactions in database. \n\n Allowed roles: USER, ADMIN",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "get transaction list data success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/TransactionResponse"
+                                            }
+                                        },
+                                        "meta": {
+                                            "type": "object",
+                                            "properties": {
+                                                "count": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnauthorizedError"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "General Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Add new transaction",
+                "operationId": "addtrans",
+                "description": " Allowed roles: ADMIN, USER",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "ticketId",
+                                    "amount"
+                                ],
+                                "properties": {
+                                    "ticketId": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "amount": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "add transaction success"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/TransactionResponse"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, missing fields",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MissingFieldError"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnauthorizedError"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/IdNotFoundError"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "General Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/transactions/{id}": {
+            "get": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Get transaction by ID",
+                "operationId": "getTransactionsData",
+                "description": "USER is only authorized to access transactions made by themself. On other hands ADMIN can access all transactions in database",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "required": true,
+                        "description": "ID of the transaction to get"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "get transaction data success"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/TransactionResponse"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnauthorizedError"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/IdNotFoundError"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "General Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/images": {
+            "post": {
+                "tags": [
+                    "Images"
+                ],
+                "summary": "Upload image to server",
+                "operationId": "addImg",
+                "description": "USER is only authorized to access PROFILE_IMG type, ADMIN can access both.\n\n Allowed roles: ADMIN, USER",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "type",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "PROFILE_IMG",
+                                "TICKET_IMG"
+                            ]
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "image"
+                                ],
+                                "properties": {
+                                    "image": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "upload image success"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/ImageResponse"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, missing fields",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MissingFieldError"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnauthorizedError"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "General Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Images"
+                ],
+                "summary": "Delete image data by ID",
+                "operationId": "deleteImage",
+                "description": "USER is only authorized to access PROFILE_IMG type, ADMIN can access both.\n\n Allowed roles: ADMIN, USER",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "imageId",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "delete image success"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request, missing fields",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MissingFieldError"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnauthorizedError"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/IdNotFoundError"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "General Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
-      }
     },
     "components": {
-      "securitySchemes": {
-        "bearerAuth": {
-          "type": "http",
-          "scheme": "bearer",
-          "bearerFormat": "JWT"
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        },
+        "schemas": {
+            "GeneralError": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "example": "error"
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "error message"
+                    }
+                }
+            },
+            "MissingFieldError": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "example": "failed"
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "missing required field(s)"
+                    }
+                }
+            },
+            "UnauthorizedError": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "example": "failed"
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "unauthorized"
+                    }
+                }
+            },
+            "IdNotFoundError": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "example": "failed"
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "id not found"
+                    }
+                }
+            },
+            "UserResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "user"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "user@email.com"
+                    },
+                    "encryptedPassword": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "role": {
+                        "type": "string",
+                        "enum": [
+                            "USER",
+                            "ADMIN"
+                        ]
+                    },
+                    "phone": {
+                        "type": "string",
+                        "example": "0856xxxxxxxx"
+                    },
+                    "address": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "imageId": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "imageUrl": {
+                        "type": "string",
+                        "example": "string.com/image.png"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "example": "timestamp"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "example": "timestamp"
+                    },
+                    "deletedAt": {
+                        "type": "string",
+                        "example": "timestamp"
+                    }
+                }
+            },
+            "TicketResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "category": {
+                        "type": "string",
+                        "enum": [
+                            "ONE_WAY",
+                            "ROUND_TRIP"
+                        ]
+                    },
+                    "from": {
+                        "type": "string",
+                        "example": "JAKARTA"
+                    },
+                    "to": {
+                        "type": "string",
+                        "example": "MEDAN"
+                    },
+                    "departureTime": {
+                        "type": "string",
+                        "example": "timestamp"
+                    },
+                    "returnTime": {
+                        "type": "string",
+                        "example": "timestamp"
+                    },
+                    "price": {
+                        "type": "integer",
+                        "example": 980000
+                    },
+                    "flightNumber": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "imageId": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "imageUrl": {
+                        "type": "string",
+                        "example": "string.com/image.png"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "string"
+                    },
+                    "wishlisted": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "createdBy": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "example": "timestamp"
+                    },
+                    "updatedBy": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "example": "timestamp"
+                    },
+                    "deletedAt": {
+                        "type": "string",
+                        "example": "timestamp"
+                    }
+                }
+            },
+            "TransactionResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "userId": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "ticketId": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "amount": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "bookingCode": {
+                        "type": "string",
+                        "example": "AKUD392BCLW"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "example": "timestamp"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "example": "timestamp"
+                    },
+                    "deletedAt": {
+                        "type": "string",
+                        "example": "timestamp"
+                    }
+                }
+            },
+            "SimpleUserResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "user"
+                    },
+                    "role": {
+                        "type": "string",
+                        "enum": [
+                            "USER",
+                            "ADMIN"
+                        ]
+                    },
+                    "imageUrl": {
+                        "type": "string",
+                        "example": "string.com/image1.png"
+                    }
+                }
+            },
+            "ImageResponse": {
+                "type": "object",
+                "properties": {
+                    "imageId": {
+                        "type": "string",
+                        "example": "image1"
+                    },
+                    "imageUrl": {
+                        "type": "string",
+                        "example": "string.com/image1.png"
+                    }
+                }
+            }
         }
-      },
-      "schemas": {
-        "GeneralError": {
-          "type": "object",
-          "properties": {
-            "status": {
-              "type": "string",
-              "example": "error"
-            },
-            "message": {
-              "type": "string",
-              "example": "error message"
-            }
-          }
-        },
-        "MissingFieldError": {
-          "type": "object",
-          "properties": {
-            "status": {
-              "type": "string",
-              "example": "failed"
-            },
-            "message": {
-              "type": "string",
-              "example": "missing required field(s)"
-            }
-          }
-        },
-        "UnauthorizedError": {
-          "type": "object",
-          "properties": {
-            "status": {
-              "type": "string",
-              "example": "failed"
-            },
-            "message": {
-              "type": "string",
-              "example": "unauthorized"
-            }
-          }
-        },
-        "IdNotFoundError": {
-          "type": "object",
-          "properties": {
-            "status": {
-              "type": "string",
-              "example": "failed"
-            },
-            "message": {
-              "type": "string",
-              "example": "id not found"
-            }
-          }
-        },
-        "UserResponse": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "integer",
-              "example": 1
-            },
-            "name": {
-              "type": "string",
-              "example": "user"
-            },
-            "email": {
-              "type": "string",
-              "example": "user@email.com"
-            },
-            "encryptedPassword": {
-              "type": "string",
-              "example": "string"
-            },
-            "role": {
-              "type": "string",
-              "enum": [
-                "USER",
-                "ADMIN"
-              ]
-            },
-            "phone": {
-              "type": "string",
-              "example": "0856xxxxxxxx"
-            },
-            "address": {
-              "type": "string",
-              "example": "string"
-            },
-            "imageId": {
-              "type": "string",
-              "example": "string"
-            },
-            "imageUrl": {
-              "type": "string",
-              "example": "string.com/image.png"
-            },
-            "createdAt": {
-              "type": "string",
-              "example": "timestamp"
-            },
-            "updatedAt": {
-              "type": "string",
-              "example": "timestamp"
-            },
-            "deletedAt": {
-              "type": "string",
-              "example": "timestamp"
-            }
-          }
-        },
-        "TicketResponse": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "integer",
-              "example": 1
-            },
-            "category": {
-              "type": "string",
-              "enum": [
-                "ONE_WAY",
-                "ROUND_TRIP"
-              ]
-            },
-            "from": {
-              "type": "string",
-              "example": "JAKARTA"
-            },
-            "to": {
-              "type": "string",
-              "example": "MEDAN"
-            },
-            "departureTime": {
-              "type": "string",
-              "example": "timestamp"
-            },
-            "returnTime": {
-              "type": "string",
-              "example": "timestamp"
-            },
-            "price": {
-              "type": "integer",
-              "example": 980000
-            },
-            "flightNumber": {
-              "type": "string",
-              "example": "string"
-            },
-            "imageId": {
-              "type": "string",
-              "example": "string"
-            },
-            "imageUrl": {
-              "type": "string",
-              "example": "string.com/image.png"
-            },
-            "description": {
-              "type": "string",
-              "example": "string"
-            },
-            "wishlisted": {
-              "type": "boolean",
-              "example": false
-            },
-            "createdBy": {
-              "type": "integer",
-              "example": 1
-            },
-            "createdAt": {
-              "type": "string",
-              "example": "timestamp"
-            },
-            "updatedBy": {
-              "type": "integer",
-              "example": 1
-            },
-            "updatedAt": {
-              "type": "string",
-              "example": "timestamp"
-            },
-            "deletedAt": {
-              "type": "string",
-              "example": "timestamp"
-            }
-          }
-        },
-        "TransactionResponse": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "integer",
-              "example": 1
-            },
-            "userId": {
-              "type": "integer",
-              "example": 1
-            },
-            "ticketId": {
-              "type": "integer",
-              "example": 1
-            },
-            "amount": {
-              "type": "integer",
-              "example": 1
-            },
-            "bookingCode": {
-              "type": "string",
-              "example": "AKUD392BCLW"
-            },
-            "createdAt": {
-              "type": "string",
-              "example": "timestamp"
-            },
-            "updatedAt": {
-              "type": "string",
-              "example": "timestamp"
-            },
-            "deletedAt": {
-              "type": "string",
-              "example": "timestamp"
-            }
-          }
-        },
-        "SimpleUserResponse": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "integer",
-              "example": 1
-            },
-            "name": {
-              "type": "string",
-              "example": "user"
-            },
-            "role": {
-              "type": "string",
-              "enum": [
-                "USER",
-                "ADMIN"
-              ]
-            },
-            "imageUrl": {
-              "type": "string",
-              "example": "string.com/image1.png"
-            }
-          }
-        },
-        "ImageResponse": {
-          "type": "object",
-          "properties": {
-            "imageId": {
-              "type": "string",
-              "example": "image1"
-            },
-            "imageUrl": {
-              "type": "string",
-              "example": "string.com/image1.png"
-            }
-          }
-        }
-      }
     },
     "security": [
-      {
-        "bearerAuth": []
-      }
+        {
+            "bearerAuth": []
+        }
     ]
-  }
+}

@@ -6,8 +6,8 @@ info:
     email: apiteam@swagger.io
   version: 1.0.11
 servers:
-  # - url: https://gosky.up.railway.app/api/
-  #   description: hosted
+  - url: https://gosky.up.railway.app/api/
+    description: hosted
   - url: http://localhost:8000/api/
     description: local
 tags:
@@ -344,6 +344,8 @@ paths:
       security:
         - {}
       requestBody:
+        description: "Allowed fields to update: [otp, otpToken, newPassword]"
+        required: true
         content:
           application/json:
             schema:
@@ -362,6 +364,7 @@ paths:
                 newPassword:
                   type: string
                   example: string
+    
 
       responses:
         "200":
@@ -471,6 +474,7 @@ paths:
                   example: John Doe
                 phone:
                   type: string
+                  format: email
                   example: 0856xxxxxxxx
                 address:
                   type: string
@@ -526,6 +530,9 @@ paths:
             schema:
               type: object
               properties:
+                password:
+                  type: string
+                  example: string
                 newPassword:
                   type: string
                   example: string
@@ -557,7 +564,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UnauthorizedError"
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: failed
+                  message:
+                    type: string
+                    example: wrong password
         default:
             description: General Error
             content:
