@@ -246,4 +246,131 @@ describe('UserController', () => {
       expect(mockRes.json).toHaveBeenCalledWith(err.json());
     });
   });
+
+  describe('#handleUpdateUserPassword', () => {
+    it('should res.status(200) if update pass success', async () => {
+      const mockReq = {
+        user: mock.USER,
+        body: {
+          password: 'string',
+          newPassword: 'password',
+        },
+      };
+      const mockRes = mock.RES;
+
+      const mockAuthService = {
+        verifyPassword: jest.fn().mockReturnValue(true),
+        encryptPassword: jest.fn().mockReturnValue('encrytptedpassword'),
+      };
+      const mockUserService = {
+        update: jest.fn(),
+        get: jest.fn().mockReturnValue({
+          ...mock.USER,
+          encryptedPassword: 'encrytptedpassword',
+        }),
+      };
+
+      const controller = new UserController(mockUserService, mockAuthService);
+      await controller.handleUpdateUserPassword(mockReq, mockRes);
+
+      expect(mockAuthService.verifyPassword).toHaveBeenCalled();
+      expect(mockUserService.update).toHaveBeenCalled();
+      expect(mockRes.status).toHaveBeenCalledWith(200);
+      expect(mockRes.json).toHaveBeenCalledWith({
+        status: 'success',
+        message: 'reset password success',
+        data: {
+          ...mock.USER,
+          encryptedPassword: 'encrytptedpassword',
+        },
+      });
+    });
+
+    it('should res.status(400) missing req field(s)', async () => {
+      const mockReq = {
+        user: mock.USER,
+        body: {},
+      };
+      const mockRes = mock.RES;
+
+      const mockAuthService = {
+        verifyPassword: jest.fn().mockReturnValue(true),
+        encryptPassword: jest.fn().mockReturnValue('encrytptedpassword'),
+      };
+      const mockUserService = {
+        update: jest.fn(),
+        get: jest.fn().mockReturnValue({
+          ...mock.USER,
+          encryptedPassword: 'encrytptedpassword',
+        }),
+      };
+
+      const controller = new UserController(mockUserService, mockAuthService);
+      await controller.handleUpdateUserPassword(mockReq, mockRes);
+
+      expect(mockRes.status).toHaveBeenCalledWith(400);
+      expect(mockRes.json).toHaveBeenCalledWith(new MissingFieldError().json());
+    });
+
+    it('should res.status(401) if old password wrong', async () => {
+      const mockReq = {
+        user: mock.USER,
+        body: {
+          password: 'awda',
+          newPassword: 'daidnal',
+        },
+      };
+      const mockRes = mock.RES;
+
+      const mockAuthService = {
+        verifyPassword: jest.fn().mockReturnValue(false),
+        encryptPassword: jest.fn().mockReturnValue('encrytptedpassword'),
+      };
+      const mockUserService = {
+        update: jest.fn(),
+        get: jest.fn().mockReturnValue({
+          ...mock.USER,
+          encryptedPassword: 'encrytptedpassword',
+        }),
+      };
+
+      const controller = new UserController(mockUserService, mockAuthService);
+      await controller.handleUpdateUserPassword(mockReq, mockRes);
+
+      expect(mockRes.status).toHaveBeenCalledWith(401);
+      expect(mockRes.json).toHaveBeenCalledWith({
+        status: 'failed',
+        message: 'wrong password',
+      });
+    });
+
+    it('should res.status(500) to handle general error', async () => {
+      const mockReq = {
+        user: mock.USER,
+        body: {
+          password: 'awda',
+          newPassword: 'daidnal',
+        },
+      };
+      const mockRes = mock.RES;
+      const err = new GeneralError('test');
+      const mockAuthService = {
+        verifyPassword: jest.fn().mockReturnValue(true),
+        encryptPassword: jest.fn().mockReturnValue('encrytptedpassword'),
+      };
+      const mockUserService = {
+        update: jest.fn().mockRejectedValue(err),
+        get: jest.fn().mockReturnValue({
+          ...mock.USER,
+          encryptedPassword: 'encrytptedpassword',
+        }),
+      };
+
+      const controller = new UserController(mockUserService, mockAuthService);
+      await controller.handleUpdateUserPassword(mockReq, mockRes);
+
+      expect(mockRes.status).toHaveBeenCalledWith(500);
+      expect(mockRes.json).toHaveBeenCalledWith(err.json());
+    });
+  });
 });

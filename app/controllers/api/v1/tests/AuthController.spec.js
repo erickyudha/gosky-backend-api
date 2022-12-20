@@ -654,4 +654,144 @@ describe('AuthController', () => {
       expect(mockRes.json).toHaveBeenCalledWith(err.json());
     });
   });
+
+  describe('#handleResetPassword', () => {
+    it('should res.status(404) email not registered', async () => {
+      const mockReq = {
+        body: {
+          otp: '123456',
+          otpToken: 'string',
+          newPassword: 'password',
+        },
+      };
+      const mockRes = mock.RES;
+
+      const mockAuthService = {
+        verifyOtpToken: jest.fn().mockReturnValue(true),
+        encryptPassword: jest.fn().mockReturnValue('abcdef'),
+        createTokenFromUser: jest.fn().mockReturnValue('abcdef'),
+      };
+      const mockUserService = {
+        getByEmail: jest.fn().mockReturnValue(null),
+        update: jest.fn(),
+      };
+
+      const controller = new AuthController(mockAuthService, mockUserService);
+      await controller.handleResetPassword(mockReq, mockRes);
+
+      expect(mockRes.status).toHaveBeenCalledWith(404);
+      expect(mockRes.json).toHaveBeenCalledWith({
+        status: 'failed',
+        message: 'email not registered',
+      });
+    });
+
+    it('should res.status(400) if missing req field(s)', async () => {
+      const mockReq = {
+        body: {},
+      };
+      const mockRes = mock.RES;
+
+      const mockAuthService = {
+        verifyOtpToken: jest.fn().mockReturnValue(true),
+        encryptPassword: jest.fn().mockReturnValue('abcdef'),
+        createTokenFromUser: jest.fn().mockReturnValue('abcdef'),
+      };
+      const mockUserService = {
+        getByEmail: jest.fn().mockReturnValue(mock.USER),
+        update: jest.fn(),
+      };
+
+      const controller = new AuthController(mockAuthService, mockUserService);
+      await controller.handleResetPassword(mockReq, mockRes);
+
+      expect(mockRes.status).toHaveBeenCalledWith(400);
+      expect(mockRes.json).toHaveBeenCalledWith(new MissingFieldError().json());
+    });
+
+    it('should res.status(401) if invalid token', async () => {
+      const mockReq = {
+        body: {
+          otp: '123456',
+          otpToken: 'string',
+          newPassword: 'password',
+        },
+      };
+      const mockRes = mock.RES;
+
+      const mockAuthService = {
+        verifyOtpToken: jest.fn().mockReturnValue(false),
+        encryptPassword: jest.fn().mockReturnValue('abcdef'),
+        createTokenFromUser: jest.fn().mockReturnValue('abcdef'),
+      };
+      const mockUserService = {
+        getByEmail: jest.fn().mockReturnValue(mock.USER),
+        update: jest.fn(),
+      };
+
+      const controller = new AuthController(mockAuthService, mockUserService);
+      await controller.handleResetPassword(mockReq, mockRes);
+
+      expect(mockRes.status).toHaveBeenCalledWith(401);
+      expect(mockRes.json).toHaveBeenCalledWith(
+          new GeneralError('Invalid OTP or OTP Token').json());
+    });
+
+    it('should res.status(404) email not registered', async () => {
+      const mockReq = {
+        body: {
+          otp: '123456',
+          otpToken: 'string',
+          newPassword: 'password',
+        },
+      };
+      const mockRes = mock.RES;
+
+      const mockAuthService = {
+        verifyOtpToken: jest.fn().mockReturnValue(true),
+        encryptPassword: jest.fn().mockReturnValue('abcdef'),
+        createTokenFromUser: jest.fn().mockReturnValue('abcdef'),
+      };
+      const mockUserService = {
+        getByEmail: jest.fn().mockReturnValue(null),
+        update: jest.fn(),
+      };
+
+      const controller = new AuthController(mockAuthService, mockUserService);
+      await controller.handleResetPassword(mockReq, mockRes);
+
+      expect(mockRes.status).toHaveBeenCalledWith(404);
+      expect(mockRes.json).toHaveBeenCalledWith({
+        status: 'failed',
+        message: 'email not registered',
+      });
+    });
+
+    it('should res.status(500) to handle general error', async () => {
+      const mockReq = {
+        body: {
+          otp: '123456',
+          otpToken: 'string',
+          newPassword: 'password',
+        },
+      };
+      const mockRes = mock.RES;
+      const err = new GeneralError('test');
+      const mockAuthService = {
+        verifyOtpToken: jest.fn().mockReturnValue(true),
+        encryptPassword: jest.fn().mockReturnValue('abcdef'),
+        createTokenFromUser: jest.fn().mockReturnValue('abcdef'),
+      };
+      const mockUserService = {
+        getByEmail: jest.fn().mockReturnValue(mock.USER),
+        update: jest.fn().mockRejectedValue(err),
+      };
+
+      const controller = new AuthController(mockAuthService, mockUserService);
+      await controller.handleResetPassword(mockReq, mockRes);
+
+      expect(mockRes.status).toHaveBeenCalledWith(500);
+      expect(mockRes.json).toHaveBeenCalledWith(err.json());
+    });
+  });
 });
