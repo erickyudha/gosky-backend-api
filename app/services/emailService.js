@@ -18,12 +18,13 @@ module.exports = {
     return this.sendEmail(mailOptions, handler);
   },
 
-  sendTransactionEmail(email, transactionData, ticketData, handler) {
+  sendTransactionEmail(email, transactionData, ticketData, userData, handler) {
     const mailOptions = {
       to: email,
       subject: 'GoSky - Transaction Receipt',
       template: 'transaction',
       context: {
+        name: userData.name,
         id: transactionData.id,
         amount: transactionData.amount,
         bookingCode: transactionData.bookingCode,
