@@ -206,22 +206,9 @@ class AuthController {
     // if valid reset password
     // finally return accessToken
     try {
-      const email = req.query.email;
       const missingFieldErr = new MissingFieldError();
-      if (!req.query.email) {
-        res.status(400).json(missingFieldErr.json());
-        return;
-      }
       if (!req.body.otp || !req.body.otpToken|| !req.body.newPassword) {
         res.status(400).json(missingFieldErr.json());
-        return;
-      }
-      const user = await this.userService.getByEmail(email);
-      if (!user) {
-        res.status(404).json({
-          status: 'failed',
-          message: 'email not registered',
-        });
         return;
       }
       const verifyToken = this.authService.verifyOtpToken(
@@ -230,6 +217,15 @@ class AuthController {
       if (!verifyToken) {
         const error = new GeneralError('Invalid OTP or OTP Token');
         res.status(401).json(error.json());
+        return;
+      }
+      console.log(verifyToken);
+      const user = await this.userService.getByEmail(verifyToken);
+      if (!user) {
+        res.status(404).json({
+          status: 'failed',
+          message: 'email not registered',
+        });
         return;
       }
       const encryptPassword = await this.authService.encryptPassword(
