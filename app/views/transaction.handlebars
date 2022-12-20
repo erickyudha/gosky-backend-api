@@ -1,16 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <style>
+    *{
+        margin: 0px;
+        padding: 0px;
+    }
+    body{
+        background: url(https://gosky.up.railway.app/docs/static/Bandara.png);
+        background-size: cover;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        background-position: center;
+        height: 100px;
+        font-family: sans-serif;
+        overflow: hidden;
+    }
+    .box{
+        background: rgb(0,0,0, 0.5);
+        margin: 50px auto;
+        color: white;
+        text-align: center;
+        width: 480px;
+        height: 527px;
+    }
+    .box > img{
+        width: 350px;
+        border-radius: 50px;
+        margin-top: 25px;
+    }
+    .box h1{
+        letter-spacing: 3.0px;
+        margin-top: 10px;
+        font-weight: 100;
+        margin-bottom: 10px;
+    }
+    .box h5{
+        font-size: 15px;
+    }
+    .box p{
+        font-size: 20px;
+        padding: 5px;
+    }
+  </style>
 </head>
+
 <body>
-  <h1>TRANSACTION RECEIPT</h1>
-  <h2>ID: {{id}}</h2>
-  <h2>Ticket Amount: {{amount}}</h2>
-  <h2>BookingCode: {{bookingCode}}</h2>
-  <h4>{{createdAt}}</h4>
+  <div class="box">
+    <img src="https://gosky.up.railway.app/static/Group 4.png" alt="">
+    <h1>
+      <center>TRANSACTION RECEIPT</center>
+    </h1>
+    <p><b>Hai Pengguna,</b></p>
+    <p>Selamat! Pembayaranmu telah berhasil. Terimakasih atas kepercayaanmu untuk melakukan penerbangan di GoSky.
+    </p>
+    <br>
+    <p><b>Detail Pembayaran</b></p>
+    <hr>
+    <h5>
+      <pre align="justify">
+        ID              : {{id}}
+        Ticket Amount   : {{amount}}
+        BookingCode     : {{bookingCode}}
+        {{createdAt}}</pre>
+    </h5>
+    <br>
+    <p>Selamat menikmati pelayanan</p>
+    <p>Salam, GoSky</p>
+
+  </div>
 </body>
+
 </html>
