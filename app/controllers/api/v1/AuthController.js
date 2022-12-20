@@ -42,6 +42,21 @@ class AuthController {
     this.baseAuthorize(req, res, next, ['ADMIN']);
   };
 
+  authorizeOptional = async (req, res, next) => {
+    try {
+      const bearerToken = req.headers.authorization;
+      const token = bearerToken.split('Bearer ')[1];
+      const decodedUser = this.authService.decodeUserToken(token);
+      const user = await this.userService.get(decodedUser.id);
+
+      req.user = user;
+    } catch (err) {
+      req.user = null;
+    } finally {
+      next();
+    }
+  };
+
 
   handleRegister = async (req, res) => {
     try {

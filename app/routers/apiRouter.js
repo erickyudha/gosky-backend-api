@@ -44,13 +44,17 @@ apiRouter.put('/users/password',
 
 // TICKET ENDPOINTS
 const ticketController = new controller.api.v1.TicketController(
-    ticketService,
+    ticketService, wishlistService,
 );
-apiRouter.get('/tickets', ticketController.handleGetList);
+apiRouter.get('/tickets',
+    authController.authorizeOptional,
+    ticketController.handleGetList);
 apiRouter.post('/tickets',
     authController.authorizeAdmin,
     ticketController.handleCreate);
-apiRouter.get('/tickets/:id', ticketController.handleGet);
+apiRouter.get('/tickets/:id',
+    authController.authorizeOptional,
+    ticketController.handleGet);
 apiRouter.put('/tickets/:id',
     authController.authorizeAdmin,
     ticketController.handleUpdate);
