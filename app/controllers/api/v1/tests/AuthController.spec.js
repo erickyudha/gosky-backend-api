@@ -656,7 +656,7 @@ describe('AuthController', () => {
   });
 
   describe('#handleResetPassword', () => {
-    it('should res.status(404) email not registered', async () => {
+    it('should res.status(200) if success', async () => {
       const mockReq = {
         body: {
           otp: '123456',
@@ -672,17 +672,21 @@ describe('AuthController', () => {
         createTokenFromUser: jest.fn().mockReturnValue('abcdef'),
       };
       const mockUserService = {
-        getByEmail: jest.fn().mockReturnValue(null),
+        getByEmail: jest.fn().mockReturnValue(mock.USER),
         update: jest.fn(),
       };
 
       const controller = new AuthController(mockAuthService, mockUserService);
       await controller.handleResetPassword(mockReq, mockRes);
 
-      expect(mockRes.status).toHaveBeenCalledWith(404);
+      expect(mockAuthService.verifyOtpToken).toHaveBeenCalled();
+      expect(mockUserService.getByEmail).toHaveBeenCalled();
+      expect(mockAuthService.createTokenFromUser).toHaveBeenCalled();
+      expect(mockRes.status).toHaveBeenCalledWith(200);
       expect(mockRes.json).toHaveBeenCalledWith({
-        status: 'failed',
-        message: 'email not registered',
+        status: 'success',
+        message: 'reset password success',
+        data: {accessToken: 'abcdef'},
       });
     });
 
