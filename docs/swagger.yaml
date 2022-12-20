@@ -6,8 +6,8 @@ info:
     email: apiteam@swagger.io
   version: 1.0.11
 servers:
-  - url: https://gosky.up.railway.app/api/
-    description: hosted
+  # - url: https://gosky.up.railway.app/api/
+  #   description: hosted
   - url: http://localhost:8000/api/
     description: local
 tags:
@@ -333,7 +333,80 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
+                
+  /auth/password:
+    put:
+      tags:
+        - Auth
+      summary: Reset password
+      operationId: resetpassword
+      description: "reset password \n\n Allowed roles: ADMIN, USER"
+      security:
+        - {}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - otp
+                - otpToken
+                - newPassword
+              properties:
+                otp:
+                  type: string
+                  example: string
+                otpToken:
+                  type: string
+                  example: string
+                newPassword:
+                  type: string
+                  example: string
 
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: reset password success
+                  data:
+                    type: object
+                    properties:
+                      accessToken:
+                        type: string
+                        example: string
+        "400":
+          description: Bad Request, missing fields
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MissingFieldError"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IdNotFoundError"
+        default:
+            description: General Error
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/GeneralError"                
               
   /users/{id}:
     get:
@@ -398,7 +471,6 @@ paths:
                   example: John Doe
                 phone:
                   type: string
-                  format: email
                   example: 0856xxxxxxxx
                 address:
                   type: string
@@ -440,6 +512,58 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneralError"
+  /users/password:
+    put:
+      tags:
+        - Users
+      summary: Reset password
+      operationId: resetpasswordUsr
+      description: "reset password \n\n Allowed roles: ADMIN, USER"
+      requestBody:
+        description: "Allowed fields to update: [newPassword]"
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                newPassword:
+                  type: string
+                  example: string
+
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: update user password success
+                  data:
+                    $ref: "#/components/schemas/UserResponse"
+        "400":
+          description: Bad Request, missing fields
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MissingFieldError"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        default:
+            description: General Error
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/GeneralError" 
          
   /auth/otp:
     get:
