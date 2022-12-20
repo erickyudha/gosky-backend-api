@@ -16,11 +16,16 @@ describe('TransactionController', () => {
       const mockRes = mock.RES;
 
       const mockTransactionService = {
-        listByUser: jest.fn().mockReturnValue([mock.TRANSACTION]),
+        listByUser: jest.fn().mockReturnValue([{
+          dataValues: mock.TRANSACTION,
+        }]),
+      };
+      const mockTicketService = {
+        get: jest.fn().mockReturnValue(mock.TICKET),
       };
 
       const controller = new TransactionController(
-          mockTransactionService, {}, {}, {});
+          mockTransactionService, mockTicketService, {}, {});
       await controller.handleGetList(mockReq, mockRes);
 
       expect(mockTransactionService.listByUser).toHaveBeenCalled();
@@ -28,7 +33,10 @@ describe('TransactionController', () => {
       expect(mockRes.json).toHaveBeenCalledWith({
         status: 'success',
         message: 'get transaction list data success',
-        data: [mock.TRANSACTION],
+        data: [{
+          ...mock.TRANSACTION,
+          ticket: mock.TICKET,
+        }],
         meta: {count: 1},
       });
     });
@@ -40,11 +48,16 @@ describe('TransactionController', () => {
       const mockRes = mock.RES;
 
       const mockTransactionService = {
-        list: jest.fn().mockReturnValue([mock.TRANSACTION]),
+        list: jest.fn().mockReturnValue([{
+          dataValues: mock.TRANSACTION,
+        }]),
+      };
+      const mockTicketService = {
+        get: jest.fn().mockReturnValue(mock.TICKET),
       };
 
       const controller = new TransactionController(
-          mockTransactionService, {}, {}, {});
+          mockTransactionService, mockTicketService, {}, {});
       await controller.handleGetList(mockReq, mockRes);
 
       expect(mockTransactionService.list).toHaveBeenCalled();
@@ -52,7 +65,10 @@ describe('TransactionController', () => {
       expect(mockRes.json).toHaveBeenCalledWith({
         status: 'success',
         message: 'get transaction list data success',
-        data: [mock.TRANSACTION],
+        data: [{
+          ...mock.TRANSACTION,
+          ticket: mock.TICKET,
+        }],
         meta: {count: 1},
       });
     });
@@ -87,11 +103,17 @@ describe('TransactionController', () => {
       const mockRes = mock.RES;
 
       const mockTransactionService = {
-        get: jest.fn().mockReturnValue(mock.TRANSACTION),
+        get: jest.fn().mockReturnValue({
+          ...mock.TRANSACTION,
+          dataValues: mock.TRANSACTION,
+        }),
+      };
+      const mockTicketService = {
+        get: jest.fn().mockReturnValue(mock.TICKET),
       };
 
       const controller = new TransactionController(
-          mockTransactionService, {}, {}, {});
+          mockTransactionService, mockTicketService, {}, {});
       await controller.handleGet(mockReq, mockRes);
 
       expect(mockTransactionService.get).toHaveBeenCalled();
@@ -99,7 +121,10 @@ describe('TransactionController', () => {
       expect(mockRes.json).toHaveBeenCalledWith({
         status: 'success',
         message: 'get transaction data success',
-        data: mock.TRANSACTION,
+        data: {
+          ...mock.TRANSACTION,
+          ticket: mock.TICKET,
+        },
       });
     });
 
@@ -113,11 +138,17 @@ describe('TransactionController', () => {
       const mockRes = mock.RES;
 
       const mockTransactionService = {
-        get: jest.fn().mockReturnValue(mock.TRANSACTION),
+        get: jest.fn().mockReturnValue({
+          ...mock.TRANSACTION,
+          dataValues: mock.TRANSACTION,
+        }),
+      };
+      const mockTicketService = {
+        get: jest.fn().mockReturnValue(mock.TICKET),
       };
 
       const controller = new TransactionController(
-          mockTransactionService, {}, {}, {});
+          mockTransactionService, mockTicketService, {}, {});
       await controller.handleGet(mockReq, mockRes);
 
       expect(mockTransactionService.get).toHaveBeenCalled();
@@ -125,7 +156,10 @@ describe('TransactionController', () => {
       expect(mockRes.json).toHaveBeenCalledWith({
         status: 'success',
         message: 'get transaction data success',
-        data: mock.TRANSACTION,
+        data: {
+          ...mock.TRANSACTION,
+          ticket: mock.TICKET,
+        },
       });
     });
 
@@ -209,7 +243,10 @@ describe('TransactionController', () => {
       const mockRes = mock.RES;
 
       const mockTransactionService = {
-        create: jest.fn().mockReturnValue(mock.TRANSACTION),
+        create: jest.fn().mockReturnValue({
+          ...mock.TRANSACTION,
+          dataValues: mock.TRANSACTION,
+        }),
       };
       const mockTicketService = {
         get: jest.fn().mockReturnValue(mock.TICKET),
@@ -242,7 +279,10 @@ describe('TransactionController', () => {
       expect(mockRes.json).toHaveBeenCalledWith({
         status: 'success',
         message: 'add transaction success',
-        data: mock.TRANSACTION,
+        data: {
+          ...mock.TRANSACTION,
+          ticket: mock.TICKET,
+        },
       });
     });
 

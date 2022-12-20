@@ -18,7 +18,7 @@ class TicketController {
         for (let i = 0; i < tickets.length; i++) {
           const ticket = tickets[i];
           const found = wishlist.find((x) => {
-            return x.ticketId == ticket.id;
+            return x.ticketId == ticket.dataValues.id;
           });
           result.push({...ticket.dataValues, wishlisted: !!found});
         };
@@ -52,11 +52,11 @@ class TicketController {
       if (req.user) {
         const wishlist = await this.wishlistService.listByUser(req.user.id);
         const found = wishlist.find((x) => {
-          return x.ticketId == ticket.id;
+          return x.ticketId == ticket.dataValues.id;
         });
         result = {...ticket.dataValues, wishlisted: !!found};
       } else {
-        result = ticket;
+        result = ticket.dataValues;
       }
       res.status(200).json({
         status: 'success',
