@@ -10,24 +10,26 @@ const now = dayjs();
 
 describe('TicketController', () => {
   describe('#handleGetList', () => {
-    // wishlisted: false,
-    // TODO: ADD wishlisted REQUIREMENTS ON WISHLIST IMPLEMENTATION
     const mockTicket1 = {
       ...mock.TICKET,
+      id: 1,
       category: 'ONE_WAY',
     };
     const mockTicket2 = {
       ...mock.TICKET,
+      id: 2,
       category: 'ONE_WAY',
       to: 'BANDUNG',
     };
     const mockTicket3 = {
       ...mock.TICKET,
+      id: 3,
       category: 'ONE_WAY',
       departureTime: now.subtract(1, 'day'),
     };
     const mockTicket4 = {
       ...mock.TICKET,
+      id: 4,
     };
     const mockTicketList = [
       mockTicket1, mockTicket2, mockTicket3, mockTicket4];
@@ -79,6 +81,49 @@ describe('TicketController', () => {
           expect(mockRes.status).toHaveBeenCalledWith(200);
         });
 
+    it('should res.status(200) and return with added wishlisted if loggedin',
+        async () => {
+          const mockTicketListSoecial = [
+            {dataValues: mockTicket1},
+            {dataValues: mockTicket2},
+            {dataValues: mockTicket3},
+            {dataValues: mockTicket4},
+          ];
+          const mockRes = mock.RES;
+          const mockReq = {
+            user: mock.USER,
+            body: {},
+          };
+
+          const mockWishlistService = {
+            listByUser: jest.fn().mockReturnValue([mock.WISHLIST]),
+          };
+          const mockTicketService = {
+            list: jest.fn().mockReturnValue(mockTicketListSoecial),
+          };
+
+          const controller =
+            new TicketController(mockTicketService, mockWishlistService);
+          await controller.handleGetList(mockReq, mockRes);
+
+          expect(mockTicketService.list).toHaveBeenCalled();
+          expect(mockWishlistService.listByUser).toHaveBeenCalled();
+          expect(mockRes.status).toHaveBeenCalledWith(200);
+          expect(mockRes.json).toHaveBeenCalledWith({
+            status: 'success',
+            message: 'get ticket list data success',
+            data: [
+              {...mockTicket1, wishlisted: true},
+              {...mockTicket2, wishlisted: false},
+              {...mockTicket3, wishlisted: false},
+              {...mockTicket4, wishlisted: false},
+            ],
+            meta: {
+              count: mockTicketList.length,
+            },
+          });
+        });
+
     it('should res.status(500) to handle general error',
         async () => {
           const mockRes = mock.RES;
@@ -107,7 +152,7 @@ describe('TicketController', () => {
 
       const mockTicket = mock.TICKET;
       const mockTicketService = {
-        get: jest.fn().mockReturnValue(mock.TICKET),
+        get: jest.fn().mockReturnValue({dataValues: mockTicket}),
       };
 
       const controller = new TicketController(mockTicketService);
@@ -120,8 +165,39 @@ describe('TicketController', () => {
         message: 'get ticket data success',
         data: {
           ...mockTicket,
-          // wishlisted: false,
-          // TODO: ADD THIS REQUIREMENTS ON WISHLIST IMPLEMENTATION
+        },
+      });
+    });
+
+    it('should res.status(200) + added wishlisted if logged in', async () => {
+      const mockRes = mock.RES;
+      const mockReq = {
+        user: mock.USER,
+        params: {
+          id: 1,
+        },
+      };
+
+      const mockTicket = mock.TICKET;
+      const mockTicketService = {
+        get: jest.fn().mockReturnValue({dataValues: mockTicket}),
+      };
+      const mockWishlistService = {
+        listByUser: jest.fn().mockReturnValue([mock.WISHLIST]),
+      };
+
+      const controller =
+        new TicketController(mockTicketService, mockWishlistService);
+      await controller.handleGet(mockReq, mockRes);
+
+      expect(mockTicketService.get).toHaveBeenCalled();
+      expect(mockRes.status).toHaveBeenCalledWith(200);
+      expect(mockRes.json).toHaveBeenCalledWith({
+        status: 'success',
+        message: 'get ticket data success',
+        data: {
+          ...mockTicket,
+          wishlisted: true,
         },
       });
     });
@@ -278,12 +354,20 @@ describe('TicketController', () => {
       };
       const mockRes = mock.RES;
 
+      let i = 0;
       const mockTicketService = {
-        get: jest.fn().mockReturnValue(mock.TICKET),
-        update: jest.fn().mockReturnValue({
-          ...mock.TICKET,
-          from: 'DA WAY',
+        get: jest.fn().mockImplementation(() => {
+          if (i === 0) {
+            i++;
+            return mock.TICKET;
+          } else {
+            return {
+              ...mockTicket,
+              from: 'DA WAY',
+            };
+          }
         }),
+        update: jest.fn().mockReturnValue([1]),
       };
 
       const controller = new TicketController(mockTicketService);
@@ -296,7 +380,7 @@ describe('TicketController', () => {
         status: 'success',
         message: 'update ticket data success',
         data: {
-          ...mock.TICKET,
+          ...mockTicket,
           from: 'DA WAY',
         },
       });

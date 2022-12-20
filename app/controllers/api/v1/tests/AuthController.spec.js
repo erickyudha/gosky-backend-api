@@ -226,6 +226,53 @@ describe('AuthController', () => {
     });
   });
 
+  describe('#authorizeOptional', () => {
+    it('should save user data in req and go to next if success', async () => {
+      const mockUser = mock.USER;
+      const token = authService.createTokenFromUser(mockUser);
+      const mockReq = {
+        headers: {
+          authorization: 'Bearer ' + token,
+        },
+        user: jest.fn().mockReturnThis(),
+      };
+      const mockRes = mock.RES;
+      const mockUserService = {
+        get: jest.fn().mockReturnValue(mockUser),
+      };
+      const mockNext = jest.fn();
+
+      const controller = new AuthController(authService, mockUserService, {});
+      await controller.authorizeOptional(mockReq, mockRes, mockNext);
+
+      expect(mockUserService.get).toHaveBeenCalled();
+      expect(mockReq.user).toEqual(mockUser);
+      expect(mockNext).toHaveBeenCalled();
+    });
+
+    it('should req.user = null and go next if token invalid', async () => {
+      const mockUser = mock.USER;
+      const token = authService.createTokenFromUser(mockUser) + 'amogus';
+      const mockReq = {
+        headers: {
+          authorization: 'Bearer ' + token,
+        },
+        user: jest.fn().mockReturnThis(),
+      };
+      const mockRes = mock.RES;
+      const mockUserService = {
+        get: jest.fn().mockReturnValue(mockUser),
+      };
+      const mockNext = jest.fn();
+
+      const controller = new AuthController(authService, mockUserService, {});
+      await controller.authorizeOptional(mockReq, mockRes, mockNext);
+
+      expect(mockReq.user).toEqual(null);
+      expect(mockNext).toHaveBeenCalled();
+    });
+  });
+
   describe('#handleRegister', () => {
     it('should res.status(201) if register success', async () => {
       const mockUser = mock.USER;
