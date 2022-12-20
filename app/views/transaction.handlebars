@@ -12,7 +12,7 @@
         padding: 0px;
     }
     body{
-        background: url(https://gosky.up.railway.app/docs/static/Bandara.png);
+        background: url(https://res.cloudinary.com/dgjwtquka/image/upload/v1671535002/gosky/Bandara_u5pvm0.png);
         background-size: cover;
         background-attachment: fixed;
         background-repeat: no-repeat;
@@ -22,12 +22,11 @@
         overflow: hidden;
     }
     .box{
-        background: rgb(0,0,0, 0.5);
+        border: 2px solid #35aacb;
         margin: 50px auto;
-        color: white;
+        color: rgb(0, 0, 0);
         text-align: center;
-        width: 480px;
-        height: 527px;
+        width: 800px;
     }
     .box > img{
         width: 350px;
@@ -52,7 +51,7 @@
 
 <body>
   <div class="box">
-    <img src="https://gosky.up.railway.app/static/Group 4.png" alt="">
+    <img src="https://res.cloudinary.com/dgjwtquka/image/upload/v1671535001/gosky/Group_4_axkxf1.png" alt="">
     <h1>
       <center>TRANSACTION RECEIPT</center>
     </h1>
@@ -65,12 +64,15 @@
     <h5>
       <pre align="justify">
         ID              : {{id}}
-        Ticket Amount   : {{amount}}
+        Ticket          : {{ticketName}}
+        Departure       : {{ticketDate}}
+        Amount          : {{amount}}
         BookingCode     : {{bookingCode}}
-        {{createdAt}}</pre>
+      </pre>
+      <p>{{createdAt}}</p>
     </h5>
     <br>
-    <p>Selamat menikmati pelayanan</p>
+    <p>Selamat menikmati penerbangan anda</p>
     <p>Salam, GoSky</p>
 
   </div>

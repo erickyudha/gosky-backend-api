@@ -125,7 +125,8 @@ class TransactionController {
           `Transaction of ${req.body.amount} ${ticket.category} ` +
           `[${ticket.from} - ${ticket.to}] ticket(s) is success`,
       );
-      await this.emailService.sendTransactionEmail(user.email, transaction,
+      await this.emailService.sendTransactionEmail(
+          user.email, transaction, ticket,
           (err, info) => {
             if (err) {
               throw err;
