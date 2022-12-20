@@ -203,7 +203,7 @@ class AuthController {
       }
       const user = await this.userService.getByEmail(email);
       if (!user) {
-        res.status(409).json({
+        res.status(404).json({
           status: 'failed',
           message: 'email not registered',
         });
@@ -214,7 +214,7 @@ class AuthController {
       );
       if (!verifyToken) {
         const error = new GeneralError('Invalid OTP or OTP Token');
-        res.status(422).json(error.json());
+        res.status(401).json(error.json());
         return;
       }
       const encryptPassword = await this.authService.encryptPassword(
