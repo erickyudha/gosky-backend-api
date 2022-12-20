@@ -89,7 +89,6 @@ class UserController {
   };
 
   handleUpdateUserPassword = async (req, res) => {
-    // TODO:
     // get user data from req
     // Just update it
     try {
@@ -100,7 +99,7 @@ class UserController {
         return;
       }
       const pass = req.body.password;
-      const password = await this.authService.verifyPassword(
+      const password = this.authService.verifyPassword(
           pass, user.encryptedPassword);
       if (!password) {
         res.status(401).json({

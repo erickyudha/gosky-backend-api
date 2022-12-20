@@ -84,7 +84,7 @@ class AuthController {
               message: 'email already registered',
             });
           } else {
-            const encryptPassword = await this.authService.encryptPassword(
+            const encryptPassword = this.authService.encryptPassword(
                 req.body.password);
             const user = await this.userService.create({
               name: req.body.name,
@@ -199,7 +199,6 @@ class AuthController {
   };
 
   handleResetPassword = async (req, res) => {
-    // TODO:
     // User Can't Login because Forgot Password
     // Get OTP first to verify email
     // Check if email registered
@@ -219,7 +218,6 @@ class AuthController {
         res.status(401).json(error.json());
         return;
       }
-      console.log(verifyToken);
       const user = await this.userService.getByEmail(verifyToken);
       if (!user) {
         res.status(404).json({
@@ -228,7 +226,7 @@ class AuthController {
         });
         return;
       }
-      const encryptPassword = await this.authService.encryptPassword(
+      const encryptPassword = this.authService.encryptPassword(
           req.body.newPassword);
       await this.userService.update(user.id,
           {encryptedPassword: encryptPassword},
