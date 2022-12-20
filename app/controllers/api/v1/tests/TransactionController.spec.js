@@ -256,7 +256,7 @@ describe('TransactionController', () => {
       };
       const mockEmailService = {
         sendTransactionEmail: jest.fn()
-            .mockImplementation((email, transaction, handler) => {
+            .mockImplementation((email, transaction, ticket, handler) => {
               const err = null;
               const info = {
                 email, transaction,
@@ -385,7 +385,7 @@ describe('TransactionController', () => {
       };
       const mockEmailService = {
         sendTransactionEmail: jest.fn()
-            .mockImplementation((email, transaction, handler) => {
+            .mockImplementation((email, transaction, ticket, handler) => {
               const err = new GeneralError('error test');
               const info = {
                 email, transaction,

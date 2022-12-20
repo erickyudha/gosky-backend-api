@@ -18,7 +18,7 @@ module.exports = {
     return this.sendEmail(mailOptions, handler);
   },
 
-  sendTransactionEmail(email, transactionData, handler) {
+  sendTransactionEmail(email, transactionData, ticketData, handler) {
     const mailOptions = {
       to: email,
       subject: 'GoSky - Transaction Receipt',
@@ -27,7 +27,10 @@ module.exports = {
         id: transactionData.id,
         amount: transactionData.amount,
         bookingCode: transactionData.bookingCode,
-        createdAt: transactionData.createdAt,
+        createdAt: new Date(transactionData.createdAt).toLocaleString(),
+        ticketName:
+          `[${ticketData.category}] ${ticketData.from} - ${ticketData.to}`,
+        ticketDate: new Date(ticketData.departureTime).toLocaleString(),
       },
     };
 
