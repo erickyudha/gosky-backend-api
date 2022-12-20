@@ -4,22 +4,37 @@ const {
   MissingFieldError,
 } = require('../../../errors');
 class TicketController {
-  constructor(ticketService) {
+  constructor(ticketService, wishlistService) {
     this.ticketService = ticketService;
+    this.wishlistService = wishlistService;
   };
 
   handleGetList = async (req, res) => {
     try {
-      const ticket = await this.ticketService.list({...req.query});
+      const tickets = await this.ticketService.list({...req.query});
+      let result = [];
+      if (req.user) {
+        const wishlist = await this.wishlistService.listByUser(req.user.id);
+        for (let i = 0; i < tickets.length; i++) {
+          const ticket = tickets[i];
+          const found = wishlist.find((x) => {
+            return x.ticketId == ticket.id;
+          });
+          result.push({...ticket.dataValues, wishlisted: !!found});
+        };
+      } else {
+        result = tickets;
+      };
       res.status(200).json({
         status: 'success',
         message: 'get ticket list data success',
-        data: ticket,
+        data: result,
         meta: {
-          count: ticket.length,
+          count: result.length,
         },
       });
     } catch (err) {
+      console.log(err);
       const error = new GeneralError(err.message);
       res.status(500).json(error.json());
     }
@@ -27,16 +42,26 @@ class TicketController {
 
   handleGet = async (req, res) => {
     try {
+      let result;
       const ticket = await this.ticketService.get(req.params.id);
       if (!ticket) {
         const err = new IdNotFoundError();
         res.status(404).json(err.json());
         return;
       }
+      if (req.user) {
+        const wishlist = await this.wishlistService.listByUser(req.user.id);
+        const found = wishlist.find((x) => {
+          return x.ticketId == ticket.id;
+        });
+        result = {...ticket.dataValues, wishlisted: !!found};
+      } else {
+        result = ticket;
+      }
       res.status(200).json({
         status: 'success',
         message: 'get ticket data success',
-        data: ticket,
+        data: result,
       });
     } catch (err) {
       const error = new GeneralError(err.message);

@@ -22,17 +22,27 @@ class TransactionController {
     // On other hands ADMIN can access all transactions in database.
     try {
       const user = req.user;
-      let transaction;
+      let transactions;
       if (user.role === 'ADMIN') {
-        transaction = await this.transactionService.list();
+        transactions = await this.transactionService.list();
       } else {
-        transaction = await this.transactionService.listByUser(user.id);
+        transactions = await this.transactionService.listByUser(user.id);
+      }
+      const result = [];
+      for (let i = 0; i < transactions.length; i++) {
+        const transaction = transactions[i];
+        const ticket = await this.ticketService.get(transaction.ticketId);
+        const append = {
+          ...transaction.dataValues,
+          ticket,
+        };
+        result.push(append);
       }
       res.status(200).json({
         status: 'success',
         message: 'get transaction list data success',
-        data: transaction,
-        meta: {count: transaction.length},
+        data: result,
+        meta: {count: result.length},
       });
     } catch (err) {
       const error = new GeneralError(err.message);
@@ -58,10 +68,14 @@ class TransactionController {
         res.status(401).json(error.json());
         return;
       }
+      const ticket = await this.ticketService.get(transaction.ticketId);
       res.status(200).json({
         status: 'success',
         message: 'get transaction data success',
-        data: transaction,
+        data: {
+          ...transaction.dataValues,
+          ticket,
+        },
       });
     } catch (err) {
       const error = new GeneralError(err.message);
@@ -119,7 +133,10 @@ class TransactionController {
               res.status(201).json({
                 status: 'success',
                 message: 'add transaction success',
-                data: transaction,
+                data: {
+                  ...transaction.dataValues,
+                  ticket,
+                },
               });
             }
           },
