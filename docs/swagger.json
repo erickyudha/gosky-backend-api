@@ -45,6 +45,102 @@
         }
     ],
     "paths": {
+        "/earnings": {
+            "get": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Get transaction earnings data",
+                "operationId": "getearn",
+                "description": "Only Admin can access",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "get earnings data success"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "today": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "earnings": {
+                                                            "type": "number",
+                                                            "example": 123456
+                                                        },
+                                                        "count": {
+                                                            "type": "number",
+                                                            "example": 12
+                                                        }
+                                                    }
+                                                },
+                                                "thisMonth": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "earnings": {
+                                                            "type": "number",
+                                                            "example": 123456
+                                                        },
+                                                        "count": {
+                                                            "type": "number",
+                                                            "example": 12
+                                                        }
+                                                    }
+                                                },
+                                                "thisYear": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "earnings": {
+                                                            "type": "number",
+                                                            "example": 123456
+                                                        },
+                                                        "count": {
+                                                            "type": "number",
+                                                            "example": 12
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized, bearer token invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnauthorizedError"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "General Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/notifications": {
             "get": {
                 "tags": [
