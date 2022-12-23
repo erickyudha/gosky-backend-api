@@ -405,4 +405,34 @@ describe('TransactionController', () => {
           .toHaveBeenCalledWith(new GeneralError('error test').json());
     });
   });
+
+  describe('#handleGetEarnings', () => {
+    it('should res.status(200) on success', async () => {
+      const mockReq = {};
+      const mockRes = mock.RES;
+
+      const mockEarnings = {
+        earnings: 123456,
+        count: 24,
+      };
+      const mockTransactionService = {
+        calculateEarnings: jest.fn().mockReturnValue(mockEarnings),
+      };
+
+      const controller = new TransactionController(mockTransactionService);
+      await controller.handleGetEarnings(mockReq, mockRes);
+
+      expect(mockTransactionService.calculateEarnings).toHaveBeenCalled();
+      expect(mockRes.status).toHaveBeenCalledWith(200);
+      expect(mockRes.json).toHaveBeenCalledWith({
+        status: 'success',
+        message: 'get earnings data success',
+        data: {
+          today: mockEarnings,
+          thisMonth: mockEarnings,
+          thisYear: mockEarnings,
+        },
+      });
+    });
+  });
 });
