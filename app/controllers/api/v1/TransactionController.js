@@ -147,6 +147,25 @@ class TransactionController {
       res.status(500).json(error.json());
     }
   };
+
+  handleGetEarnings = async (req, res) => {
+    const todayEarnings =
+      await this.transactionService.calculateEarnings('TODAY');
+    const thisMonthEarnings =
+      await this.transactionService.calculateEarnings('MONTH');
+    const thisYearEarnings =
+      await this.transactionService.calculateEarnings('YEAR');
+
+    res.status(200).json({
+      status: 'success',
+      message: 'get earnings data success',
+      data: {
+        today: todayEarnings,
+        thisMonth: thisMonthEarnings,
+        thisYear: thisYearEarnings,
+      },
+    });
+  };
 }
 
 module.exports = TransactionController;

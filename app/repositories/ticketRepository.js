@@ -13,6 +13,12 @@ module.exports = {
     return Ticket.findByPk(id);
   },
 
+  forceFind(id) {
+    return Ticket.findByPk(id, {
+      paranoid: false,
+    });
+  },
+
   create(args) {
     return Ticket.create(args);
   },

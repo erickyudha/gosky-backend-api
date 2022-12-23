@@ -88,6 +88,9 @@ apiRouter.post('/transactions',
 apiRouter.get('/transactions/:id',
     authController.authorizeUser,
     transactionController.handleGet);
+apiRouter.get('/earnings',
+    authController.authorizeAdmin,
+    transactionController.handleGetEarnings);
 
 // IMAGE ENDPOINTS
 const imageController = new controller.api.v1.ImageController(imageService);
