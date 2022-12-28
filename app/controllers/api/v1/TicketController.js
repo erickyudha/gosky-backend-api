@@ -3,6 +3,10 @@ const {
   IdNotFoundError,
   MissingFieldError,
 } = require('../../../errors');
+
+const generateRand3Digit = () => {
+  return '' + Math.floor(100 + Math.random() * 900);
+};
 class TicketController {
   constructor(ticketService, wishlistService) {
     this.ticketService = ticketService;
@@ -79,13 +83,20 @@ class TicketController {
         !req.body.from ||
         !req.body.departureTime ||
         !req.body.price ||
-        !req.body.flightNumber ||
         !req.body.duration ||
         (req.body.category == 'ROUND_TRIP' && !req.body.returnTime)
       ) {
         const error = new MissingFieldError();
         res.status(400).json(error.json());
       } else {
+        let flightNumber = req.body.flightNumber;
+        if (!flightNumber) {
+          flightNumber = [
+            req.body.from.charAt(0),
+            req.body.to.charAt(0),
+            '' + generateRand3Digit,
+          ].join('');
+        }
         let returnTimes;
         if (req.body.category === 'ONE_WAY') {
           returnTimes = null;
@@ -94,6 +105,7 @@ class TicketController {
         }
         const ticket = await this.ticketService.create({
           ...req.body,
+          flightNumber,
           createdBy: req.user.id,
           updatedBy: req.user.id,
           departureTime: new Date(req.body.departureTime).toISOString(),

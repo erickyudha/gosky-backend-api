@@ -24,11 +24,7 @@ module.exports = {
         [Op.gte]: returntime,
       };
     }
-    return ticketRepository.findAll({where: filter, limit: 100});
-  },
-
-  imageId(imageId) {
-    return ticketRepository.findOne({where: {imageId}, limit: 100});
+    return ticketRepository.findAll({where: filter});
   },
 
   create(args) {

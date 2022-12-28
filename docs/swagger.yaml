@@ -821,7 +821,6 @@ paths:
               - to
               - departureTime
               - price
-              - flightNumber
               properties:
                 category:
                   type: string
