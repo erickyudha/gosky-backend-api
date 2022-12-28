@@ -1428,6 +1428,14 @@ paths:
         schema:
           type: string
         required: true
+      - in: query
+        name: type
+        required: true
+        schema:
+          type: string
+          enum:
+          - PROFILE_IMG
+          - TICKET_IMG
       responses:
         '200':
           description: OK
