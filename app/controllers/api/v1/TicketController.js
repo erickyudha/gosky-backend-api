@@ -81,6 +81,7 @@ class TicketController {
       if (
         !req.body.category ||
         !req.body.from ||
+        !req.body.to ||
         !req.body.departureTime ||
         !req.body.price ||
         !req.body.duration ||
@@ -94,7 +95,7 @@ class TicketController {
           flightNumber = [
             req.body.from.charAt(0),
             req.body.to.charAt(0),
-            '' + generateRand3Digit,
+            '' + generateRand3Digit(),
           ].join('');
         }
         let returnTimes;
