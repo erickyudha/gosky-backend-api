@@ -98,7 +98,7 @@ class TicketController {
           ].join('');
         }
         let returnTimes;
-        if (req.body.category === 'ONE_WAY') {
+        if (req.body.category === 'ONE_WAY' || !req.body.returnTime) {
           returnTimes = null;
         } else {
           returnTimes = new Date(req.body.returnTime).toISOString();
@@ -134,7 +134,7 @@ class TicketController {
         return;
       }
       let returnTimes;
-      if (req.body.category === 'ONE_WAY') {
+      if (req.body.category === 'ONE_WAY' || !req.body.returnTime) {
         returnTimes = null;
       } else {
         returnTimes = new Date(req.body.returnTime).toISOString();
