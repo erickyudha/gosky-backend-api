@@ -29,6 +29,7 @@ module.exports = {
   attributesFind(id, attributesArr) {
     return User.findByPk(id, {
       attributes: attributesArr,
+      paranoid: false,
     });
   },
 

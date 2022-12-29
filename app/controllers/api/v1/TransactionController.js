@@ -10,11 +10,13 @@ class TransactionController {
       ticketService,
       notificationService,
       emailService,
+      userService,
   ) {
     this.transactionService = transactionService;
     this.ticketService = ticketService;
     this.notificationService = notificationService;
     this.emailService = emailService;
+    this.userService = userService;
   }
 
   handleGetList = async (req, res) => {
@@ -31,10 +33,12 @@ class TransactionController {
       const result = [];
       for (let i = 0; i < transactions.length; i++) {
         const transaction = transactions[i];
+        const user = await this.userService.simpleGet(transaction.userId);
         const ticket = await this.ticketService.get(transaction.ticketId);
         const append = {
           ...transaction.dataValues,
           ticket,
+          user,
         };
         result.push(append);
       }
@@ -68,6 +72,7 @@ class TransactionController {
         res.status(401).json(error.json());
         return;
       }
+      const userData = await this.userService.simpleGet(transaction.userId);
       const ticket = await this.ticketService.get(transaction.ticketId);
       res.status(200).json({
         status: 'success',
@@ -75,6 +80,7 @@ class TransactionController {
         data: {
           ...transaction.dataValues,
           ticket,
+          user: userData,
         },
       });
     } catch (err) {

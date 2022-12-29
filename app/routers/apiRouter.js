@@ -78,6 +78,7 @@ apiRouter.delete('/tickets/:id/wishlist',
 const transactionController = new controller.api.v1.TransactionController(
     transactionService, ticketService,
     notificationService, emailService,
+    userService,
 );
 apiRouter.get('/transactions',
     authController.authorizeUser,

@@ -23,9 +23,12 @@ describe('TransactionController', () => {
       const mockTicketService = {
         get: jest.fn().mockReturnValue(mock.TICKET),
       };
+      const mockUserService = {
+        simpleGet: jest.fn().mockReturnValue(mock.USER),
+      };
 
       const controller = new TransactionController(
-          mockTransactionService, mockTicketService, {}, {});
+          mockTransactionService, mockTicketService, {}, {}, mockUserService);
       await controller.handleGetList(mockReq, mockRes);
 
       expect(mockTransactionService.listByUser).toHaveBeenCalled();
@@ -36,6 +39,7 @@ describe('TransactionController', () => {
         data: [{
           ...mock.TRANSACTION,
           ticket: mock.TICKET,
+          user: mock.USER,
         }],
         meta: {count: 1},
       });
@@ -55,9 +59,12 @@ describe('TransactionController', () => {
       const mockTicketService = {
         get: jest.fn().mockReturnValue(mock.TICKET),
       };
+      const mockUserService = {
+        simpleGet: jest.fn().mockReturnValue(mock.USER),
+      };
 
       const controller = new TransactionController(
-          mockTransactionService, mockTicketService, {}, {});
+          mockTransactionService, mockTicketService, {}, {}, mockUserService);
       await controller.handleGetList(mockReq, mockRes);
 
       expect(mockTransactionService.list).toHaveBeenCalled();
@@ -68,6 +75,7 @@ describe('TransactionController', () => {
         data: [{
           ...mock.TRANSACTION,
           ticket: mock.TICKET,
+          user: mock.USER,
         }],
         meta: {count: 1},
       });
@@ -111,9 +119,12 @@ describe('TransactionController', () => {
       const mockTicketService = {
         get: jest.fn().mockReturnValue(mock.TICKET),
       };
+      const mockUserService = {
+        simpleGet: jest.fn().mockReturnValue(mock.USER),
+      };
 
       const controller = new TransactionController(
-          mockTransactionService, mockTicketService, {}, {});
+          mockTransactionService, mockTicketService, {}, {}, mockUserService);
       await controller.handleGet(mockReq, mockRes);
 
       expect(mockTransactionService.get).toHaveBeenCalled();
@@ -124,6 +135,7 @@ describe('TransactionController', () => {
         data: {
           ...mock.TRANSACTION,
           ticket: mock.TICKET,
+          user: mock.USER,
         },
       });
     });
@@ -146,9 +158,12 @@ describe('TransactionController', () => {
       const mockTicketService = {
         get: jest.fn().mockReturnValue(mock.TICKET),
       };
+      const mockUserService = {
+        simpleGet: jest.fn().mockReturnValue(mock.USER),
+      };
 
       const controller = new TransactionController(
-          mockTransactionService, mockTicketService, {}, {});
+          mockTransactionService, mockTicketService, {}, {}, mockUserService);
       await controller.handleGet(mockReq, mockRes);
 
       expect(mockTransactionService.get).toHaveBeenCalled();
@@ -159,6 +174,7 @@ describe('TransactionController', () => {
         data: {
           ...mock.TRANSACTION,
           ticket: mock.TICKET,
+          user: mock.USER,
         },
       });
     });
