@@ -49,7 +49,7 @@ Default admin account data is available and can be changed in local on [`config/
 
     {
       name: 'admin',
-      email: 'admin@gmail',
+      email: 'gosky.admin@gmail.com',
       password: 'admin',
     }
 
