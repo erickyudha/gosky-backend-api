@@ -1,5 +1,5 @@
 module.exports = {
   name: 'admin',
-  email: 'admin@gmail',
+  email: 'gosky.admin@gmail.com',
   password: 'admin',
 };
