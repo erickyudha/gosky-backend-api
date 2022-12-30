@@ -35,6 +35,10 @@ module.exports = {
     return ticketRepository.find(id);
   },
 
+  forceGet(id) {
+    return ticketRepository.forceFind(id);
+  },
+
   update(id, args) {
     return ticketRepository.update(id, args);
   },

@@ -21,7 +21,7 @@ describe('TransactionController', () => {
         }]),
       };
       const mockTicketService = {
-        get: jest.fn().mockReturnValue(mock.TICKET),
+        forceGet: jest.fn().mockReturnValue(mock.TICKET),
       };
       const mockUserService = {
         simpleGet: jest.fn().mockReturnValue(mock.USER),
@@ -57,7 +57,7 @@ describe('TransactionController', () => {
         }]),
       };
       const mockTicketService = {
-        get: jest.fn().mockReturnValue(mock.TICKET),
+        forceGet: jest.fn().mockReturnValue(mock.TICKET),
       };
       const mockUserService = {
         simpleGet: jest.fn().mockReturnValue(mock.USER),
@@ -117,7 +117,7 @@ describe('TransactionController', () => {
         }),
       };
       const mockTicketService = {
-        get: jest.fn().mockReturnValue(mock.TICKET),
+        forceGet: jest.fn().mockReturnValue(mock.TICKET),
       };
       const mockUserService = {
         simpleGet: jest.fn().mockReturnValue(mock.USER),
@@ -156,7 +156,7 @@ describe('TransactionController', () => {
         }),
       };
       const mockTicketService = {
-        get: jest.fn().mockReturnValue(mock.TICKET),
+        forceGet: jest.fn().mockReturnValue(mock.TICKET),
       };
       const mockUserService = {
         simpleGet: jest.fn().mockReturnValue(mock.USER),

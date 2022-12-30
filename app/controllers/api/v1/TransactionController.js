@@ -34,7 +34,7 @@ class TransactionController {
       for (let i = 0; i < transactions.length; i++) {
         const transaction = transactions[i];
         const user = await this.userService.simpleGet(transaction.userId);
-        const ticket = await this.ticketService.get(transaction.ticketId);
+        const ticket = await this.ticketService.forceGet(transaction.ticketId);
         const append = {
           ...transaction.dataValues,
           ticket,
@@ -73,7 +73,7 @@ class TransactionController {
         return;
       }
       const userData = await this.userService.simpleGet(transaction.userId);
-      const ticket = await this.ticketService.get(transaction.ticketId);
+      const ticket = await this.ticketService.forceGet(transaction.ticketId);
       res.status(200).json({
         status: 'success',
         message: 'get transaction data success',
