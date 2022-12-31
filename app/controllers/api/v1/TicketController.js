@@ -125,38 +125,38 @@ class TicketController {
   };
 
   handleUpdate = async (req, res) => {
-    // BUG:
-    // If returnTime or departureTime empty/not updated, error
     try {
-      const id = await this.ticketService.get(req.params.id);
-      if (!id) {
+      const ticket = await this.ticketService.get(req.params.id);
+      if (!ticket) {
         const err = new IdNotFoundError();
         res.status(404).json(err.json());
         return;
-      }
-      let returnTimes;
-      if (req.body.category === 'ONE_WAY' || !req.body.returnTime) {
-        returnTimes = null;
-      } else {
-        returnTimes = new Date(req.body.returnTime).toISOString();
-      }
-      let departureTimes;
-      if (req.body.departureTime = null) {
-        departureTimes = id.departureTime;
-      } else {
-        new Date(req.body.departureTime).toISOString();
-      }
-      await this.ticketService.update(req.params.id, {
+      };
+      const dateArgs = {};
+      if (req.body.departureTime) {
+        dateArgs['departureTime'] =
+          new Date(req.body.departureTime).toISOString();
+      };
+      if (ticket.category === 'ONE_WAY' && req.body.category === 'ROUND_TRIP') {
+        const returnTime =
+          (req.body.returnTime) ? new Date(req.body.returnTime) : new Date();
+        dateArgs['returnTime'] = returnTime.toISOString();
+      } else if (ticket.category === 'ROUND_TRIP' && req.body.returnTime) {
+        dateArgs['returnTime'] = new Date(req.body.returnTime).toISOString();
+      };
+
+      const updateData = {
         ...req.body,
         updatedBy: req.user.id,
-        departureTime: departureTimes,
-        returnTime: returnTimes,
-      });
-      const ticket = await this.ticketService.get(id.id);
+        ...dateArgs,
+      };
+
+      await this.ticketService.update(req.params.id, updateData);
+      const updatedTicket = await this.ticketService.get(req.params.id);
       res.status(200).json({
         status: 'success',
         message: 'update ticket data success',
-        data: ticket,
+        data: updatedTicket,
       });
     } catch (err) {
       const error = new GeneralError(err.message);

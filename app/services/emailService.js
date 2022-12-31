@@ -32,6 +32,8 @@ module.exports = {
         ticketName:
           `[${ticketData.category}] ${ticketData.from} - ${ticketData.to}`,
         ticketDate: new Date(ticketData.departureTime).toLocaleString(),
+        price: transactionData.amount * ticketData.price,
+        flightNumber: ticketData.flightNumber,
       },
     };
 

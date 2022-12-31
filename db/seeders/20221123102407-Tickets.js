@@ -55,8 +55,8 @@ module.exports = {
                 description: LOREM_IPSUM,
                 createdBy: 1,
                 updatedBy: 1,
-                createdAt: now.toISOString(),
-                updatedAt: now.toISOString(),
+                createdAt: dayjs().toISOString(),
+                updatedAt: dayjs().toISOString(),
               });
             }
           }
