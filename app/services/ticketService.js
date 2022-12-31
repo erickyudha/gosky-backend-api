@@ -16,12 +16,12 @@ module.exports = {
     if (to) filter['to'] = to;
     if (departureTime) {
       filter['departureTime'] = {
-        [Op.gte]: departureTime,
+        [Op.gte]: new Date(departureTime).toISOString(),
       };
     }
     if (category == 'ROUND_TRIP' && returntime) {
       filter['returnTime'] = {
-        [Op.gte]: returntime,
+        [Op.gte]: new Date(returntime).toISOString(),
       };
     }
     return ticketRepository.findAll({where: filter});

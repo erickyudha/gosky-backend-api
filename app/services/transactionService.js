@@ -31,7 +31,7 @@ module.exports = {
       date = `${now.getFullYear()}-1-1`;
     }
     filterArgs['createdAt'] = {
-      [Op.gte]: date,
+      [Op.gte]: new Date(date).toISOString(),
     };
     const transactions =
       await transactionRepository.findAll({where: filterArgs});
