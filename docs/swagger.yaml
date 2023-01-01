@@ -821,6 +821,7 @@ paths:
               - to
               - departureTime
               - price
+              - duration
               properties:
                 category:
                   type: string
@@ -845,6 +846,9 @@ paths:
                 flightNumber:
                   type: string
                   example: string
+                duration:
+                  type: number
+                  example: 104
                 imageId:
                   type: string
                   example: string
@@ -971,6 +975,9 @@ paths:
                 flightNumber:
                   type: string
                   example: string
+                duration:
+                  type: number
+                  example: 104
                 imageId:
                   type: string
                   example: string
@@ -1274,7 +1281,7 @@ paths:
                     type: string
                     example: add transaction success
                   data:
-                    "$ref": "#/components/schemas/TransactionResponse"
+                    "$ref": "#/components/schemas/PostTransactionResponse"
         '400':
           description: Bad Request, missing fields
           content:
@@ -1549,13 +1556,13 @@ components:
         imageUrl:
           type: string
           example: string.com/image.png
+        deletedAt:
+          type: string
+          example: timestamp
         createdAt:
           type: string
           example: timestamp
         updatedAt:
-          type: string
-          example: timestamp
-        deletedAt:
           type: string
           example: timestamp
     TicketResponse:
@@ -1587,6 +1594,9 @@ components:
         flightNumber:
           type: string
           example: string
+        durationr:
+          type: integer
+          example: 104
         imageId:
           type: string
           example: string
@@ -1596,22 +1606,19 @@ components:
         description:
           type: string
           example: string
-        wishlisted:
-          type: boolean
-          example: false
         createdBy:
           type: integer
           example: 1
-        createdAt:
-          type: string
-          example: timestamp
         updatedBy:
           type: integer
           example: 1
-        updatedAt:
+        deletedAt:
           type: string
           example: timestamp
-        deletedAt:
+        createdAt:
+          type: string
+          example: timestamp
+        updatedAt:
           type: string
           example: timestamp
     TransactionResponse:
@@ -1641,6 +1648,40 @@ components:
         deletedAt:
           type: string
           example: timestamp
+        ticket: 
+          "$ref": "#/components/schemas/TicketResponse"
+        user:
+          "$ref": "#/components/schemas/SimpleUserResponse"
+    PostTransactionResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        userId:
+          type: integer
+          example: 1
+        ticketId:
+          type: integer
+          example: 1
+        amount:
+          type: integer
+          example: 1
+        bookingCode:
+          type: string
+          example: AKUD392BCLW
+        createdAt:
+          type: string
+          example: timestamp
+        updatedAt:
+          type: string
+          example: timestamp
+        deletedAt:
+          type: string
+          example: timestamp
+        ticket: 
+          "$ref": "#/components/schemas/TicketResponse"
+        
     SimpleUserResponse:
       type: object
       properties:
