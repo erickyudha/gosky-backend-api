@@ -24,12 +24,12 @@ module.exports = {
     const filterArgs = {};
     let date;
     if (filter == 'TODAY') {
-      date = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
+      date = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
     } else if (filter == 'MONTH') {
-      date = `${now.getFullYear()}-${now.getMonth()}-1`;
+      date = `${now.getFullYear()}-${now.getMonth() + 1}-1`;
     } else {
       date = `${now.getFullYear()}-1-1`;
-    }
+    };
     filterArgs['createdAt'] = {
       [Op.gte]: new Date(date).toISOString(),
     };

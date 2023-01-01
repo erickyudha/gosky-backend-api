@@ -31,6 +31,7 @@ describe('NotificationController', () => {
         data: [mock.NOTIFICATION],
         meta: {
           count: 1,
+          unreadCount: 1,
         },
       });
     });
