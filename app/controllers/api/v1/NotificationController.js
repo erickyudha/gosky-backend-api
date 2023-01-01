@@ -13,12 +13,16 @@ class NotificationController {
     try {
       const user = req.user;
       const listNotif = await this.notificationService.listByUser(user.id);
+      const unreadNotif = listNotif.filter((notif) => {
+        return notif.isRead === false;
+      });
       res.status(200).json({
         status: 'success',
         message: 'get notification list success',
         data: listNotif,
         meta: {
           count: listNotif.length,
+          unreadCount: unreadNotif.length,
         },
       });
     } catch (err) {
