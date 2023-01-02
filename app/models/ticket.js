@@ -37,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
     duration: DataTypes.INTEGER,
     imageId: DataTypes.STRING,
     imageUrl: DataTypes.STRING,
-    description: DataTypes.STRING,
+    description: DataTypes.TEXT,
     createdBy: DataTypes.INTEGER,
     updatedBy: DataTypes.INTEGER,
     deletedAt: DataTypes.DATE,
