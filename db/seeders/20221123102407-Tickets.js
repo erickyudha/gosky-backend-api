@@ -49,29 +49,27 @@ module.exports = {
           if (city !== city2) {
             const flightNumber =
               city.charAt(0) + city2.charAt(0) + generateRand3Digit();
-            for (let i = 0; i < 2; i++) {
-              const now = dayjs().add(generateRand1Digit(), 'day');
-              const returnTime =
-                now.add(generateRand1Digit(), 'day').toISOString();
-              ticketArr.push({
-                category: category,
-                from: city,
-                to: city2,
-                departureTime: now.toISOString(),
-                returnTime: (category == 'ONE_WAY') ? null : returnTime,
-                price: generateRand3Digit() + '000',
-                duration: generateRandMinutes(),
-                flightNumber,
-                imageId: 'default',
-                imageUrl: IMG_PLACEHOLDER,
-                description: cityDescPair[city] + '\n\n\n\n' + cityDescPair[city2],
-                createdBy: 1,
-                updatedBy: 1,
-                createdAt: dayjs().toISOString(),
-                updatedAt: dayjs().toISOString(),
-              });
-            }
-          }
+            const now = dayjs().add(generateRand1Digit(), 'day');
+            const returnTime =
+              now.add(generateRand1Digit(), 'day').toISOString();
+            ticketArr.push({
+              category: category,
+              from: city,
+              to: city2,
+              departureTime: now.toISOString(),
+              returnTime: (category == 'ONE_WAY') ? null : returnTime,
+              price: generateRand3Digit() + '000',
+              duration: generateRandMinutes(),
+              flightNumber,
+              imageId: 'default',
+              imageUrl: IMG_PLACEHOLDER,
+              description: cityDescPair[city] + '\n\n\n\n' + cityDescPair[city2],
+              createdBy: 1,
+              updatedBy: 1,
+              createdAt: dayjs().toISOString(),
+              updatedAt: dayjs().toISOString(),
+            });
+          };
         });
       });
     });
