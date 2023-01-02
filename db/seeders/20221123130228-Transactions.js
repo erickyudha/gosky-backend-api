@@ -19,7 +19,7 @@ const n = 300;
 for (let i = 0; i < n; i++) {
   transactions.push({
     userId: randomIntFromInterval(1, 300),
-    ticketId: randomIntFromInterval(1, 700),
+    ticketId: randomIntFromInterval(1, 300),
     amount: randomIntFromInterval(1, 5),
     bookingCode: generateBookingCode(),
     createdAt: new Date().toISOString(),
