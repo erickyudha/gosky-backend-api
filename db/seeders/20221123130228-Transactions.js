@@ -1,5 +1,23 @@
 'use strict';
 
+function randomIntFromInterval(min, max) { // min and max included
+  return Math.floor(Math.random() * (max - min + 1) + min);
+};
+
+const transactions = [];
+const n = 300;
+
+for (let i = 0; i < n; i++) {
+  transactions.push({
+    userId: randomIntFromInterval(1, 20),
+    ticketId: randomIntFromInterval(1, 700),
+    amount: randomIntFromInterval(1, 5),
+    bookingCode: 
+  })
+  
+}
+
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
