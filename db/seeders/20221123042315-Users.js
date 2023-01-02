@@ -7,7 +7,7 @@ const names = require('../names');
 const namesLen = names.length;
 
 const users = [];
-const n = 50;
+const n = 300;
 const defaultImg = 'https://res.cloudinary.com/dgjwtquka/image/upload/c_scale,w_24/v1672668236/gosky/profile_h8kcr5.png';
 const date = new Date().toISOString();
 
