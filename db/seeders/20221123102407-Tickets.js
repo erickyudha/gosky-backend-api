@@ -64,8 +64,8 @@ module.exports = {
               imageId: 'default',
               imageUrl: IMG_PLACEHOLDER,
               description: cityDescPair[city] + '\n\n' + cityDescPair[city2],
-              createdBy: 1,
-              updatedBy: 1,
+              createdBy: 301,
+              updatedBy: 301,
               createdAt: dayjs().toISOString(),
               updatedAt: dayjs().toISOString(),
             });
